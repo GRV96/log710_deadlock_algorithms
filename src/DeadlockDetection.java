@@ -1,28 +1,21 @@
-
 public class DeadlockDetection {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		// Rows: processes
 		// Columns: resources allocated to processes
 
-		final int processCount = 3;
+		InputFileReader ifr = new InputFileReader(args[0]);
+		int processCount = ifr.getProcessCount();
 
-		int[][] allocationArray = {
-				{0, 0, 1, 0},
-				{2, 0, 0, 1},
-				{0, 1, 2, 0}};
-		IntMatrix allocation = new IntMatrix(allocationArray);
+		IntMatrix allocation = ifr.getAllocationMatrix();
 
-		int[] availableArray = {2, 1, 0, 0};
-		IntMatrix available = new IntMatrix(availableArray);
+		IntMatrix available = ifr.getResourceMatrix();
+		for(int j=0; j<available.columns; j++) {
+			available.set(0, j, available.get(0, j)-allocation.columnSum(j));
+		}
 		IntMatrix work = new IntMatrix(available);
 
-		int[][] requestArray = {
-				{2, 0, 0, 1},
-				//{1, 0, 1, 0},
-				{0, 1, 3, 0},
-				{2, 1, 0, 0}};
-		IntMatrix request = new IntMatrix(requestArray);
+		IntMatrix request = ifr.getRequestMatrix();
 
 		boolean[] end = new boolean[processCount];
 		for(int i=0; i<processCount; i++) {

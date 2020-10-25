@@ -21,7 +21,7 @@ public class IntMatrix {
 		rows = content.length;
 		columns = content[0].length;
 		matrix = new int[rows][columns];
-		copyContent(matrix, content, rows, columns);
+		copyContent(matrix, content);
 	}
 
 	public IntMatrix(IntMatrix other) {
@@ -42,21 +42,31 @@ public class IntMatrix {
 		}
 	}
 
+	public int columnSum(int column)throws IllegalArgumentException {
+		if(column<0 || columns<column) {
+			throw new IllegalArgumentException();
+		}
+		int sum = 0;
+		for(int i=0; i<rows; i++) {
+			sum += matrix[i][column];
+		}
+		return sum;
+	}
+
 	private static void copyContent(int[] destination, int[] source) {
 		for(int i=0; i<source.length; i++) {
 			destination[i] = source[i];
 		}
 	}
 
-	private static void copyContent(int[][] destination, int[][] source,
-			int rows, int columns) {
-		for(int i=0; i<rows; i++) {
+	private static void copyContent(int[][] destination, int[][] source) {
+		for(int i=0; i<source.length; i++) {
 			copyContent(destination[i], source[i]);
 		}
 	}
 
 	private static void copyContent(IntMatrix destination, IntMatrix source) {
-		copyContent(destination.matrix, source.matrix, source.rows, source.columns);
+		copyContent(destination.matrix, source.matrix);
 	}
 
 	public boolean dimensionsAreEqual(IntMatrix other) {
@@ -66,6 +76,16 @@ public class IntMatrix {
 	public int get(int row, int column)
 			throws ArrayIndexOutOfBoundsException {
 		return matrix[row][column];
+	}
+
+	public IntMatrix getOpposite() {
+		IntMatrix opposite = new IntMatrix(this);
+		for(int i=0; i<rows; i++) {
+			for(int j=0; j<columns; j++) {
+				opposite.matrix[i][j] *= -1;
+			}
+		}
+		return opposite;
 	}
 
 	public static boolean rowLengthIsConstant(int[][] intArray2d) {
@@ -106,5 +126,9 @@ public class IntMatrix {
 	public void set(int row, int column, int value)
 			throws ArrayIndexOutOfBoundsException {
 		matrix[row][column] = value;
+	}
+
+	public void substraction(IntMatrix other) throws IllegalArgumentException {
+		addition(other.getOpposite());
 	}
 }
