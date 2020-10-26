@@ -1,13 +1,13 @@
 Processes: 3
 Resources: 4
 
+Resources
+4 2 3 1
+
 Allocation
 0 0 1 0
 2 0 0 1
 0 1 2 0
-
-Resources
-4 2 3 1
 
 Request
 2 0 0 1

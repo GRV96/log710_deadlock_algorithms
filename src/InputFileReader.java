@@ -98,7 +98,7 @@ public class InputFileReader {
 				int bound = start + processCount;
 				linesToIntArray2d(allocationArray, start, bound);
 				allocation = new IntMatrix(allocationArray);
-				lineIndex += resourceCount;
+				lineIndex += processCount;
 			}
 			else if(line.equals(RESOURCE_ARRAY)) {
 				lineToIntArray(inputFileLines.get(++lineIndex), resourceArray);
@@ -109,7 +109,7 @@ public class InputFileReader {
 				int bound = start + processCount;
 				linesToIntArray2d(requestArray, start, bound);
 				request = new IntMatrix(requestArray);
-				lineIndex += resourceCount;
+				lineIndex += processCount;
 			}
 		}
 	}
