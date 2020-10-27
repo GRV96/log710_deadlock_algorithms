@@ -5,7 +5,7 @@ import java.util.List;
 
 public class InputFileReader {
 
-	private static final String PROC_COUNT = "Processes: ";
+	private static final String PROCESS_COUNT = "Processes: ";
 	private static final String RESOURCE_COUNT = "Resources: ";
 	private static final String ALLOCATION_ARRAY = "Allocation";
 	private static final String RESOURCE_ARRAY = "Resources";
@@ -19,21 +19,38 @@ public class InputFileReader {
 	private int processCount = -1;
 	private int resourceCount = -1;
 
-	private IntMatrix allocation;
-	private IntMatrix resources;
-	private IntMatrix request;
+	private IntMatrix allocation = null;
+	private IntMatrix resources = null;
+	private IntMatrix request = null;
 
 	public InputFileReader(String filePath) throws IOException,
-			IllegalArgumentException, NumberFormatException {
+	IllegalArgumentException, NumberFormatException {
 		String extension = getFileExtension(filePath);
 		if(extension==null || !extension.equals(REQUIRED_EXTENSION)) {
-			throw new IOException("The input file must have the extension "
-					+ REQUIRED_EXTENSION + ".");
+			throw new IOException("The input file must have the extension \""
+					+ REQUIRED_EXTENSION + "\".");
 		}
 
 		inputFile = new File(filePath);
 		inputFileLines = Files.readAllLines(inputFile.toPath());
 		parseInputLines();
+	}
+
+	private IntMatrix extractIntMatrix(int startLine, int lines, int columns)
+			throws IllegalArgumentException, NumberFormatException {
+		IntMatrix matrix = null;
+		if(lines == 1) {
+			int[] intArray = new int[columns];
+			lineToIntArray(inputFileLines.get(startLine), intArray);
+			matrix = new IntMatrix(intArray);
+		}
+		else if(lines >= 2) {
+			int endLine = startLine + lines;
+			int[][] intArray2d = new int[lines][columns];
+			linesToIntArray2d(startLine, endLine, intArray2d);
+			matrix = new IntMatrix(intArray2d);
+		}
+		return matrix;
 	}
 
 	private static String getFileExtension(String filePath) {
@@ -55,7 +72,7 @@ public class InputFileReader {
 
 	public IntMatrix getRequestMatrix() {return new IntMatrix(request);}
 
-	private void linesToIntArray2d(int[][] intArray2d, int startLine, int endLine)
+	private void linesToIntArray2d(int startLine, int endLine, int[][] intArray2d)
 			throws IllegalArgumentException, NumberFormatException {
 		for(int i=0, lineIndex=startLine; lineIndex<endLine; i++, lineIndex++) {
 			String line = inputFileLines.get(lineIndex);
@@ -81,7 +98,7 @@ public class InputFileReader {
 	private void parseInputLines()
 			throws IllegalArgumentException, NumberFormatException {
 		String procCountStr =
-				inputFileLines.get(0).substring(PROC_COUNT.length());
+				inputFileLines.get(0).substring(PROCESS_COUNT.length());
 		// Can throw NumberFormatException.
 		processCount = Integer.parseUnsignedInt(procCountStr);
 
@@ -90,30 +107,21 @@ public class InputFileReader {
 		// Can throw NumberFormatException.
 		resourceCount = Integer.parseUnsignedInt(resourceCountStr);
 
-		int[][] allocationArray = new int[processCount][resourceCount];
-		int[] resourceArray = new int[resourceCount];
-		int[][] requestArray = new int [processCount][resourceCount];
-
 		int lineCount = inputFileLines.size();
 		for(int lineIndex=0; lineIndex<lineCount; lineIndex++) {
 			String line = inputFileLines.get(lineIndex);
 
 			if(line.equals(ALLOCATION_ARRAY)) {
-				int start = lineIndex + 1;
-				int bound = start + processCount;
-				linesToIntArray2d(allocationArray, start, bound);
-				allocation = new IntMatrix(allocationArray);
+				allocation = extractIntMatrix(lineIndex+1,
+						processCount, resourceCount);
 				lineIndex += processCount;
 			}
 			else if(line.equals(RESOURCE_ARRAY)) {
-				lineToIntArray(inputFileLines.get(++lineIndex), resourceArray);
-				resources = new IntMatrix(resourceArray);
+				resources = extractIntMatrix(++lineIndex, 1, resourceCount);
 			}
 			else if(line.equals(REQUEST_ARRAY)) {
-				int start = lineIndex + 1;
-				int bound = start + processCount;
-				linesToIntArray2d(requestArray, start, bound);
-				request = new IntMatrix(requestArray);
+				request = extractIntMatrix(lineIndex+1,
+						processCount, resourceCount);
 				lineIndex += processCount;
 			}
 		}
