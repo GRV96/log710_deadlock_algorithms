@@ -44,7 +44,8 @@ public class IntMatrix {
 
 	public int columnSum(int column)throws IllegalArgumentException {
 		if(column<0 || columns<column) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("This matrix does not have column "
+					+ column + ".");
 		}
 		int sum = 0;
 		for(int i=0; i<rows; i++) {
@@ -114,7 +115,8 @@ public class IntMatrix {
 
 	public int rowSum(int row) throws IllegalArgumentException {
 		if(row<0 || rows<row) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("This matrix does not have row "
+					+ row + ".");
 		}
 		int sum = 0;
 		for(int j=0; j<columns; j++) {

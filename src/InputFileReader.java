@@ -23,8 +23,8 @@ public class InputFileReader {
 	private IntMatrix resources;
 	private IntMatrix request;
 
-	public InputFileReader(String filePath)
-			throws IOException, NumberFormatException, RuntimeException {
+	public InputFileReader(String filePath) throws IOException,
+			IllegalArgumentException, NumberFormatException {
 		String extension = getFileExtension(filePath);
 		if(extension==null || !extension.equals(REQUIRED_EXTENSION)) {
 			throw new IOException("The input file must have the extension "
@@ -56,7 +56,7 @@ public class InputFileReader {
 	public IntMatrix getRequestMatrix() {return new IntMatrix(request);}
 
 	private void linesToIntArray2d(int[][] intArray2d, int startLine, int endLine)
-			throws NumberFormatException, RuntimeException {
+			throws IllegalArgumentException, NumberFormatException {
 		for(int i=0, lineIndex=startLine; lineIndex<endLine; i++, lineIndex++) {
 			String line = inputFileLines.get(lineIndex);
 			lineToIntArray(line, intArray2d[i]);
@@ -64,25 +64,30 @@ public class InputFileReader {
 	}
 
 	private static void lineToIntArray(String line, int[] intArray)
-			throws NumberFormatException, RuntimeException {
+			throws IllegalArgumentException, NumberFormatException {
 		String[] numbers = line.split(" ");
 
 		if(numbers.length < intArray.length) {
-			throw new RuntimeException("A line does not contain enough numbers.");
+			throw new IllegalArgumentException("Line " + line
+					+ " does not contain enough numbers.");
 		}
 
 		for(int j=0; j<intArray.length; j++) {
+			// Can throw NumberFormatException.
 			intArray[j] = Integer.parseUnsignedInt(numbers[j]);
 		}
 	}
 
-	private void parseInputLines() throws NumberFormatException, RuntimeException {
+	private void parseInputLines()
+			throws IllegalArgumentException, NumberFormatException {
 		String procCountStr =
 				inputFileLines.get(0).substring(PROC_COUNT.length());
+		// Can throw NumberFormatException.
 		processCount = Integer.parseUnsignedInt(procCountStr);
 
 		String resourceCountStr =
 				inputFileLines.get(1).substring(RESOURCE_COUNT.length());
+		// Can throw NumberFormatException.
 		resourceCount = Integer.parseUnsignedInt(resourceCountStr);
 
 		int[][] allocationArray = new int[processCount][resourceCount];
