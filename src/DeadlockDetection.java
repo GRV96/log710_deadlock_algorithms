@@ -1,10 +1,33 @@
+import java.io.File;
+import java.io.IOException;
+
 public class DeadlockDetection {
+
+	private static final String INPUT_FILE_EXTENSION = "txt";
+
+	private static String getFileExtension(String filePath) {
+		String extension = null;
+		int dotIndex = filePath.lastIndexOf('.');
+		if(dotIndex >= 0) {
+			extension = filePath.substring(dotIndex+1);
+		}
+		return extension;
+	}
 
 	public static void main(String[] args) throws Exception {
 		// Rows: processes
 		// Columns: resources allocated to processes
 
-		InputFileReader ifr = new InputFileReader(args[0]);
+		String extension = getFileExtension(args[0]);
+		if(extension==null || !extension.equals(INPUT_FILE_EXTENSION)) {
+			throw new IOException("The input file must have the extension \""
+					+ INPUT_FILE_EXTENSION + "\".");
+		}
+		File inputFile = new File(args[0]);
+		FileContent inputFileContent = new FileContent(inputFile);
+
+		InputFileReader ifr = new InputFileReader(inputFileContent);
+
 		int processCount = ifr.getProcessCount();
 
 		IntMatrix allocation = ifr.getAllocationMatrix();
