@@ -74,17 +74,24 @@ public class DeadlockDetection {
 				recordArray(fileContent, "End", end);
 			}
 			else {
-				String deadlockProcs = "These processes are deadlocked: ";
+				String procNumbers = "";
 				for(int i=0; i<processCount; i++) {
 					if(!end[i]) {
-						deadlockProcs += i + " ";
+						procNumbers += i + " ";
 					}
 				}
-				fileContent.addLine(deadlockProcs);
+				if(procNumbers.length() > 0) {
+					fileContent.addLine("These processes are deadlocked: "
+							+ procNumbers);
+				}
+				else {
+					fileContent.addLine("No deadlock occured.");
+				}
 				break;
 			}
 			iteration++;
 		}
+
 		OutputFileWriter ofw = new OutputFileWriter(args[0]);
 		ofw.writeToFile(fileContent);
 	}
