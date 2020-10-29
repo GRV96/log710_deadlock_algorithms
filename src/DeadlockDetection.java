@@ -46,7 +46,7 @@ public class DeadlockDetection {
 		}
 
 		fileContent.addLine(null);
-		recordIntMatrix(fileContent, "Avaiable", available);
+		recordIntMatrix(fileContent, "Available", available);
 		fileContent.addLine(null);
 		recordArray(fileContent, "End", end);
 
