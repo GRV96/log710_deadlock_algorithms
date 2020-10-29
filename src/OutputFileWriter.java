@@ -31,7 +31,7 @@ public class OutputFileWriter {
 		FileWriter fw = new FileWriter(outputFile);
 		Iterator<String> contentIterator = fileContent.iterator();
 		while(contentIterator.hasNext()) {
-			fw.write(contentIterator.next()+"\n");
+			fw.write(contentIterator.next() + "\n");
 		}
 		fw.flush();
 		fw.close();
