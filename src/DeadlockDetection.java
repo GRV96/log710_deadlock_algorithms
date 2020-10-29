@@ -67,6 +67,8 @@ public class DeadlockDetection {
 				work.addition(allocation.rowToIntMatrix(procIndex));
 				end[procIndex] = true;
 
+				fileContent.addLine("Process " + procIndex + " executed");
+				fileContent.addLine(null);
 				recordIntMatrix(fileContent, "Work", work);
 				fileContent.addLine(null);
 				recordArray(fileContent, "End", end);
