@@ -1,10 +1,33 @@
+import java.io.File;
+import java.io.IOException;
+
 public class DeadlockDetection {
+
+	private static final String INPUT_FILE_EXTENSION = "txt";
+
+	private static String getFileExtension(String filePath) {
+		String extension = null;
+		int dotIndex = filePath.lastIndexOf('.');
+		if(dotIndex >= 0) {
+			extension = filePath.substring(dotIndex+1);
+		}
+		return extension;
+	}
 
 	public static void main(String[] args) throws Exception {
 		// Rows: processes
 		// Columns: resources allocated to processes
 
-		InputFileReader ifr = new InputFileReader(args[0]);
+		String extension = getFileExtension(args[0]);
+		if(extension==null || !extension.equals(INPUT_FILE_EXTENSION)) {
+			throw new IOException("The input file must have the extension \""
+					+ INPUT_FILE_EXTENSION + "\".");
+		}
+		File inputFile = new File(args[0]);
+		FileContent fileContent = new FileContent(inputFile);
+
+		InputFileReader ifr = new InputFileReader(fileContent);
+
 		int processCount = ifr.getProcessCount();
 
 		IntMatrix allocation = ifr.getAllocationMatrix();
@@ -17,12 +40,20 @@ public class DeadlockDetection {
 
 		IntMatrix request = ifr.getRequestMatrix();
 
-		boolean[] end = new boolean[processCount];
+		Boolean[] end = new Boolean[processCount];
 		for(int i=0; i<processCount; i++) {
 			end[i] = allocation.rowSum(i) == 0;
 		}
 
+		fileContent.addLine(null);
+		recordIntMatrix(fileContent, "Available", available);
+		fileContent.addLine(null);
+		recordArray(fileContent, "End", end);
+
+		int iteration = 1;
 		while(true) {
+			fileContent.addLine(null, 2);
+
 			int procIndex = -1;
 			for(int i=0; i<processCount; i++) {
 				if(!end[i] && requestLeqWork(request.rowToIntMatrix(i), work)) {
@@ -34,18 +65,56 @@ public class DeadlockDetection {
 			if(procIndex > -1) {
 				work.addition(allocation.rowToIntMatrix(procIndex));
 				end[procIndex] = true;
+
+				fileContent.addLine("ITERATION " + iteration);
+				fileContent.addLine("Process " + procIndex + " executed");
+				fileContent.addLine(null);
+				recordIntMatrix(fileContent, "Work", work);
+				fileContent.addLine(null);
+				recordArray(fileContent, "End", end);
 			}
 			else {
-				System.out.print("These processes are deadlocked: ");
 				String procNumbers = "";
 				for(int i=0; i<processCount; i++) {
 					if(!end[i]) {
 						procNumbers += i + " ";
 					}
 				}
-				System.out.println(procNumbers);
+				if(procNumbers.length() > 0) {
+					fileContent.addLine("These processes are deadlocked: "
+							+ procNumbers);
+				}
+				else {
+					fileContent.addLine("No deadlock occured.");
+				}
 				break;
 			}
+			iteration++;
+		}
+
+		OutputFileWriter ofw = new OutputFileWriter(args[0]);
+		ofw.writeToFile(fileContent);
+	}
+
+	private static <T> void recordArray(FileContent fc,
+			String arrayTitle, T[] array) {
+		fc.addLine(arrayTitle);
+		String line = "";
+		for(int i=0; i<array.length; i++) {
+			line += array[i] + " ";
+		}
+		fc.addLine(line);
+	}
+
+	private static void recordIntMatrix(FileContent fc,
+			String matrixTitle, IntMatrix matrix) {
+		fc.addLine(matrixTitle);
+		for(int i=0; i<matrix.rows; i++) {
+			String line = "";
+			for(int j=0; j<matrix.columns; j++) {
+				line += matrix.get(i, j) + " ";
+			}
+			fc.addLine(line);
 		}
 	}
 
