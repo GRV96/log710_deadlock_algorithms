@@ -53,7 +53,6 @@ public class DeadlockDetection {
 		int iteration = 1;
 		while(true) {
 			fileContent.addLine(null, 2);
-			fileContent.addLine("ITERATION " + iteration);
 
 			int procIndex = -1;
 			for(int i=0; i<processCount; i++) {
@@ -67,6 +66,7 @@ public class DeadlockDetection {
 				work.addition(allocation.rowToIntMatrix(procIndex));
 				end[procIndex] = true;
 
+				fileContent.addLine("ITERATION " + iteration);
 				fileContent.addLine("Process " + procIndex + " executed");
 				fileContent.addLine(null);
 				recordIntMatrix(fileContent, "Work", work);

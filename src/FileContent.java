@@ -17,13 +17,24 @@ public class FileContent implements Iterable<String> {
 
 	public FileContent(File file) throws IOException {
 		lineList = Files.readAllLines(file.toPath());
+
+		int lineCount = getLineCount();
+		for(int i=0; i<lineCount; i++) {
+			String line = lineList.get(i);
+			String trimmedLine = line.trim();
+			if(!line.equals(trimmedLine)) {
+				lineList.set(i, trimmedLine);
+			}
+		}
 	}
 
 	public void addLine(String line) {
 		if(line == null) {
-			line = EMPTY_STRING;
+			lineList.add(EMPTY_STRING);
 		}
-		lineList.add(line);
+		else {
+			lineList.add(line.trim());
+		}
 	}
 
 	public void addLine(String line, int n) {
