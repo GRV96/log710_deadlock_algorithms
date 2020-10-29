@@ -8,8 +8,6 @@ public class InputFileReader {
 	private static final String RESOURCE_ARRAY = "Resources";
 	private static final String REQUEST_ARRAY = "Request";
 
-	private FileContent inputFileContent;
-
 	private int processCount = -1;
 	private int resourceCount = -1;
 
@@ -19,22 +17,22 @@ public class InputFileReader {
 
 	public InputFileReader(FileContent inputFileContent) throws IOException,
 	IllegalArgumentException, NumberFormatException {
-		this.inputFileContent = inputFileContent;
-		parseInputLines();
+		parseInputLines(inputFileContent);
 	}
 
-	private IntMatrix extractIntMatrix(int startLine, int lines, int columns)
-			throws IllegalArgumentException, NumberFormatException {
+	private static IntMatrix extractIntMatrix(FileContent fileContent,
+			int startLine, int lines, int columns)
+					throws IllegalArgumentException, NumberFormatException {
 		IntMatrix matrix = null;
 		if(lines == 1) {
 			int[] intArray = new int[columns];
-			lineToIntArray(inputFileContent.getLine(startLine), intArray);
+			lineToIntArray(fileContent.getLine(startLine), intArray);
 			matrix = new IntMatrix(intArray);
 		}
 		else if(lines >= 2) {
 			int endLine = startLine + lines;
 			int[][] intArray2d = new int[lines][columns];
-			linesToIntArray2d(startLine, endLine, intArray2d);
+			linesToIntArray2d(fileContent, startLine, endLine, intArray2d);
 			matrix = new IntMatrix(intArray2d);
 		}
 		return matrix;
@@ -50,10 +48,11 @@ public class InputFileReader {
 
 	public IntMatrix getRequestMatrix() {return new IntMatrix(request);}
 
-	private void linesToIntArray2d(int startLine, int endLine, int[][] intArray2d)
-			throws IllegalArgumentException, NumberFormatException {
+	private static void linesToIntArray2d(FileContent fileContent, int startLine,
+			int endLine, int[][] intArray2d)
+					throws IllegalArgumentException, NumberFormatException {
 		for(int i=0, lineIndex=startLine; lineIndex<endLine; i++, lineIndex++) {
-			String line = inputFileContent.getLine(lineIndex);
+			String line = fileContent.getLine(lineIndex);
 			lineToIntArray(line, intArray2d[i]);
 		}
 	}
@@ -73,33 +72,34 @@ public class InputFileReader {
 		}
 	}
 
-	private void parseInputLines()
+	private void parseInputLines(FileContent fileContent)
 			throws IllegalArgumentException, NumberFormatException {
 		String procCountStr =
-				inputFileContent.getLine(0).substring(PROCESS_COUNT.length());
+				fileContent.getLine(0).substring(PROCESS_COUNT.length());
 		// Can throw NumberFormatException.
 		processCount = Integer.parseUnsignedInt(procCountStr);
 
 		String resourceCountStr =
-				inputFileContent.getLine(1).substring(RESOURCE_COUNT.length());
+				fileContent.getLine(1).substring(RESOURCE_COUNT.length());
 		// Can throw NumberFormatException.
 		resourceCount = Integer.parseUnsignedInt(resourceCountStr);
 
-		int lineCount = inputFileContent.getLineCount();
+		int lineCount = fileContent.getLineCount();
 		for(int lineIndex=2; lineIndex<lineCount; lineIndex++) {
-			String line = inputFileContent.getLine(lineIndex);
+			String line = fileContent.getLine(lineIndex);
 
 			if(line.equals(ALLOCATION_ARRAY)) {
-				allocation = extractIntMatrix(lineIndex+1,
-						processCount, resourceCount);
+				allocation = extractIntMatrix(fileContent,
+						lineIndex+1, processCount, resourceCount);
 				lineIndex += processCount;
 			}
 			else if(line.equals(RESOURCE_ARRAY)) {
-				resources = extractIntMatrix(++lineIndex, 1, resourceCount);
+				resources = extractIntMatrix(fileContent,
+						++lineIndex, 1, resourceCount);
 			}
 			else if(line.equals(REQUEST_ARRAY)) {
-				request = extractIntMatrix(lineIndex+1,
-						processCount, resourceCount);
+				request = extractIntMatrix(fileContent,
+						lineIndex+1, processCount, resourceCount);
 				lineIndex += processCount;
 			}
 		}

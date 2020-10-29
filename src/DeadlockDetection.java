@@ -24,9 +24,9 @@ public class DeadlockDetection {
 					+ INPUT_FILE_EXTENSION + "\".");
 		}
 		File inputFile = new File(args[0]);
-		FileContent inputFileContent = new FileContent(inputFile);
+		FileContent fileContent = new FileContent(inputFile);
 
-		InputFileReader ifr = new InputFileReader(inputFileContent);
+		InputFileReader ifr = new InputFileReader(fileContent);
 
 		int processCount = ifr.getProcessCount();
 
@@ -40,12 +40,21 @@ public class DeadlockDetection {
 
 		IntMatrix request = ifr.getRequestMatrix();
 
-		boolean[] end = new boolean[processCount];
+		Boolean[] end = new Boolean[processCount];
 		for(int i=0; i<processCount; i++) {
 			end[i] = allocation.rowSum(i) == 0;
 		}
 
+		fileContent.addLine(null);
+		recordIntMatrix(fileContent, "Avaiable", available);
+		fileContent.addLine(null);
+		recordArray(fileContent, "End", end);
+
+		int iteration = 1;
 		while(true) {
+			fileContent.addLine(null, 2);
+			fileContent.addLine("ITERATION " + iteration);
+
 			int procIndex = -1;
 			for(int i=0; i<processCount; i++) {
 				if(!end[i] && requestLeqWork(request.rowToIntMatrix(i), work)) {
@@ -57,18 +66,46 @@ public class DeadlockDetection {
 			if(procIndex > -1) {
 				work.addition(allocation.rowToIntMatrix(procIndex));
 				end[procIndex] = true;
+
+				recordIntMatrix(fileContent, "Work", work);
+				fileContent.addLine(null);
+				recordArray(fileContent, "End", end);
 			}
 			else {
-				System.out.print("These processes are deadlocked: ");
-				String procNumbers = "";
+				String deadlockProcs = "These processes are deadlocked: ";
 				for(int i=0; i<processCount; i++) {
 					if(!end[i]) {
-						procNumbers += i + " ";
+						deadlockProcs += i + " ";
 					}
 				}
-				System.out.println(procNumbers);
+				fileContent.addLine(deadlockProcs);
 				break;
 			}
+			iteration++;
+		}
+		OutputFileWriter ofw = new OutputFileWriter(args[0]);
+		ofw.writeToFile(fileContent);
+	}
+
+	private static <T> void recordArray(FileContent fc,
+			String arrayTitle, T[] array) {
+		fc.addLine(arrayTitle);
+		String line = "";
+		for(int i=0; i<array.length; i++) {
+			line += array[i] + " ";
+		}
+		fc.addLine(line);
+	}
+
+	private static void recordIntMatrix(FileContent fc,
+			String matrixTitle, IntMatrix matrix) {
+		fc.addLine(matrixTitle);
+		for(int i=0; i<matrix.rows; i++) {
+			String line = "";
+			for(int j=0; j<matrix.columns; j++) {
+				line += matrix.get(i, j) + " ";
+			}
+			fc.addLine(line);
 		}
 	}
 
