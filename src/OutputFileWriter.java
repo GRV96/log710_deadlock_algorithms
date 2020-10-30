@@ -6,17 +6,16 @@ import java.util.Iterator;
 public class OutputFileWriter {
 
 	private File outputFile = null;
-	private String inputPath = null;
+	private String outputPath = null;
 
-	public OutputFileWriter(String inputPath) throws NullPointerException {
-		this.inputPath = inputPath;
+	public OutputFileWriter(String outputPath) throws NullPointerException {
+		this.outputPath = outputPath;
 	}
 
 	private void createFile() throws IOException {
-		int dotIndex = inputPath.lastIndexOf('.');
-		String pathAndName = inputPath.substring(0, dotIndex);
-		pathAndName += "_result";
-		String extension = inputPath.substring(dotIndex);
+		int dotIndex = outputPath.lastIndexOf('.');
+		String pathAndName = outputPath.substring(0, dotIndex);
+		String extension = outputPath.substring(dotIndex);
 		outputFile = new File(pathAndName + extension);
 
 		int fileNumber = 2;

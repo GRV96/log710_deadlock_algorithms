@@ -3,25 +3,14 @@ import java.io.IOException;
 
 public class DeadlockDetection {
 
-	private static final String INPUT_FILE_EXTENSION = "txt";
-
-	private static String getFileExtension(String filePath) {
-		String extension = null;
-		int dotIndex = filePath.lastIndexOf('.');
-		if(dotIndex >= 0) {
-			extension = filePath.substring(dotIndex+1);
-		}
-		return extension;
-	}
-
 	public static void main(String[] args) throws Exception {
 		// Rows: processes
 		// Columns: resources allocated to processes
 
-		String extension = getFileExtension(args[0]);
-		if(extension==null || !extension.equals(INPUT_FILE_EXTENSION)) {
+		String extension = FileUtil.getFileExtension(args[0]);
+		if(extension==null || !extension.equals(FileUtil.FILE_EXTENSION)) {
 			throw new IOException("The input file must have the extension \""
-					+ INPUT_FILE_EXTENSION + "\".");
+					+ FileUtil.FILE_EXTENSION + "\".");
 		}
 		File inputFile = new File(args[0]);
 		FileContent fileContent = new FileContent(inputFile);
@@ -92,7 +81,9 @@ public class DeadlockDetection {
 			iteration++;
 		}
 
-		OutputFileWriter ofw = new OutputFileWriter(args[0]);
+		String outputPath =
+				FileUtil.addSuffixToPath(args[0], "_deadlock_detection");
+		OutputFileWriter ofw = new OutputFileWriter(outputPath);
 		ofw.writeToFile(fileContent);
 	}
 
