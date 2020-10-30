@@ -15,6 +15,8 @@ public abstract class DeadlockAlgorithm {
 
 	protected Boolean[] end = null;
 
+	protected int iteration;
+
 	protected DeadlockAlgorithm(String inputPath) throws IOException {
 		String extension = FileUtil.getFileExtension(inputPath);
 		if(extension==null || !extension.equals(FileUtil.FILE_EXTENSION)) {
@@ -44,7 +46,22 @@ public abstract class DeadlockAlgorithm {
 		end = new Boolean[processCount];
 	}
 
-	public abstract void execute() throws Exception;
+	public final void execute() throws Exception {
+		fileContent.addLine(null);
+		recordIntMatrix("Available", available);
+		fileContent.addLine(null);
+		recordArray("End", end);
+
+		iteration = 1;
+		boolean keepLooping;
+		do {
+			keepLooping = loop();
+		} while(keepLooping);
+
+		outputWriter.writeToFile(fileContent);
+	}
+
+	protected abstract boolean loop() throws Exception;
 
 	protected <T> void recordArray(String arrayTitle, T[] array) {
 		fileContent.addLine(arrayTitle);
@@ -66,11 +83,11 @@ public abstract class DeadlockAlgorithm {
 		}
 	}
 
-	protected void writeProcessToExecute(int procIndex) {
-		fileContent.addLine("Process " + procIndex + " executed");
+	protected void recordIterationNumber(int iteration) {
+		fileContent.addLine("ITERATION " + iteration);
 	}
 
-	protected void writeIterationNumber(int iteration) {
-		fileContent.addLine("ITERATION " + iteration);
+	protected void recordProcessToExecute(int procIndex) {
+		fileContent.addLine("Process " + procIndex + " executed");
 	}
 }

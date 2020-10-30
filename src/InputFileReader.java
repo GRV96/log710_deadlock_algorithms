@@ -4,14 +4,16 @@ public class InputFileReader {
 
 	private static final String PROCESS_COUNT = "Processes: ";
 	private static final String RESOURCE_COUNT = "Resources: ";
-	private static final String ALLOCATION_ARRAY = "Allocation";
 	private static final String RESOURCE_ARRAY = "Resources";
-	private static final String REQUEST_ARRAY = "Request";
+	private static final String ALLOCATION_MATRIX = "Allocation";
+	private static final String MAXIMUM_MATRIX = "Maximum";
+	private static final String REQUEST_MATRIX = "Request";
 
 	private int processCount = -1;
 	private int resourceCount = -1;
 
 	private IntMatrix allocation = null;
+	private IntMatrix maximum = null;
 	private IntMatrix resources = null;
 	private IntMatrix request = null;
 
@@ -40,6 +42,8 @@ public class InputFileReader {
 
 	public IntMatrix getAllocationMatrix() {return new IntMatrix(allocation);}
 
+	public IntMatrix getMaximumMatrix() {return new IntMatrix(maximum);}
+
 	public int getProcessCount() {return processCount;}
 
 	public int getResourceCount() {return resourceCount;}
@@ -48,8 +52,8 @@ public class InputFileReader {
 
 	public IntMatrix getRequestMatrix() {return new IntMatrix(request);}
 
-	private static void linesToIntArray2d(FileContent fileContent, int startLine,
-			int endLine, int[][] intArray2d)
+	private static void linesToIntArray2d(FileContent fileContent,
+			int startLine, int endLine, int[][] intArray2d)
 					throws IllegalArgumentException, NumberFormatException {
 		for(int i=0, lineIndex=startLine; lineIndex<endLine; i++, lineIndex++) {
 			String line = fileContent.getLine(lineIndex);
@@ -88,16 +92,20 @@ public class InputFileReader {
 		for(int lineIndex=2; lineIndex<lineCount; lineIndex++) {
 			String line = fileContent.getLine(lineIndex);
 
-			if(line.equals(ALLOCATION_ARRAY)) {
+			if(line.equals(ALLOCATION_MATRIX)) {
 				allocation = extractIntMatrix(fileContent,
 						lineIndex+1, processCount, resourceCount);
 				lineIndex += processCount;
+			}
+			else if(line.equals(MAXIMUM_MATRIX)) {
+				maximum = extractIntMatrix(fileContent,
+						lineIndex+1, processCount, resourceCount);
 			}
 			else if(line.equals(RESOURCE_ARRAY)) {
 				resources = extractIntMatrix(fileContent,
 						++lineIndex, 1, resourceCount);
 			}
-			else if(line.equals(REQUEST_ARRAY)) {
+			else if(line.equals(REQUEST_MATRIX)) {
 				request = extractIntMatrix(fileContent,
 						lineIndex+1, processCount, resourceCount);
 				lineIndex += processCount;
