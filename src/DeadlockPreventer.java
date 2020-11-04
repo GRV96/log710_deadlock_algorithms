@@ -1,6 +1,9 @@
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class DeadlockPreventer extends DeadlockAlgorithm {
 
@@ -10,22 +13,22 @@ public class DeadlockPreventer extends DeadlockAlgorithm {
 	private IntMatrix need = null;
 
 	private List<Integer> processOrder = null;
+	private Map<Integer, Boolean> processesTried = null;
 	private String safeSeqLine = null;
 
 	public DeadlockPreventer(String inputPath) throws IOException {
 		super(inputPath, 0);
-		for(int i=0; i<processCount; i++) {
-			end[i] = false;
-		}
 		maximum = inputReader.getMaximumMatrix();
 		need = new IntMatrix(maximum);
 		need.substraction(allocation);
 		processOrder = inputReader.getProcressOrder();
 		safeSeqLine = "Safe sequence: ";
-	}
 
-	private void addProcToSafeSeq(int procIndex) {
-		safeSeqLine += procIndex + " ";
+		processesTried = new HashMap<Integer, Boolean>();
+		Iterator<Integer> procNumIter = processOrder.iterator();
+		while(procNumIter.hasNext()) {
+			processesTried.put(procNumIter.next(), false);
+		}
 	}
 
 	private boolean endArrayIsTrue() {
@@ -55,6 +58,7 @@ public class DeadlockPreventer extends DeadlockAlgorithm {
 		fileContent.addLine(null);
 
 		int procNumber = processOrder.remove(0);
+		processesTried.put(procNumber, true);
 		IntMatrix requestRow = request.rowToIntMatrix(procNumber);
 		IntMatrix needRow = need.rowToIntMatrix(procNumber);
 
@@ -73,37 +77,49 @@ public class DeadlockPreventer extends DeadlockAlgorithm {
 			allocation.additionOnRow(request, procNumber);
 			need.substractionOnRow(request, procNumber);
 
-			if(systemStateIsSafe()) {
-				recordProcessToExecute(procNumber);
+			boolean safeState = systemStateIsSafe();
+			recordArray(END_TITLE, end);
+
+			if(safeState) {
+				safeSeqLine += procNumber + " ";
 				fileContent.addLine(null);
-				addProcToSafeSeq(procNumber);
-				recordSafeSequence();
+				recordProcessToExecute(procNumber);
 				fileContent.addLine(null);
 				recordIntMatrix(ALLOCATION_TITLE, allocation);
 				fileContent.addLine(null);
 				recordIntMatrix(AVAILABLE_TITLE, available);
 				fileContent.addLine(null);
 				recordIntMatrix(NEED_TITLE, need);
+
+				processesTried.remove(procNumber);
+				makeProcessesUntried();
 			}
 			else {
 				// Cancel allocation
 				available = availableCopy;
 				allocation = allocationCopy;
 				need = needCopy;
+
+				fileContent.addLine(null);
 				fileContent.addLine("Executing process " + procNumber
 						+ " would put the system in an unsafe state.");
+
+				// The process is put on hold.
+				processOrder.add(procNumber);
 			}
 		}
 		else {
-			if(processOrder.size() > 0) {
-				processOrder.add(procNumber);
-			}
 			fileContent.addLine("Process " + procNumber
 					+ " requests more resources than available.");
+			// The process is put on hold.
+			processOrder.add(procNumber);
 		}
 
+		fileContent.addLine(null);
+		recordSafeSequence();
+
 		iteration++;
-		return processOrder.size() > 0;
+		return processesTried.containsValue(false);
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -111,11 +127,21 @@ public class DeadlockPreventer extends DeadlockAlgorithm {
 		dp.execute();
 	}
 
+	private void makeProcessesUntried() {
+		Set<Integer> procNumbers = processesTried.keySet();
+		for(int procNumber: procNumbers) {
+			processesTried.put(procNumber, false);
+		}
+	}
+
 	private void recordSafeSequence() {
 		fileContent.addLine(safeSeqLine);
 	}
 
 	private boolean systemStateIsSafe() throws IllegalArgumentException {
+		for(int i=0; i<processCount; i++) {
+			end[i] = false;
+		}
 		work = new IntMatrix(available);
 
 		while(true) {

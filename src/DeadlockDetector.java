@@ -11,6 +11,13 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 	}
 
 	@Override
+	protected void beforeLoop() {
+		super.beforeLoop();
+		fileContent.addLine(null);
+		recordArray(END_TITLE, end);
+	}
+
+	@Override
 	protected boolean loop() throws Exception {
 		boolean keepLooping = true;
 		fileContent.addLine(null, 2);
