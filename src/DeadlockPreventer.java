@@ -10,7 +10,6 @@ public class DeadlockPreventer extends DeadlockAlgorithm {
 	private IntMatrix need = null;
 
 	private List<Integer> processOrder = null;
-	private List<Integer> safeSequence = null;
 	private String safeSeqLine = null;
 
 	public DeadlockPreventer(String inputPath) throws IOException {
@@ -22,12 +21,10 @@ public class DeadlockPreventer extends DeadlockAlgorithm {
 		need = new IntMatrix(maximum);
 		need.substraction(allocation);
 		processOrder = inputReader.getProcressOrder();
-		safeSequence = new ArrayList<Integer>();
 		safeSeqLine = "Safe sequence: ";
 	}
 
 	private void addProcToSafeSeq(int procIndex) {
-		safeSequence.add(procIndex);
 		safeSeqLine += procIndex + " ";
 	}
 
