@@ -2,11 +2,9 @@ import java.io.IOException;
 
 public class DeadlockDetector extends DeadlockAlgorithm {
 
-	private IntMatrix request = null;
-
-	protected DeadlockDetector(String inputPath) throws IOException {
-		super(inputPath);
-		request = inputReader.getRequestMatrix();
+	public DeadlockDetector(String inputPath) throws IOException {
+		super(inputPath, 1);
+		work = new IntMatrix(available);
 		for(int i=0; i<processCount; i++) {
 			end[i] = allocation.rowSum(i) == 0;
 		}
@@ -19,7 +17,7 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 
 		int procIndex = -1;
 		for(int i=0; i<processCount; i++) {
-			if(!end[i] && requestIsLeqThanWork(i)) {
+			if(!end[i] && request.rowToIntMatrix(i).isLeqThanMat(work)) {
 				procIndex = i;
 				break;
 			}
@@ -32,9 +30,9 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 			recordIterationNumber(iteration);
 			recordProcessToExecute(procIndex);
 			fileContent.addLine(null);
-			recordIntMatrix("Work", work);
+			recordIntMatrix(WORK_TITLE, work);
 			fileContent.addLine(null);
-			recordArray("End", end);
+			recordArray(END_TITLE, end);
 		}
 		else {
 			String procNumbers = "";
@@ -59,14 +57,5 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 	public static void main(String[] args) throws Exception {
 		DeadlockDetector dd = new DeadlockDetector(args[0]);
 		dd.execute();
-	}
-
-	private boolean requestIsLeqThanWork(int requestRow) {
-		for(int j=0; j<work.columns; j++) {
-			if(request.get(requestRow, j) > work.get(0, j)) {
-				return false;
-			}
-		}
-		return true;
 	}
 }

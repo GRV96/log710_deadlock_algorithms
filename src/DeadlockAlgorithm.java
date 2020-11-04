@@ -3,6 +3,11 @@ import java.io.IOException;
 
 public abstract class DeadlockAlgorithm {
 
+	protected static final String ALLOCATION_TITLE = "Allocation";
+	protected static final String AVAILABLE_TITLE = "Available";
+	protected static final String END_TITLE = "End";
+	protected static final String WORK_TITLE = "Work";
+
 	protected FileContent fileContent = null;
 	protected InputFileReader inputReader = null;
 	protected OutputFileWriter outputWriter = null;
@@ -11,13 +16,16 @@ public abstract class DeadlockAlgorithm {
 
 	protected IntMatrix allocation = null;
 	protected IntMatrix available = null;
+	protected IntMatrix request = null;
 	protected IntMatrix work = null;
 
 	protected Boolean[] end = null;
 
 	protected int iteration;
+	private int firstIterNum;
 
-	protected DeadlockAlgorithm(String inputPath) throws IOException {
+	protected DeadlockAlgorithm(String inputPath, int firstIterNum)
+			throws IOException {
 		String extension = FileUtil.getFileExtension(inputPath);
 		if(extension==null || !extension.equals(FileUtil.FILE_EXTENSION)) {
 			throw new IOException("The input file must have the extension \""
@@ -38,12 +46,14 @@ public abstract class DeadlockAlgorithm {
 		allocation = inputReader.getAllocationMatrix();
 
 		available = inputReader.getResourceMatrix();
-		for(int j=0; j<available.columns; j++) {
-			available.set(0, j, available.get(0, j)-allocation.columnSum(j));
-		}
-		work = new IntMatrix(available);
+		IntMatrix allocColumnSum = allocation.columnSumMatrix();
+		available.substraction(allocColumnSum);
+
+		request = inputReader.getRequestMatrix();
 
 		end = new Boolean[processCount];
+
+		this.firstIterNum = firstIterNum;
 	}
 
 	public final void execute() throws Exception {
@@ -52,7 +62,7 @@ public abstract class DeadlockAlgorithm {
 		fileContent.addLine(null);
 		recordArray("End", end);
 
-		iteration = 1;
+		iteration = firstIterNum;
 		boolean keepLooping;
 		do {
 			keepLooping = loop();
