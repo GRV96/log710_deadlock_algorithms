@@ -31,6 +31,12 @@ public class DeadlockPreventer extends DeadlockAlgorithm {
 		}
 	}
 
+	@Override
+	protected void beforeLoop() {
+		fileContent.addLine(null);
+		recordIntMatrix(NEED_TITLE, need);
+	}
+
 	private boolean endArrayIsTrue() {
 		for(int i=0; i<end.length; i++) {
 			if(!end[i]) {

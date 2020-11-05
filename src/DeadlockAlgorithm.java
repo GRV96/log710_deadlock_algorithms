@@ -56,12 +56,12 @@ public abstract class DeadlockAlgorithm {
 		this.firstIterNum = firstIterNum;
 	}
 
-	protected void beforeLoop() {
-		fileContent.addLine(null);
-		recordIntMatrix(AVAILABLE_TITLE, available);
-	}
+	protected abstract void beforeLoop();
 
 	public final void execute() throws Exception {
+		fileContent.addLine(null);
+		recordIntMatrix(AVAILABLE_TITLE, available);
+
 		beforeLoop();
 
 		iteration = firstIterNum;
