@@ -140,6 +140,11 @@ public class DeadlockPreventer extends DeadlockAlgorithm {
 		}
 	}
 
+	private boolean procExecIsSafe(int procNumber) {
+		IntMatrix needRow = need.rowToIntMatrix(procNumber);
+		return !end[procNumber] && needRow.isLeqThanMat(work);
+	}
+
 	private void recordSafeSequence() {
 		fileContent.addLine(safeSeqLine);
 	}
@@ -153,8 +158,7 @@ public class DeadlockPreventer extends DeadlockAlgorithm {
 		while(true) {
 			int procIndex = -1;
 			for(int i=0; i<processCount; i++) {
-				IntMatrix needRow = need.rowToIntMatrix(i);
-				if(!end[i] && needRow.isLeqThanMat(work)) {
+				if(procExecIsSafe(i)) {
 					procIndex = i;
 					break;
 				}
