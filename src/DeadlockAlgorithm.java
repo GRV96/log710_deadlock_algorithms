@@ -22,9 +22,8 @@ public abstract class DeadlockAlgorithm {
 	protected Boolean[] end = null;
 
 	protected int iteration;
-	private int firstIterNum;
 
-	protected DeadlockAlgorithm(String inputPath, int firstIterNum)
+	protected DeadlockAlgorithm(String inputPath)
 			throws IOException {
 		String extension = FileUtil.getFileExtension(inputPath);
 		if(extension==null || !extension.equals(FileUtil.FILE_EXTENSION)) {
@@ -45,32 +44,32 @@ public abstract class DeadlockAlgorithm {
 
 		allocation = inputReader.getAllocationMatrix();
 
-		available = inputReader.getResourceMatrix();
-		IntMatrix allocColumnSum = allocation.columnSumMatrix();
-		available.substraction(allocColumnSum);
+		initAvailableMatrix();
 
 		request = inputReader.getRequestMatrix();
 
 		end = new Boolean[processCount];
-
-		this.firstIterNum = firstIterNum;
 	}
 
-	protected abstract void beforeLoop();
+	protected boolean beforeLoop() {return true;}
 
 	public final void execute() throws Exception {
 		fileContent.addLine(null);
 		recordIntMatrix(AVAILABLE_TITLE, available);
 
-		beforeLoop();
-
-		iteration = firstIterNum;
-		boolean keepLooping;
-		do {
+		iteration = 1;
+		boolean keepLooping = beforeLoop();
+		while(keepLooping) {
 			keepLooping = loop();
-		} while(keepLooping);
+		}
 
 		outputWriter.writeToFile(fileContent);
+	}
+
+	protected void initAvailableMatrix() {
+		available = inputReader.getResourceMatrix();
+		IntMatrix allocColumnSum = allocation.columnSumMatrix();
+		available.substraction(allocColumnSum);
 	}
 
 	protected abstract boolean loop() throws Exception;

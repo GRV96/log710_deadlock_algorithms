@@ -3,7 +3,7 @@ import java.io.IOException;
 public class DeadlockDetector extends DeadlockAlgorithm {
 
 	public DeadlockDetector(String inputPath) throws IOException {
-		super(inputPath, 1);
+		super(inputPath);
 		work = new IntMatrix(available);
 		for(int i=0; i<processCount; i++) {
 			end[i] = allocation.rowSum(i) == 0;
@@ -11,9 +11,10 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 	}
 
 	@Override
-	protected void beforeLoop() {
+	protected boolean beforeLoop() {
 		fileContent.addLine(null);
 		recordArray(END_TITLE, end);
+		return true;
 	}
 
 	@Override
@@ -23,7 +24,7 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 
 		int procIndex = -1;
 		for(int i=0; i<processCount; i++) {
-			if(!end[i] && request.rowToIntMatrix(i).isLeqThanMat(work)) {
+			if(!end[i] && request.rowToIntMatrix(i).isLeqToMat(work)) {
 				procIndex = i;
 				break;
 			}

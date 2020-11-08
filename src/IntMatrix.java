@@ -108,11 +108,11 @@ public class IntMatrix {
 		return opposite;
 	}
 
-	public boolean isLeqThanMat(IntMatrix other)
+	public boolean isLeqToMat(IntMatrix other)
 			throws IllegalArgumentException {
 		if(!dimensionsAreEqual(other)) {
 			throw new IllegalArgumentException(
-					"The matrices have different column numbers.");
+					"The matrices have different dimensions.");
 		}
 		for(int i=0; i<rows; i++) {
 			for(int j=0; j<columns; j++) {
@@ -146,6 +146,19 @@ public class IntMatrix {
 			return null;
 		}
 		return new IntMatrix(matrix[row]);
+	}
+
+	public String rowToString(int row, String separator) {
+		if(row<0 || rows<=row) {
+			return null;
+		}
+
+		String rowStr = "";
+		for(int j=0; j<columns; j++) {
+			rowStr += matrix[row][j] + separator;
+		}
+
+		return rowStr;
 	}
 
 	public int rowSum(int row) throws IllegalArgumentException {

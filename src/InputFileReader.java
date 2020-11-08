@@ -20,7 +20,7 @@ public class InputFileReader {
 	private IntMatrix resources = null;
 	private IntMatrix request = null;
 
-	private List<Integer> processOrder = null;
+	//private List<Integer> processOrder = null;
 
 	public InputFileReader(FileContent inputFileContent)
 			throws IOException, NumberFormatException {
@@ -57,21 +57,28 @@ public class InputFileReader {
 		}
 	}
 
-	public IntMatrix getAllocationMatrix() {return new IntMatrix(allocation);}
+	public IntMatrix getAllocationMatrix() {
+		return allocation==null? null: new IntMatrix(allocation);
+	}
 
 	public IntMatrix getMaximumMatrix() {return new IntMatrix(maximum);}
 
 	public int getProcessCount() {return processCount;}
 
+	/*
 	public List<Integer> getProcressOrder() {
-		return new ArrayList<Integer>(processOrder);
-	}
+		return processOrder==null? null: new ArrayList<Integer>(processOrder);
+	}//*/
 
 	public int getResourceCount() {return resourceCount;}
 
-	public IntMatrix getResourceMatrix() {return new IntMatrix(resources);}
+	public IntMatrix getResourceMatrix() {
+		return resources==null? null: new IntMatrix(resources);
+	}
 
-	public IntMatrix getRequestMatrix() {return new IntMatrix(request);}
+	public IntMatrix getRequestMatrix() {
+		return request==null? null: new IntMatrix(request);
+	}
 
 	private static void linesToIntArray2d(FileContent fileContent,
 			int startLine, int endLine, int[][] intArray2d)
@@ -129,6 +136,7 @@ public class InputFileReader {
 						lineIndex+1, processCount, resourceCount);
 				lineIndex += processCount;
 			}
+			/*
 			else if(line.equals(PROCESS_ORDER)) {
 				int[] procOrderArray = new int[processCount];
 				initIntArray(procOrderArray, -1);
@@ -144,7 +152,7 @@ public class InputFileReader {
 						processOrder.add(procNumber);
 					}
 				}
-			}
+			}//*/
 		}
 	}
 }
