@@ -8,6 +8,8 @@ public abstract class DeadlockAlgorithm {
 	protected static final String END_TITLE = "End";
 	protected static final String WORK_TITLE = "Work";
 
+	protected static final String RESULT_SUFFIX = "_result";
+
 	protected FileContent fileContent = null;
 	protected InputFileReader inputReader = null;
 	protected OutputFileWriter outputWriter = null;
@@ -23,7 +25,7 @@ public abstract class DeadlockAlgorithm {
 
 	protected int iteration;
 
-	protected DeadlockAlgorithm(String inputPath)
+	protected DeadlockAlgorithm(String inputPath, String outputPathSuffix)
 			throws IOException {
 		String extension = FileUtil.getFileExtension(inputPath);
 		if(extension==null || !extension.equals(FileUtil.FILE_EXTENSION)) {
@@ -37,7 +39,7 @@ public abstract class DeadlockAlgorithm {
 		fileContent = new FileContent(inputFile);
 		inputReader = new InputFileReader(fileContent);
 		String outputPath =
-				FileUtil.addSuffixToPath(inputPath, FileUtil.RESULT_SUFFIX);
+				FileUtil.addSuffixToPath(inputPath, outputPathSuffix);
 		outputWriter = new OutputFileWriter(outputPath);
 
 		processCount = inputReader.getProcessCount();

@@ -3,12 +3,14 @@ import java.util.Scanner;
 
 public class RequestEvaluator extends DeadlockPreventer {
 
+	private static final String REQ_EVAL_SUFFIX = "_req_eval";
+
 	private int resourceCount = -1;
 
 	private Scanner keyboardScanner;
 
 	public RequestEvaluator(String inputPath) throws IOException {
-		super(inputPath);
+		super(inputPath, REQ_EVAL_SUFFIX);
 		resourceCount = inputReader.getResourceCount();
 		maximum = inputReader.getMaximumMatrix();
 		need = new IntMatrix(maximum);

@@ -3,7 +3,7 @@ import java.io.IOException;
 public class DeadlockDetector extends DeadlockAlgorithm {
 
 	public DeadlockDetector(String inputPath) throws IOException {
-		super(inputPath);
+		super(inputPath, RESULT_SUFFIX);
 		work = new IntMatrix(available);
 		for(int i=0; i<processCount; i++) {
 			end[i] = allocation.rowSum(i) == 0;

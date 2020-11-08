@@ -7,8 +7,9 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 	protected IntMatrix maximum = null;
 	protected IntMatrix need = null;
 
-	public DeadlockPreventer(String inputPath) throws IOException {
-		super(inputPath);
+	public DeadlockPreventer(String inputPath, String outputPathSuffix)
+			throws IOException {
+		super(inputPath, outputPathSuffix);
 		maximum = inputReader.getMaximumMatrix();
 		need = new IntMatrix(maximum);
 		need.substraction(allocation);

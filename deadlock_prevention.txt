@@ -17,13 +17,3 @@ Maximum
 9 0 2
 2 2 2
 4 3 3
-
-Request
-0 2 0
-1 0 2
--1 -1 -1
--1 -1 -1
-0 2 0
-
-Process order
-1 4 0

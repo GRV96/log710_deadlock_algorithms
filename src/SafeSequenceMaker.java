@@ -2,11 +2,13 @@ import java.io.IOException;
 
 public class SafeSequenceMaker extends DeadlockPreventer {
 
+	private static final String SAFE_SEQ_SUFFIX = "_safe_seq";
+
 	private int safeSeqLength;
 	private String safeSeqLine = null;
 
 	public SafeSequenceMaker(String inputPath) throws IOException {
-		super(inputPath);
+		super(inputPath, SAFE_SEQ_SUFFIX);
 		safeSeqLine = "Safe sequence: ";
 	}
 
