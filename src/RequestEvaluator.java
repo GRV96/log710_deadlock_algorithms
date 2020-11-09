@@ -132,7 +132,7 @@ public class RequestEvaluator extends DeadlockPreventer {
 		initEndArray();
 		work = new IntMatrix(available);
 		while(true) {
-			int procNumber = safeSequenceIteration();
+			int procNumber = bankersAlgorithmIter();
 			if(procNumber < 0) {
 				return endArrayIsTrue();
 			}

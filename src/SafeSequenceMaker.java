@@ -31,10 +31,10 @@ public class SafeSequenceMaker extends DeadlockPreventer {
 		fileContent.addLine(null, 2);
 		recordIterationNumber(iteration);
 		fileContent.addLine(null);
-		recordIntMatrix(WORK_TITLE, work);
-		fileContent.addLine(null);
 
-		int procNumber = safeSequenceIteration();
+		announceBankersAlgorithm();
+		int procNumber = bankersAlgorithmIter();
+		fileContent.addLine(null);
 		if(procNumber >= 0) {
 			safeSeqLength++;
 			addProcToSafeSeq(procNumber);

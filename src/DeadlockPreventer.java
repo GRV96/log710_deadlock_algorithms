@@ -2,6 +2,7 @@ import java.io.IOException;
 
 public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 
+	private static final String BANKERS_ALGO_LINE = "Banker's algorithm";
 	protected static final String NEED_TITLE = "Need";
 
 	protected IntMatrix maximum = null;
@@ -13,6 +14,10 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 		maximum = inputReader.getMaximumMatrix();
 		need = new IntMatrix(maximum);
 		need.substraction(allocation);
+	}
+
+	protected void announceBankersAlgorithm() {
+		fileContent.addLine(BANKERS_ALGO_LINE);
 	}
 
 	protected boolean endArrayIsTrue() {
@@ -33,12 +38,13 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 	protected boolean procExecIsSafe(int procNumber) {
 		IntMatrix needRow = need.rowToIntMatrix(procNumber);
 		fileContent.addLine("Process " + procNumber);
+		fileContent.addLine("end[" + procNumber + "]: " + end[procNumber]);
 		fileContent.addLine("Need: " + needRow.rowToString(0, " "));
 		fileContent.addLine("Work: " + work.rowToString(0, " "));
 		return !end[procNumber] && needRow.isLeqToMat(work);
 	}
 
-	protected int safeSequenceIteration() throws IllegalArgumentException {
+	protected int bankersAlgorithmIter() throws IllegalArgumentException {
 		int procNumber = -1;
 		for(int i=0; i<processCount; i++) {
 			if(procExecIsSafe(i)) {
