@@ -6,6 +6,7 @@ public abstract class DeadlockAlgorithm {
 	protected static final String ALLOCATION_TITLE = "Allocation";
 	protected static final String AVAILABLE_TITLE = "Available";
 	protected static final String END_TITLE = "End";
+	protected static final String REQUEST_TITLE = "Request";
 	protected static final String WORK_TITLE = "Work";
 
 	protected static final String RESULT_SUFFIX = "_result";
@@ -94,6 +95,17 @@ public abstract class DeadlockAlgorithm {
 			}
 			fileContent.addLine(line);
 		}
+	}
+
+	protected String recordIntMatrixRow(String matrixTitle,
+			IntMatrix matrix, int row) {
+		String line = matrixTitle;
+		if(matrix.rows > 1) {
+			line += "[" + row + "]";
+		}
+		line += ": " + matrix.rowToString(row, " ");
+		fileContent.addLine(line);
+		return line;
 	}
 
 	protected void recordIterationNumber(int iteration) {

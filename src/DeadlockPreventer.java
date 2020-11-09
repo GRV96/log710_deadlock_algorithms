@@ -35,19 +35,22 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 		}
 	}
 
-	protected boolean procExecIsSafe(int procNumber) {
+	protected boolean procExecIsSafe(int procNumber, boolean recordData) {
 		IntMatrix needRow = need.rowToIntMatrix(procNumber);
-		fileContent.addLine("Process " + procNumber);
-		fileContent.addLine("end[" + procNumber + "]: " + end[procNumber]);
-		fileContent.addLine("Need: " + needRow.rowToString(0, " "));
-		fileContent.addLine("Work: " + work.rowToString(0, " "));
+		if(recordData) {
+			fileContent.addLine("Process " + procNumber);
+			fileContent.addLine("end[" + procNumber + "]: " + end[procNumber]);
+			fileContent.addLine("Need: " + needRow.rowToString(0, " "));
+			fileContent.addLine("Work: " + work.rowToString(0, " "));
+		}
 		return !end[procNumber] && needRow.isLeqToMat(work);
 	}
 
-	protected int bankersAlgorithmIter() throws IllegalArgumentException {
+	protected int bankersAlgorithmIter(boolean recordData)
+			throws IllegalArgumentException {
 		int procNumber = -1;
 		for(int i=0; i<processCount; i++) {
-			if(procExecIsSafe(i)) {
+			if(procExecIsSafe(i, recordData)) {
 				procNumber = i;
 				break;
 			}

@@ -33,7 +33,7 @@ public class SafeSequenceMaker extends DeadlockPreventer {
 		fileContent.addLine(null);
 
 		announceBankersAlgorithm();
-		int procNumber = bankersAlgorithmIter();
+		int procNumber = bankersAlgorithmIter(true);
 		fileContent.addLine(null);
 		if(procNumber >= 0) {
 			safeSeqLength++;
