@@ -42,7 +42,17 @@ public class IntMatrix {
 		}
 	}
 
-	public int columnSum(int column)throws IllegalArgumentException {
+	public void additionOnRow(IntMatrix other, int row)
+			throws IllegalArgumentException {
+		if(!dimensionsAreEqual(other)) {
+			throw new IllegalArgumentException();
+		}
+		for(int j=0; j<columns; j++) {
+			matrix[row][j] += other.matrix[row][j];
+		}
+	}
+
+	public int columnSum(int column) throws IllegalArgumentException {
 		if(column<0 || columns<column) {
 			throw new IllegalArgumentException("This matrix does not have column "
 					+ column + ".");
@@ -52,6 +62,15 @@ public class IntMatrix {
 			sum += matrix[i][column];
 		}
 		return sum;
+	}
+
+	public IntMatrix columnSumMatrix()
+			throws IllegalArgumentException {
+		int[] sumArray = new int[columns];
+		for(int j=0; j<columns; j++) {
+			sumArray[j] = columnSum(j);
+		}
+		return new IntMatrix(sumArray);
 	}
 
 	private static void copyContent(int[] destination, int[] source) {
@@ -89,6 +108,22 @@ public class IntMatrix {
 		return opposite;
 	}
 
+	public boolean isLeqToMat(IntMatrix other)
+			throws IllegalArgumentException {
+		if(!dimensionsAreEqual(other)) {
+			throw new IllegalArgumentException(
+					"The matrices have different dimensions.");
+		}
+		for(int i=0; i<rows; i++) {
+			for(int j=0; j<columns; j++) {
+				if(get(i, j) > other.get(i, j)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	public static boolean rowLengthIsConstant(int[][] intArray2d) {
 		final int rowCount = intArray2d.length;
 		if(rowCount == 0) {
@@ -113,6 +148,19 @@ public class IntMatrix {
 		return new IntMatrix(matrix[row]);
 	}
 
+	public String rowToString(int row, String separator) {
+		if(row<0 || rows<=row) {
+			return null;
+		}
+
+		String rowStr = "";
+		for(int j=0; j<columns; j++) {
+			rowStr += matrix[row][j] + separator;
+		}
+
+		return rowStr;
+	}
+
 	public int rowSum(int row) throws IllegalArgumentException {
 		if(row<0 || rows<row) {
 			throw new IllegalArgumentException("This matrix does not have row "
@@ -132,5 +180,10 @@ public class IntMatrix {
 
 	public void substraction(IntMatrix other) throws IllegalArgumentException {
 		addition(other.getOpposite());
+	}
+
+	public void substractionOnRow(IntMatrix other, int row)
+			throws IllegalArgumentException {
+		additionOnRow(other.getOpposite(), row);
 	}
 }

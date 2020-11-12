@@ -1,22 +1,29 @@
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class InputFileReader {
 
 	private static final String PROCESS_COUNT = "Processes: ";
 	private static final String RESOURCE_COUNT = "Resources: ";
-	private static final String ALLOCATION_ARRAY = "Allocation";
 	private static final String RESOURCE_ARRAY = "Resources";
-	private static final String REQUEST_ARRAY = "Request";
+	private static final String ALLOCATION_MATRIX = "Allocation";
+	private static final String MAXIMUM_MATRIX = "Maximum";
+	private static final String REQUEST_MATRIX = "Request";
+	private static final String PROCESS_ORDER = "Process order";
 
 	private int processCount = -1;
 	private int resourceCount = -1;
 
 	private IntMatrix allocation = null;
+	private IntMatrix maximum = null;
 	private IntMatrix resources = null;
 	private IntMatrix request = null;
 
-	public InputFileReader(FileContent inputFileContent) throws IOException,
-	IllegalArgumentException, NumberFormatException {
+	//private List<Integer> processOrder = null;
+
+	public InputFileReader(FileContent inputFileContent)
+			throws IOException, NumberFormatException {
 		parseInputLines(inputFileContent);
 	}
 
@@ -38,19 +45,44 @@ public class InputFileReader {
 		return matrix;
 	}
 
-	public IntMatrix getAllocationMatrix() {return new IntMatrix(allocation);}
+	private static void initIntArray(int[] intArray, int value) {
+		for(int i=0; i<intArray.length; i++) {
+			intArray[i] = value;
+		}
+	}
+
+	private static void initIntArray(int[][] intArray, int value) {
+		for(int i=0; i<intArray.length; i++) {
+			initIntArray(intArray[i], value);
+		}
+	}
+
+	public IntMatrix getAllocationMatrix() {
+		return allocation==null? null: new IntMatrix(allocation);
+	}
+
+	public IntMatrix getMaximumMatrix() {return new IntMatrix(maximum);}
 
 	public int getProcessCount() {return processCount;}
 
+	/*
+	public List<Integer> getProcressOrder() {
+		return processOrder==null? null: new ArrayList<Integer>(processOrder);
+	}//*/
+
 	public int getResourceCount() {return resourceCount;}
 
-	public IntMatrix getResourceMatrix() {return new IntMatrix(resources);}
+	public IntMatrix getResourceMatrix() {
+		return resources==null? null: new IntMatrix(resources);
+	}
 
-	public IntMatrix getRequestMatrix() {return new IntMatrix(request);}
+	public IntMatrix getRequestMatrix() {
+		return request==null? null: new IntMatrix(request);
+	}
 
-	private static void linesToIntArray2d(FileContent fileContent, int startLine,
-			int endLine, int[][] intArray2d)
-					throws IllegalArgumentException, NumberFormatException {
+	private static void linesToIntArray2d(FileContent fileContent,
+			int startLine, int endLine, int[][] intArray2d)
+					throws NumberFormatException {
 		for(int i=0, lineIndex=startLine; lineIndex<endLine; i++, lineIndex++) {
 			String line = fileContent.getLine(lineIndex);
 			lineToIntArray(line, intArray2d[i]);
@@ -58,22 +90,20 @@ public class InputFileReader {
 	}
 
 	private static void lineToIntArray(String line, int[] intArray)
-			throws IllegalArgumentException, NumberFormatException {
+			throws NumberFormatException {
 		String[] numbers = line.split(" ");
 
-		if(numbers.length < intArray.length) {
-			throw new IllegalArgumentException("Line " + line
-					+ " does not contain enough numbers.");
-		}
+		int length = numbers.length>=intArray.length?
+				intArray.length: numbers.length;
 
-		for(int j=0; j<intArray.length; j++) {
+		for(int j=0; j<length; j++) {
 			// Can throw NumberFormatException.
-			intArray[j] = Integer.parseUnsignedInt(numbers[j]);
+			intArray[j] = Integer.parseInt(numbers[j]);
 		}
 	}
 
 	private void parseInputLines(FileContent fileContent)
-			throws IllegalArgumentException, NumberFormatException {
+			throws NumberFormatException {
 		String procCountStr =
 				fileContent.getLine(0).substring(PROCESS_COUNT.length());
 		// Can throw NumberFormatException.
@@ -88,20 +118,41 @@ public class InputFileReader {
 		for(int lineIndex=2; lineIndex<lineCount; lineIndex++) {
 			String line = fileContent.getLine(lineIndex);
 
-			if(line.equals(ALLOCATION_ARRAY)) {
+			if(line.equals(ALLOCATION_MATRIX)) {
 				allocation = extractIntMatrix(fileContent,
 						lineIndex+1, processCount, resourceCount);
 				lineIndex += processCount;
+			}
+			else if(line.equals(MAXIMUM_MATRIX)) {
+				maximum = extractIntMatrix(fileContent,
+						lineIndex+1, processCount, resourceCount);
 			}
 			else if(line.equals(RESOURCE_ARRAY)) {
 				resources = extractIntMatrix(fileContent,
 						++lineIndex, 1, resourceCount);
 			}
-			else if(line.equals(REQUEST_ARRAY)) {
+			else if(line.equals(REQUEST_MATRIX)) {
 				request = extractIntMatrix(fileContent,
 						lineIndex+1, processCount, resourceCount);
 				lineIndex += processCount;
 			}
+			/*
+			else if(line.equals(PROCESS_ORDER)) {
+				int[] procOrderArray = new int[processCount];
+				initIntArray(procOrderArray, -1);
+
+				String procLine = fileContent.getLine(++lineIndex);
+				lineToIntArray(procLine, procOrderArray);
+				processOrder = new ArrayList<Integer>();
+
+				int procIndex = 0;
+				while(procIndex<processCount) {
+					int procNumber = procOrderArray[procIndex++];
+					if(procNumber >= 0) {
+						processOrder.add(procNumber);
+					}
+				}
+			}//*/
 		}
 	}
 }

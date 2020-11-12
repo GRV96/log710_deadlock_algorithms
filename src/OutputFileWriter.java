@@ -5,18 +5,19 @@ import java.util.Iterator;
 
 public class OutputFileWriter {
 
-	private File outputFile = null;
-	private String inputPath = null;
+	private static final String NEW_LINE = "\n";
 
-	public OutputFileWriter(String inputPath) throws NullPointerException {
-		this.inputPath = inputPath;
+	private File outputFile = null;
+	private String outputPath = null;
+
+	public OutputFileWriter(String outputPath) throws NullPointerException {
+		this.outputPath = outputPath;
 	}
 
-	private void createFile() throws IOException {
-		int dotIndex = inputPath.lastIndexOf('.');
-		String pathAndName = inputPath.substring(0, dotIndex);
-		pathAndName += "_result";
-		String extension = inputPath.substring(dotIndex);
+	private void createOutputFile() throws IOException {
+		int dotIndex = outputPath.lastIndexOf(FileUtil.PERIOD);
+		String pathAndName = outputPath.substring(0, dotIndex);
+		String extension = outputPath.substring(dotIndex);
 		outputFile = new File(pathAndName + extension);
 
 		int fileNumber = 2;
@@ -27,11 +28,11 @@ public class OutputFileWriter {
 	}
 
 	public void writeToFile(FileContent fileContent) throws IOException {
-		createFile();
+		createOutputFile();
 		FileWriter fw = new FileWriter(outputFile);
 		Iterator<String> contentIterator = fileContent.iterator();
 		while(contentIterator.hasNext()) {
-			fw.write(contentIterator.next() + "\n");
+			fw.write(contentIterator.next() + NEW_LINE);
 		}
 		fw.flush();
 		fw.close();
