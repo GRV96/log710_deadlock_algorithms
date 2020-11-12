@@ -86,12 +86,13 @@ public abstract class DeadlockAlgorithm {
 		fileContent.addLine(line);
 	}
 
-	protected <T> void recordArrayOneLine(String arrayTitle, T[] array) {
+	protected <T> String recordArrayOneLine(String arrayTitle, T[] array) {
 		String line = arrayTitle + ": ";
 		for(int i=0; i<array.length; i++) {
 			line += array[i] + " ";
 		}
 		fileContent.addLine(line);
+		return line;
 	}
 
 	protected void recordIntMatrix(String matrixTitle, IntMatrix matrix) {
