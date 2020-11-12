@@ -20,6 +20,28 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 		fileContent.addLine(BANKERS_ALGO_LINE);
 	}
 
+	protected int bankersAlgorithmIter(boolean recordData)
+			throws IllegalArgumentException {
+		int procNumber = -1;
+		for(int i=0; i<processCount; i++) {
+			if(procExecIsSafe(i, recordData)) {
+				procNumber = i;
+				break;
+			}
+		}
+
+		if(procNumber >= 0) {
+			work.addition(allocation.rowToIntMatrix(procNumber));
+			end[procNumber] = true;
+		}
+
+		if(recordData) {
+			recordArrayOneLine(END_TITLE, end);
+		}
+
+		return procNumber;
+	}
+
 	protected boolean endArrayIsTrue() {
 		for(int i=0; i<end.length; i++) {
 			if(!end[i]) {
@@ -44,27 +66,5 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 			recordIntMatrixRow(WORK_TITLE, work, 0);
 		}
 		return !end[procNumber] && needRow.isLeqToMat(work);
-	}
-
-	protected int bankersAlgorithmIter(boolean recordData)
-			throws IllegalArgumentException {
-		int procNumber = -1;
-		for(int i=0; i<processCount; i++) {
-			if(procExecIsSafe(i, recordData)) {
-				procNumber = i;
-				break;
-			}
-		}
-
-		if(procNumber >= 0) {
-			work.addition(allocation.rowToIntMatrix(procNumber));
-			end[procNumber] = true;
-		}
-
-		if(recordData) {
-			recordArrayOneLine(END_TITLE, end);
-		}
-
-		return procNumber;
 	}
 }
