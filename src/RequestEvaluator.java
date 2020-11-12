@@ -106,8 +106,10 @@ public class RequestEvaluator extends DeadlockPreventer {
 			if(recordBankersAlgoData) {
 				fileContent.addLine(null);
 			}
-			recordArray(END_TITLE, end);
-			fileContent.addLine(null);
+			else {
+				recordArray(END_TITLE, end);
+				fileContent.addLine(null);
+			}
 			recordIntMatrix(ALLOCATION_TITLE, allocation);
 			fileContent.addLine(null);
 			recordIntMatrix(AVAILABLE_TITLE, available);
@@ -117,19 +119,36 @@ public class RequestEvaluator extends DeadlockPreventer {
 			recordIntMatrix(WORK_TITLE, work);
 			fileContent.addLine(null);
 
+			boolean execProc = false;
 			if(safeState) {
-				recordProcessToExecute(procNumber);
+				line = "Process " + procNumber + " can be executed.";
+				System.out.println(line);
+				fileContent.addLine(line);
+
+				line = "Do you want to execute it? ";
+				System.out.print(line);
+				String execChoice = keyboardScanner.nextLine();
+				try {
+					execProc = stringToBoolean(execChoice);
+				}
+				catch(IllegalArgumentException iae) {
+					line = iae.getMessage();
+					System.out.println(line);
+					fileContent.addLine(line);
+				}
+				fileContent.addLine(line + execChoice);
 			}
 			else {
-				// Cancel allocation
-				available = availableCopy;
-				allocation = allocationCopy;
-				need = needCopy;
-
 				line = "Executing process " + procNumber
 						+ " would put the system in an unsafe state.";
 				System.out.println(line);
 				fileContent.addLine(line);
+			}
+			if(!execProc) { // execProc is false if safeState is false.
+				// Cancel allocation
+				available = availableCopy;
+				allocation = allocationCopy;
+				need = needCopy;
 			}
 		}
 		else {
