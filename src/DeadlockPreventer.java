@@ -40,8 +40,8 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 		if(recordData) {
 			fileContent.addLine("Process " + procNumber);
 			fileContent.addLine("end[" + procNumber + "]: " + end[procNumber]);
-			fileContent.addLine("Need: " + needRow.rowToString(0, " "));
-			fileContent.addLine("Work: " + work.rowToString(0, " "));
+			recordIntMatrixRow(NEED_TITLE, need, procNumber);
+			recordIntMatrixRow(WORK_TITLE, work, 0);
 		}
 		return !end[procNumber] && needRow.isLeqToMat(work);
 	}
@@ -60,6 +60,8 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 			work.addition(allocation.rowToIntMatrix(procNumber));
 			end[procNumber] = true;
 		}
+
+		recordArrayOneLine(END_TITLE, end);
 
 		return procNumber;
 	}
