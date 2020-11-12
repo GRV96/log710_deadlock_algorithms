@@ -6,7 +6,6 @@ import java.util.Iterator;
 public class OutputFileWriter {
 
 	private static final String NEW_LINE = "\n";
-	private static final char PERIOD = '.';
 
 	private File outputFile = null;
 	private String outputPath = null;
@@ -16,7 +15,7 @@ public class OutputFileWriter {
 	}
 
 	private void createOutputFile() throws IOException {
-		int dotIndex = outputPath.lastIndexOf(PERIOD);
+		int dotIndex = outputPath.lastIndexOf(FileUtil.PERIOD);
 		String pathAndName = outputPath.substring(0, dotIndex);
 		String extension = outputPath.substring(dotIndex);
 		outputFile = new File(pathAndName + extension);
