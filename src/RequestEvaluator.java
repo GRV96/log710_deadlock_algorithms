@@ -128,6 +128,7 @@ public class RequestEvaluator extends DeadlockPreventer {
 				line = "Do you want to execute it? ";
 				System.out.print(line);
 				String execChoice = keyboardScanner.nextLine();
+				fileContent.addLine(line + execChoice);
 				try {
 					execProc = stringToBoolean(execChoice);
 				}
@@ -135,8 +136,10 @@ public class RequestEvaluator extends DeadlockPreventer {
 					line = iae.getMessage();
 					System.out.println(line);
 					fileContent.addLine(line);
+					line = "The process will not be executed.";
+					System.out.println(line);
+					fileContent.addLine(line);
 				}
-				fileContent.addLine(line + execChoice);
 			}
 			else {
 				line = "Executing process " + procNumber
