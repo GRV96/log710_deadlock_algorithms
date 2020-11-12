@@ -40,8 +40,6 @@ public class SafeSequenceMaker extends DeadlockPreventer {
 			addProcToSafeSeq(procNumber);
 			recordProcessToExecute(procNumber);
 			fileContent.addLine(null);
-			recordArray(END_TITLE, end);
-			fileContent.addLine(null);
 			recordIntMatrix(WORK_TITLE, work);
 			fileContent.addLine(null);
 			recordSafeSequence();

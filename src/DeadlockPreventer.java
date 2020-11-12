@@ -39,7 +39,7 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 		IntMatrix needRow = need.rowToIntMatrix(procNumber);
 		if(recordData) {
 			fileContent.addLine("Process " + procNumber);
-			fileContent.addLine("end[" + procNumber + "]: " + end[procNumber]);
+			fileContent.addLine("End[" + procNumber + "]: " + end[procNumber]);
 			recordIntMatrixRow(NEED_TITLE, need, procNumber);
 			recordIntMatrixRow(WORK_TITLE, work, 0);
 		}
