@@ -205,6 +205,7 @@ public class RequestEvaluator extends DeadlockPreventer {
 
 	private boolean systemStateIsSafe() throws IllegalArgumentException {
 		initEndArray();
+		int safeSeqLength = 0;
 		work = new IntMatrix(available);
 		if(recordBankersAlgoData) {
 			announceBankersAlgorithm();
@@ -212,7 +213,13 @@ public class RequestEvaluator extends DeadlockPreventer {
 		while(true) {
 			int procNumber = bankersAlgorithmIter(recordBankersAlgoData);
 			if(procNumber < 0) {
-				return endArrayIsTrue();
+				return false;
+			}
+			else {
+				safeSeqLength++;
+			}
+			if(safeSeqLength >= processCount) {
+				return true;
 			}
 		}
 	}
