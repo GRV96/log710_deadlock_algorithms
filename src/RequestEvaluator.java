@@ -178,8 +178,8 @@ public class RequestEvaluator extends DeadlockPreventer {
 	}
 
 	public static void main(String[] args) throws Exception {
-		RequestEvaluator re = new RequestEvaluator(args[0],
-				stringToBoolean(args[1]));
+		boolean recordBAData = stringToBoolean(args[1]);
+		RequestEvaluator re = new RequestEvaluator(args[0], recordBAData);
 		re.execute();
 	}
 
@@ -199,8 +199,8 @@ public class RequestEvaluator extends DeadlockPreventer {
 			}
 		}
 
-		throw new IllegalArgumentException(str
-				+ " does not match a boolean value.");
+		throw new IllegalArgumentException("\"" + str
+				+ "\" does not match a boolean value.");
 	}
 
 	private boolean systemStateIsSafe() throws IllegalArgumentException {
