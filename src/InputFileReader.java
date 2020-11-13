@@ -1,6 +1,4 @@
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class InputFileReader {
 
@@ -10,7 +8,6 @@ public class InputFileReader {
 	private static final String ALLOCATION_MATRIX = "Allocation";
 	private static final String MAXIMUM_MATRIX = "Maximum";
 	private static final String REQUEST_MATRIX = "Request";
-	private static final String PROCESS_ORDER = "Process order";
 
 	private int processCount = -1;
 	private int resourceCount = -1;
@@ -19,8 +16,6 @@ public class InputFileReader {
 	private IntMatrix maximum = null;
 	private IntMatrix resources = null;
 	private IntMatrix request = null;
-
-	//private List<Integer> processOrder = null;
 
 	public InputFileReader(FileContent inputFileContent)
 			throws IOException, NumberFormatException {
@@ -64,11 +59,6 @@ public class InputFileReader {
 	public IntMatrix getMaximumMatrix() {return new IntMatrix(maximum);}
 
 	public int getProcessCount() {return processCount;}
-
-	/*
-	public List<Integer> getProcressOrder() {
-		return processOrder==null? null: new ArrayList<Integer>(processOrder);
-	}//*/
 
 	public int getResourceCount() {return resourceCount;}
 
@@ -136,23 +126,6 @@ public class InputFileReader {
 						lineIndex+1, processCount, resourceCount);
 				lineIndex += processCount;
 			}
-			/*
-			else if(line.equals(PROCESS_ORDER)) {
-				int[] procOrderArray = new int[processCount];
-				initIntArray(procOrderArray, -1);
-
-				String procLine = fileContent.getLine(++lineIndex);
-				lineToIntArray(procLine, procOrderArray);
-				processOrder = new ArrayList<Integer>();
-
-				int procIndex = 0;
-				while(procIndex<processCount) {
-					int procNumber = procOrderArray[procIndex++];
-					if(procNumber >= 0) {
-						processOrder.add(procNumber);
-					}
-				}
-			}//*/
 		}
 	}
 }
