@@ -10,7 +10,7 @@ public class RequestEvaluator extends DeadlockPreventer {
 	private static final String REQ_EVAL_SUFFIX = "_req_eval";
 
 	private boolean recordBankersAlgoData;
-	private int resourceCount = -1;
+	private int resourceTypeCount = -1;
 
 	private Scanner keyboardScanner;
 
@@ -18,7 +18,7 @@ public class RequestEvaluator extends DeadlockPreventer {
 			throws IOException {
 		super(inputPath, REQ_EVAL_SUFFIX);
 		this.recordBankersAlgoData = recordBankerAlgoData;
-		resourceCount = inputReader.getResourceCount();
+		resourceTypeCount = inputReader.getResourceTypeCount();
 		maximum = inputReader.getMaximumMatrix();
 		need = new IntMatrix(maximum);
 		need.substraction(allocation);
@@ -69,11 +69,11 @@ public class RequestEvaluator extends DeadlockPreventer {
 		fileContent.addLine(line + procAndReqStr);
 		fileContent.addLine(null);
 
-		int[] procAndReq = new int[resourceCount+1];
+		int[] procAndReq = new int[resourceTypeCount+1];
 		makeProcAndReqArray(procAndReqStr, procAndReq);
 		int procNumber = procAndReq[0];
 
-		for(int j=0; j<resourceCount; j++) {
+		for(int j=0; j<resourceTypeCount; j++) {
 			request.set(procNumber, j, procAndReq[j+1]);
 		}
 

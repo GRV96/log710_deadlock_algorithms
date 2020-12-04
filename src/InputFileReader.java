@@ -14,7 +14,7 @@ public class InputFileReader {
 	private static final String REQUEST_MATRIX = "Request";
 
 	private int processCount = -1;
-	private int resourceCount = -1;
+	private int resourceTypeCount = -1;
 
 	private IntMatrix allocation = null;
 	private IntMatrix maximum = null;
@@ -110,7 +110,7 @@ public class InputFileReader {
 	 * Accessor of the number of resource types
 	 * @return the number of resource types
 	 */
-	public int getResourceCount() {return resourceCount;}
+	public int getResourceTypeCount() {return resourceTypeCount;}
 
 	/**
 	 * Accessor of the resource matrix
@@ -183,7 +183,7 @@ public class InputFileReader {
 		String resourceCountStr =
 				fileContent.getLine(1).substring(RESOURCE_COUNT.length());
 		// Can throw NumberFormatException.
-		resourceCount = Integer.parseUnsignedInt(resourceCountStr);
+		resourceTypeCount = Integer.parseUnsignedInt(resourceCountStr);
 
 		int lineCount = fileContent.getLineCount();
 		for(int lineIndex=2; lineIndex<lineCount; lineIndex++) {
@@ -191,20 +191,20 @@ public class InputFileReader {
 
 			if(line.equals(ALLOCATION_MATRIX)) {
 				allocation = extractIntMatrix(fileContent,
-						lineIndex+1, processCount, resourceCount);
+						lineIndex+1, processCount, resourceTypeCount);
 				lineIndex += processCount;
 			}
 			else if(line.equals(MAXIMUM_MATRIX)) {
 				maximum = extractIntMatrix(fileContent,
-						lineIndex+1, processCount, resourceCount);
+						lineIndex+1, processCount, resourceTypeCount);
 			}
 			else if(line.equals(RESOURCE_ARRAY)) {
 				resources = extractIntMatrix(fileContent,
-						++lineIndex, 1, resourceCount);
+						++lineIndex, 1, resourceTypeCount);
 			}
 			else if(line.equals(REQUEST_MATRIX)) {
 				request = extractIntMatrix(fileContent,
-						lineIndex+1, processCount, resourceCount);
+						lineIndex+1, processCount, resourceTypeCount);
 				lineIndex += processCount;
 			}
 		}
