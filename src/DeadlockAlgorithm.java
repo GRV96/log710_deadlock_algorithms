@@ -29,9 +29,9 @@ public abstract class DeadlockAlgorithm {
 	protected DeadlockAlgorithm(String inputPath, String outputPathSuffix)
 			throws IOException {
 		String extension = FileUtil.getFileExtension(inputPath);
-		if(extension==null || !extension.equals(FileUtil.FILE_EXTENSION)) {
+		if(extension==null || !extension.equals(FileUtil.TXT_EXTENSION)) {
 			throw new IOException("The input file must have the extension \""
-					+ FileUtil.FILE_EXTENSION + "\".");
+					+ FileUtil.TXT_EXTENSION + "\".");
 		}
 		File inputFile = new File(inputPath);
 		if(!inputFile.exists()) {

@@ -1,6 +1,13 @@
 public final class FileUtil {
 
-	public static final String FILE_EXTENSION = "txt";
+	/**
+	 * The "txt" file extension
+	 */
+	public static final String TXT_EXTENSION = "txt";
+
+	/**
+	 * The '.' character
+	 */
 	public static final char PERIOD = '.';
 
 	/**
