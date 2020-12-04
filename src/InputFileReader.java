@@ -98,7 +98,9 @@ public class InputFileReader {
 	 * Accessor of the maximum matrix
 	 * @return a copy of the maximum matrix
 	 */
-	public IntMatrix getMaximumMatrix() {return new IntMatrix(maximum);}
+	public IntMatrix getMaximumMatrix() {
+		return maximum==null? null: new IntMatrix(maximum);
+	}
 
 	/**
 	 * Accessor of the number of processes
