@@ -62,7 +62,7 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 	 * work matrix and a matrix of different dimensions
 	 */
 	protected int bankersAlgorithmIter(boolean recordData)
-			/*throws IllegalArgumentException*/ {
+			throws IllegalArgumentException {
 		int procIndex = -1;
 		for(int i=0; i<processCount; i++) {
 			if(procExecIsSafe(i, recordData)) {

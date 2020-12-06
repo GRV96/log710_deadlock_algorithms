@@ -22,7 +22,6 @@ public class SafeSequenceMaker extends DeadlockPreventer {
 	 */
 	public SafeSequenceMaker(String inputPath) throws IOException {
 		super(inputPath, SAFE_SEQ_SUFFIX); // Can throw IOException.
-		safeSeqLine = "Safe sequence: ";
 	}
 
 	/**
@@ -31,12 +30,14 @@ public class SafeSequenceMaker extends DeadlockPreventer {
 	 * @param procNumber - the index of a process
 	 */
 	private void addProcToSafeSeq(int procNumber) {
+		safeSeqLength++;
 		safeSeqLine += procNumber + " ";
 	}
 
 	@Override
 	protected boolean beforeLoop() {
 		safeSeqLength = 0;
+		safeSeqLine = "Safe sequence: ";
 		initEndArray();
 		work = new IntMatrix(available);
 		return true;
@@ -54,7 +55,6 @@ public class SafeSequenceMaker extends DeadlockPreventer {
 		int procNumber = bankersAlgorithmIter(true);
 		fileContent.addLine(null);
 		if(procNumber >= 0) {
-			safeSeqLength++;
 			addProcToSafeSeq(procNumber);
 			recordProcessToExecute(procNumber);
 			fileContent.addLine(null);
@@ -65,6 +65,7 @@ public class SafeSequenceMaker extends DeadlockPreventer {
 		}
 		else if(safeSeqLength < processCount) {
 			recordNegativeResult();
+			keepLooping = false;
 		}
 		iteration++;
 		return keepLooping;
