@@ -74,9 +74,9 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 
 	/**
 	 * Starts the deadlock detection algorithm.
-	 * @param args - The input file is the only argument.
-	 * @throws Exception if the DeadlockDetector or DeadlockAlgorithm.execute
-	 * throws one
+	 * @param args - The input file path is the only argument.
+	 * @throws Exception if the DeadlockDetector constructor or
+	 * DeadlockAlgorithm.execute throws one
 	 */
 	public static void main(String[] args) throws Exception {
 		DeadlockDetector dd = new DeadlockDetector(args[0]);
