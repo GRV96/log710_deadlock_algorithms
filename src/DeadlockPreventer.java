@@ -46,32 +46,48 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 		need.substraction(allocation);
 	}
 
+	/**
+	 * Announces the start of the banker's algorithm in the output file.
+	 */
 	protected void announceBankersAlgorithm() {
 		fileContent.addLine(BANKERS_ALGO_LINE);
 	}
 
+	/**
+	 * Performs an iteration of the banker's algorithm.
+	 * @param recordData - If true, the banker's algorithm's data is recorded
+	 * in the output file.
+	 * @return the index of a process safe to execute or -1 if there is none
+	 * @throws IllegalArgumentException if an addition is attempted with the
+	 * work matrix and a matrix of different dimensions
+	 */
 	protected int bankersAlgorithmIter(boolean recordData)
-			throws IllegalArgumentException {
-		int procNumber = -1;
+			/*throws IllegalArgumentException*/ {
+		int procIndex = -1;
 		for(int i=0; i<processCount; i++) {
 			if(procExecIsSafe(i, recordData)) {
-				procNumber = i;
+				procIndex = i;
 				break;
 			}
 		}
 
-		if(procNumber >= 0) {
-			work.addition(allocation.rowToIntMatrix(procNumber));
-			end[procNumber] = true;
+		if(procIndex >= 0) {
+			work.addition(allocation.rowToIntMatrix(procIndex));
+			end[procIndex] = true;
 		}
 
 		if(recordData) {
 			recordArrayOneLine(END_TITLE, end);
 		}
 
-		return procNumber;
+		return procIndex;
 	}
 
+	/**
+	 * Determines whether all the squares of the end array contain true.
+	 * @return true if all the squares of the end array contain true of false
+	 * if at least one square contains false.
+	 */
 	protected boolean endArrayIsTrue() {
 		for(int i=0; i<end.length; i++) {
 			if(!end[i]) {
@@ -81,20 +97,32 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 		return true;
 	}
 
+	/**
+	 * Sets all the values in end to false.
+	 */
 	protected void initEndArray() {
 		for(int i=0; i<processCount; i++) {
 			end[i] = false;
 		}
 	}
 
-	protected boolean procExecIsSafe(int procNumber, boolean recordData) {
-		IntMatrix needRow = need.rowToIntMatrix(procNumber);
+	/**
+	 * Determine whether the execution of process procNumber would put the
+	 * system in an unsafe sate.
+	 * @param procIndex - the index of a process
+	 * @param recordData - If true, the data determining whether the execution
+	 * is safe is recorded in the output file.
+	 * @return true if the system would stay safe after the process'
+	 * execution, false otherwise
+	 */
+	protected boolean procExecIsSafe(int procIndex, boolean recordData) {
+		IntMatrix needRow = need.rowToIntMatrix(procIndex);
 		if(recordData) {
-			fileContent.addLine("Process " + procNumber);
-			fileContent.addLine("End[" + procNumber + "]: " + end[procNumber]);
-			recordIntMatrixRow(NEED_TITLE, need, procNumber);
+			fileContent.addLine("Process " + procIndex);
+			fileContent.addLine("End[" + procIndex + "]: " + end[procIndex]);
+			recordIntMatrixRow(NEED_TITLE, need, procIndex);
 			recordIntMatrixRow(WORK_TITLE, work, 0);
 		}
-		return !end[procNumber] && needRow.isLeqToMat(work);
+		return !end[procIndex] && needRow.isLeqToMat(work);
 	}
 }
