@@ -1,16 +1,46 @@
 import java.io.IOException;
 
+/**
+ * This abstract class contains the data and methods that all deadlock
+ * prevention algorithms may need.
+ * @author Guyllaume Rousseau
+ */
 public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 
+	/**
+	 * A message announcing the start of the banker's algorithm
+	 */
 	private static final String BANKERS_ALGO_LINE = "Banker's algorithm";
+
+	/**
+	 * Title of the need matrix
+	 */
 	protected static final String NEED_TITLE = "Need";
 
+	/**
+	 * The maximum matrix matches processes (rows) with the maximum number of
+	 * each type of resource (columns) they can have.
+	 */
 	protected IntMatrix maximum = null;
+
+	/**
+	 * The need matrix matches processes (rows) with the maximum number of
+	 * each type of resource (columns) they may need in addition to the
+	 * resources already allocated to them.
+	 */
 	protected IntMatrix need = null;
 
+	/**
+	 * This constructor initializes the data of a deadlock prevention
+	 * algorithm with the content of the text file designated by inputPath.
+	 * @param inputPath - path of the input file
+	 * @param outputPathSuffix - a suffix to append to the input file's name
+	 * @throws IOException if the file designated by inputPath is non-existent
+	 * or does not have the extension .txt
+	 */
 	public DeadlockPreventer(String inputPath, String outputPathSuffix)
 			throws IOException {
-		super(inputPath, outputPathSuffix);
+		super(inputPath, outputPathSuffix); // Can throw IOException.
 		maximum = inputReader.getMaximumMatrix();
 		need = new IntMatrix(maximum);
 		need.substraction(allocation);

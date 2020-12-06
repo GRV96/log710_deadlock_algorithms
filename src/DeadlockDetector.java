@@ -14,7 +14,7 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 	 * or does not have the extension .txt
 	 */
 	public DeadlockDetector(String inputPath) throws IOException {
-		super(inputPath, RESULT_SUFFIX);
+		super(inputPath, RESULT_SUFFIX); // Can throw IOException.
 		work = new IntMatrix(available);
 		for(int i=0; i<processCount; i++) {
 			end[i] = allocation.rowSum(i) == 0;
