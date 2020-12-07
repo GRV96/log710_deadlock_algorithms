@@ -1,19 +1,64 @@
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * This interactive class determines whether requests entered by the user in
+ * the console would put the system in an unsafe state, i.e. a state in which
+ * the processes would risk to be deadlocked. A user input is a sequence of
+ * numbers separated by spaces. The first number is the process index; the
+ * other ones represent the requested quantity of each resource.
+ * @author Guyllaume Rousseau
+ */
 public class RequestEvaluator extends DeadlockPreventer {
 
-	private static final String[] FALSE_STRINGS = {"0", "f", "false", "n", "no"};
-	private static final String[] TRUE_STRINGS = {"1", "t", "true", "y", "yes"};
+	/**
+	 * An array of strings associated with the boolean value false
+	 */
+	private static final String[] FALSE_STRINGS =
+		{"0", "f", "false", "n", "no"};
 
+	/**
+	 * An array of strings associated with the boolean value true
+	 */
+	private static final String[] TRUE_STRINGS =
+		{"1", "t", "true", "y", "yes"};
+
+	/**
+	 * Console prompt for the process and the requested resources
+	 */
 	private static final String PROC_REQ_PROMPT = "Process and request: ";
+
+	/**
+	 * A suffix appended to the input file's name to form the output file's
+	 * name
+	 */
 	private static final String REQ_EVAL_SUFFIX = "_req_eval";
 
+	/**
+	 * If true, detailed data of the banker's algorithm will be recorded in
+	 * the output file.
+	 */
 	private boolean recordBankersAlgoData;
+
+	/**
+	 * The number of resource types that can be requested
+	 */
 	private int resourceTypeCount = -1;
 
+	/**
+	 * A scanner to obtain the user's input in the console
+	 */
 	private Scanner keyboardScanner;
 
+	/**
+	 * This constructor initializes the data needed to evaluate the safety of
+	 * process executions.
+	 * @param inputPath - path of the input file
+	 * @param recordBankerAlgoData - If true, detailed data of the banker's
+	 * algorithm will be recorded in the output file.
+	 * @throws IOException if the file designated by inputPath is non-existent
+	 * or does not have the extension .txt
+	 */
 	public RequestEvaluator(String inputPath, boolean recordBankerAlgoData)
 			throws IOException {
 		super(inputPath, REQ_EVAL_SUFFIX);
@@ -169,6 +214,14 @@ public class RequestEvaluator extends DeadlockPreventer {
 		return true;
 	}
 
+	/**
+	 * Fills an array containing the process index and the number of resources
+	 * of each type that it requests.
+	 * @param procAndReqStr - the string entered by the user representing a
+	 * process and a resource request
+	 * @param procAndReqArray - the array that will contain the process index
+	 * (index 0) and the resources it requests (other indices)
+	 */
 	private static void makeProcAndReqArray(String procAndReqStr,
 			int[] procAndReqArray) {
 		String[] strArray = procAndReqStr.split(" ");
@@ -177,12 +230,28 @@ public class RequestEvaluator extends DeadlockPreventer {
 		}
 	}
 
+	/**
+	 * Starts the interactive request evaluation application.
+	 * @param args
+	 * <p>0: path of the input file
+	 * <p>1: a string meaning true or false. If true, detailed data of the
+	 * banker's algorithm will be recorded in the output file.
+	 * @throws Exception if the RequestEvaluator constructor or
+	 * DeadlockAlgorithm.execute throws one
+	 */
 	public static void main(String[] args) throws Exception {
 		boolean recordBAData = stringToBoolean(args[1]);
 		RequestEvaluator re = new RequestEvaluator(args[0], recordBAData);
 		re.execute();
 	}
 
+	/**
+	 * Determines a boolean value corresponding to the given string.
+	 * @param str - a string that can be associated with the value true or
+	 * false
+	 * @return the boolean value matching str
+	 * @throws IllegalArgumentException if no boolean value matches str
+	 */
 	private static boolean stringToBoolean(String str)
 			throws IllegalArgumentException {
 		String lwStr = str.toLowerCase();
@@ -203,6 +272,14 @@ public class RequestEvaluator extends DeadlockPreventer {
 				+ "\" does not match a boolean value.");
 	}
 
+	/**
+	 * This method runs the banker's algorithm to determine whether the system's
+	 * current state is safe.
+	 * @return true if the system's state is safe, false otherwise
+	 * @throws IllegalArgumentException if an addition is attempted with the
+	 * work matrix and a matrix of different dimensions in
+	 * DeadlockPreventer.bankersAlgorithmIter.
+	 */
 	private boolean systemStateIsSafe() throws IllegalArgumentException {
 		initEndArray();
 		int safeSeqLength = 0;
