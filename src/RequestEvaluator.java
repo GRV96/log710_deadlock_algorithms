@@ -26,7 +26,8 @@ public class RequestEvaluator extends DeadlockPreventer {
 	/**
 	 * Console prompt for the process and the requested resources
 	 */
-	private static final String PROC_REQ_PROMPT = "Process and request: ";
+	private static final String PROC_REQ_PROMPT =
+			"Process and request (\"q\" to quit): ";
 
 	/**
 	 * A suffix appended to the input file's name to form the output file's
