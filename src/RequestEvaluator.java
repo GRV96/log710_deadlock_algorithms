@@ -36,7 +36,7 @@ public class RequestEvaluator extends DeadlockPreventer {
 	private static final String REQ_EVAL_SUFFIX = "_req_eval";
 
 	/**
-	 * If true, detailed data of the banker's algorithm will be recorded in
+	 * If true, detailed data from the banker's algorithm will be recorded in
 	 * the output file.
 	 */
 	private boolean recordBankersAlgoData;
@@ -55,15 +55,15 @@ public class RequestEvaluator extends DeadlockPreventer {
 	 * This constructor initializes the data needed to evaluate the safety of
 	 * process executions.
 	 * @param inputPath - path of the input file
-	 * @param recordBankerAlgoData - If true, detailed data of the banker's
+	 * @param recordBankersAlgoData - If true, detailed data from the banker's
 	 * algorithm will be recorded in the output file.
 	 * @throws IOException if the file designated by inputPath is non-existent
 	 * or does not have the extension .txt
 	 */
-	public RequestEvaluator(String inputPath, boolean recordBankerAlgoData)
+	public RequestEvaluator(String inputPath, boolean recordBankersAlgoData)
 			throws IOException {
 		super(inputPath, REQ_EVAL_SUFFIX);
-		this.recordBankersAlgoData = recordBankerAlgoData;
+		this.recordBankersAlgoData = recordBankersAlgoData;
 		resourceTypeCount = inputReader.getResourceTypeCount();
 		keyboardScanner = new Scanner(System.in);
 
