@@ -7,7 +7,7 @@
 public class InputFileReader {
 
 	private static final String PROCESS_COUNT = "Processes: ";
-	private static final String RESOURCE_COUNT = "Resources: ";
+	private static final String RESOURCE_TYPE_COUNT = "Resource types: ";
 	private static final String RESOURCE_ARRAY = "Resources";
 	private static final String ALLOCATION_MATRIX = "Allocation";
 	private static final String MAXIMUM_MATRIX = "Maximum";
@@ -183,7 +183,7 @@ public class InputFileReader {
 		processCount = Integer.parseUnsignedInt(procCountStr);
 
 		String resourceCountStr =
-				fileContent.getLine(1).substring(RESOURCE_COUNT.length());
+				fileContent.getLine(1).substring(RESOURCE_TYPE_COUNT.length());
 		// Can throw NumberFormatException.
 		resourceTypeCount = Integer.parseUnsignedInt(resourceCountStr);
 

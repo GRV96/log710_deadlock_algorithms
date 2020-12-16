@@ -1,5 +1,5 @@
 Processes: 4
-Resources: 3
+Resource types: 3
 
 Resources
 3 2 2
