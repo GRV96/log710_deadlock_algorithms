@@ -177,9 +177,8 @@ public abstract class DeadlockAlgorithm {
 
 	/**
 	 * Performs an iteration of the algorithm. It is repeatedly called by
-	 * execute until it returns false and should not be called by another
-	 * method. The instance variable iteration should be incremented in this
-	 * method.
+	 * execute until it returns false. No other method should call loop. The
+	 * instance variable iteration should be incremented in this method.
 	 * @return true if the algorithm must continue, false otherwise
 	 * @throws Exception if necessary
 	 */
