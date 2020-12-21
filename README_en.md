@@ -177,7 +177,7 @@ The result file produced when the program ends contains a copy of the console
 text and data related to the system’s state and the banker’s algorithm. This
 data is more detailed if the second parameter in the command line is true.
 
-### Making a safe sequence
+### Making a Safe Sequence
 A safe sequence is a sequence of processes that can be executed in the order
 defined by the sequence with no deadlock occurring. An operating system is in
 a safe state if and only if a safe sequence exists.
