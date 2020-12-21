@@ -24,6 +24,10 @@ whose meaning is stated further into this document. The numbers on the same
 line in a matrix are separated by spaces. It is paramount that n and m be
 consistent with the matrices’ dimensions. Their indices start at 0.
 
+File [06-deadlocks.pdf](/06-deadlocks.pdf) contains an explaination of deadlocks,
+a statement of the algorithms in this repository and examples of their
+application.
+
 ## Detecting Deadlocks
 Create a runnable .jar file from class *DeadlockDetector* and name it
 deadlock_detector.jar. Run it in command line and give it the path to a data
@@ -74,6 +78,10 @@ not (false). Initially, all its elements are false. Row matrix *Work*, of
 length m, is data that is checked in the deadlock detection algorithm.
 *Available* and *Work* contain only natural integers.
 
+The deadlock detection algorithm is presented in
+[06-deadlocks.pdf](/06-deadlocks.pdf)
+at pages 25 and 26.
+
 ## Preventing Deadlocks
 Classes *RequestEvaluator* and *SafeSequenceMaker* run the banker’s algorithm
 to determine whether allocating the resources requested by a process would put
@@ -115,6 +123,11 @@ matrix *Available* has the same meaning as the one calculated by
 *DeadlockDetector*. Matrix *Need* indicates the number of supplementary
 resources that a process may need. Row matrix *Work*, of length m, is data
 meant to be checked in the banker’s algorithm.
+
+The safe state is defined in [06-deadlocks.pdf](/06-deadlocks.pdf) at page 42.
+Pages 47 to 49 present the banker’s algorithm and the resource request
+algorithm. Geeks for Geeks also descibes them
+[here](https://www.geeksforgeeks.org/bankers-algorithm-in-operating-system-2/).
 
 ### Evaluating Requests
 Create a runnable .jar file from class *RequestEvaluator* and name it
