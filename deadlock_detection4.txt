@@ -1,0 +1,17 @@
+Processes: 4
+Resource types: 3
+
+Resources
+5 4 5
+
+Allocation
+1 1 1
+2 1 2
+1 1 0
+1 1 1
+
+Request
+3 2 1
+2 2 1
+0 0 1
+1 1 1
