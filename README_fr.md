@@ -27,6 +27,9 @@ rangées dont la signification est énoncée plus loin. Les nombres sur une mêm
 ligne d’une matrice sont séparés par des espaces. Il est primordial que n et m
 soient cohérents avec les dimensions des matrices. Leurs indices commencent à 0.
 
+Le dossier [cours_8_log710](/cours_8_log710) contient une explication des
+interblocages, l'énoncé des algorithmes de ce dépôt et des exercices.
+
 ## Détecter les interblocages
 Créez un exécutable .jar à partir de la classe *DeadlockDetector* et nommez-le
 deadlock_detector.jar. Appelez-le en ligne de commande avec le chemin d’un
@@ -80,6 +83,9 @@ un processus a été effectué (vrai) ou non (faux). Initialement, tous ses
 servant à vérifier une condition dans l’algorithme de détection d’interblocage.
 *Available* et *Work* contiennent seulement des entiers naturels.
 
+L'algorithme de détection des interblocages est présenté aux pages 24 et 25 de
+[cours_8_log710/LOG710_Hiver2020-Deadlocks.pdf](/cours_8_log710/LOG710_Hiver2020-Deadlocks.pdf).
+
 ## Prévenir les interblocages
 Les classes *RequestEvaluator* et *SafeSequenceMaker* ont recours à
 l’algorithme du banquier pour déterminer si l’allocation des ressources
@@ -123,6 +129,11 @@ calculée par *DeadlockDetector*. La matrice *Need* indique le nombre de
 ressources supplémentaires dont un processus peut avoir besoin. La matrice
 rangée *Work*, de longueur m, est une donnée servant à vérifier une condition
 dans l’algorithme du banquier.
+
+L'état sûr est défini aux pages 34 et 35 de
+[cours_8_log710/LOG710_Hiver2020-Deadlocks.pdf](/cours_8_log710/LOG710_Hiver2020-Deadlocks.pdf).
+Les pages 40 à 42 présentent l'algorithme du banquier et l'algorithme de
+demande de ressources.
 
 ### Évaluer des requêtes
 Créez un exécutable .jar à partir de la classe *RequestEvaluator* et nommez-le
