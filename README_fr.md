@@ -41,6 +41,7 @@ suit.
 java -jar .\deadlock_detector.jar .\deadlock_detection1.txt
 java -jar .\deadlock_detector.jar .\deadlock_detection2.txt
 java -jar .\deadlock_detector.jar .\deadlock_detection3.txt
+java -jar .\deadlock_detector.jar .\deadlock_detection4.txt
 ```
 
 Le fichier de données définit les matrices *Resources*, *Allocation* et
@@ -93,8 +94,8 @@ demandées par un processus mettrait le système dans un état non sûr. L’ét
 système est sûr si et seulement s’il est capable d’éviter les interblocages;
 si son état est non sûr, les interblocages sont possibles, mais pas certains.
 *RequestEvaluator* et *SafeSequenceMaker* ont besoin de fichiers de données
-conformes au format suivant. Le fichier deadlock_prevention.txt est un exemple
-d’entrée valide.
+conformes au format suivant. Les fichiers deadlock_prevention1.txt et
+deadlock_prevention2.txt sont des exemples d’entrée valide.
 
 ```
 Processes: n
@@ -147,8 +148,8 @@ chaînes suivantes sont acceptées: «0», «f», «false», «n», «no»; pour
 on peut exécuter request_evaluator.jar comme suit.
 
 ```
-java -jar .\request_evaluator.jar .\deadlock_prevention.txt 0
-java -jar .\request_evaluator.jar .\deadlock_prevention.txt y
+java -jar .\request_evaluator.jar .\deadlock_prevention1.txt 0
+java -jar .\request_evaluator.jar .\deadlock_prevention2.txt y
 ```
 
 En premier lieu, le programme indique dans la console si l’état initial du
@@ -195,21 +196,22 @@ Process and request ("q" to quit): q
 ```
 
 Le fichier de résultats produit à la fin de l’exécution du programme contient
-une copie du texte de la console et des données relatives à l’état du système
-et à l’algorithme du banquier. Ces données sont plus détaillées si le deuxième
+le texte de la console et des données relatives à l’état du système et à
+l’algorithme du banquier. Ces données sont plus détaillées si le deuxième
 paramètre de la ligne de commande est vrai.
 
 ### Constituer une séquence sûre
 Une séquence sûre est une séquence de processus qui peuvent être exécutés dans
 l’ordre défini par la séquence sans interblocage. Un système d’exploitation
-est dans un état sûr si et seulement si une séquence sûre existe.
+est dans un état sûr si et seulement si au moins une séquence sûre existe.
 
 Créez un exécutable .jar à partir de la classe *SafeSequenceMaker* et nommez-le
 safe_sequence_maker.jar. Appelez-le en ligne de commande avec comme seul
 paramètre le chemin d’un fichier de données comme dans l’exemple ci-dessous.
 
 ```
-java -jar .\safe_sequence_maker.jar .\deadlock_prevention.txt
+java -jar .\safe_sequence_maker.jar .\deadlock_prevention1.txt
+java -jar .\safe_sequence_maker.jar .\deadlock_prevention2.txt
 ```
 
 Ce programme exécute l’algorithme du banquier. Son fichier de résultats

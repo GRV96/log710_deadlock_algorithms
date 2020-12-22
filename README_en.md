@@ -38,6 +38,7 @@ called with the data files provided in this repository in the following manner.
 java -jar .\deadlock_detector.jar .\deadlock_detection1.txt
 java -jar .\deadlock_detector.jar .\deadlock_detection2.txt
 java -jar .\deadlock_detector.jar .\deadlock_detection3.txt
+java -jar .\deadlock_detector.jar .\deadlock_detection4.txt
 ```
 
 The data file defines matrices *Resources*, *Allocation* and *Request*. Row
@@ -88,8 +89,8 @@ to determine whether allocating the resources requested by a process would put
 the system in an unsafe state. The system’s state is safe if and only if it
 can avoid deadlocks; if its state is unsafe, deadlocks are possible, but not
 certain. *RequestEvaluator* and *SafeSequenceMaker* need data files conform to
-the following format. File deadlock_prevention.txt is an example of valid
-input.
+the following format. Files deadlock_prevention1.txt and
+deadlock_prevention2.txt are valid input examples.
 
 ```
 Processes: n
@@ -131,9 +132,9 @@ algorithm. Geeks for Geeks also descibes them
 
 ### Evaluating Requests
 Create a runnable .jar file from class *RequestEvaluator* and name it
-request_evaluator.jar. Run it in command line with a data file’s path as the
-first parameter and, as the second parameter, a string of characters, whose
-case will not matter, expressing a Boolean value. This last parameter
+request_evaluator.jar. Run it in command line with the path to a data file as
+the first parameter and, as the second parameter, a string of characters,
+whose case will not matter, expressing a Boolean value. This last parameter
 determines whether the result file will contain detailed data from the
 banker’s algorithm. For the value *false*, the following strings are accepted:
 "0", "f", "false", "n", "no"; for the value *true*, enter one of these
@@ -141,8 +142,8 @@ strings: "1", "t", "true", "y", "yes". On Windows, request_evaluator.jar can
 be run the following way.
 
 ```
-java -jar .\request_evaluator.jar .\deadlock_prevention.txt 0
-java -jar .\request_evaluator.jar .\deadlock_prevention.txt y
+java -jar .\request_evaluator.jar .\deadlock_prevention1.txt 0
+java -jar .\request_evaluator.jar .\deadlock_prevention2.txt y
 ```
 
 First, the program indicates in the console whether the system’s initial state
@@ -186,21 +187,22 @@ Do you want to execute it? n
 Process and request ("q" to quit): q
 ```
 
-The result file produced when the program ends contains a copy of the console
-text and data related to the system’s state and the banker’s algorithm. This
-data is more detailed if the second parameter in the command line is true.
+The result file produced when the program ends contains the text from the
+console and data related to the system’s state and the banker’s algorithm.
+This data is more detailed if the second parameter in the command line is true.
 
 ### Making a Safe Sequence
 A safe sequence is a sequence of processes that can be executed in the order
 defined by the sequence with no deadlock occurring. An operating system is in
-a safe state if and only if a safe sequence exists.
+a safe state if and only if at least one safe sequence exists.
 
 Create a runnable .jar file from class *SafeSequenceMaker* and name it
 safe_sequence_maker.jar. Run it in command line with the path to a data file
 as the only parameter as shown below.
 
 ```
-java -jar .\safe_sequence_maker.jar .\deadlock_prevention.txt
+java -jar .\safe_sequence_maker.jar .\deadlock_prevention1.txt
+java -jar .\safe_sequence_maker.jar .\deadlock_prevention2.txt
 ```
 
 This program executes the banker’s algorithm. Its result file contains, for
