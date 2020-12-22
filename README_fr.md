@@ -58,21 +58,21 @@ Processes: n
 Resource types: m
 
 Resources
-x0,0 x0,1 x0,2 … x0,m
+x0,0 x0,1 x0,2 … x0,m-1
 
 Allocation
-x0,0 x0,1 x0,2 … x0,m
-x1,0 x1,1 x1,2 … x1,m
-x2,0 x2,1 x2,2 … x2,m
+x0,0 x0,1 x0,2 … x0,m-1
+x1,0 x1,1 x1,2 … x1,m-1
+x2,0 x2,1 x2,2 … x2,m-1
 …
-xn,0 xn,1 xn,2 … xn,m
+xn-1,0 xn-1,1 xn-1,2 … xn-1,m-1
 
 Request
-x0,0 x0,1 x0,2 … x0,m
-x1,0 x1,1 x1,2 … x1,m
-x2,0 x2,1 x2,2 … x2,m
+x0,0 x0,1 x0,2 … x0,m-1
+x1,0 x1,1 x1,2 … x1,m-1
+x2,0 x2,1 x2,2 … x2,m-1
 …
-xn,0 xn,1 xn,2 … xn,m
+xn-1,0 xn-1,1 xn-1,2 … xn-1,m-1
 ```
 
 Dans le fichier de résultats, la matrice rangée *Available* indique le nombre
@@ -102,21 +102,21 @@ Processes: n
 Resource types: m
 
 Resources
-x0,0 x0,1 x0,2 … x0,m
+x0,0 x0,1 x0,2 … x0,m-1
 
 Allocation
-x0,0 x0,1 x0,2 … x0,m
-x1,0 x1,1 x1,2 … x1,m
-x2,0 x2,1 x2,2 … x2,m
+x0,0 x0,1 x0,2 … x0,m-1
+x1,0 x1,1 x1,2 … x1,m-1
+x2,0 x2,1 x2,2 … x2,m-1
 …
-xn,0 xn,1 xn,2 … xn,m
+xn-1,0 xn-1,1 xn-1,2 … xn-1,m-1
 
 Maximum
-x0,0 x0,1 x0,2 … x0,m
-x1,0 x1,1 x1,2 … x1,m
-x2,0 x2,1 x2,2 … x2,m
+x0,0 x0,1 x0,2 … x0,m-1
+x1,0 x1,1 x1,2 … x1,m-1
+x2,0 x2,1 x2,2 … x2,m-1
 …
-xn,0 xn,1 xn,2 … xn,m
+xn-1,0 xn-1,1 xn-1,2 … xn-1,m-1
 ```
 
 Ce format est identique à celui prescrit pour la détection d’interblocages
