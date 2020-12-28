@@ -2,16 +2,16 @@ Processes: 4
 Resource types: 3
 
 Resources
-3 2 2
+5 4 5
 
 Allocation
-1 0 0
-0 2 0
-1 0 0
-0 0 2
+1 1 1
+2 1 2
+1 1 0
+1 1 1
 
 Request
-0 1 0
-1 0 1
-0 1 0
-1 0 0
+3 2 1
+2 2 1
+0 0 1
+1 1 1

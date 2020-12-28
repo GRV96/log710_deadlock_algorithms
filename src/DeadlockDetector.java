@@ -1,9 +1,20 @@
 import java.io.IOException;
 
+/**
+ * This class implements a deadlock detection algorithm.
+ * @author Guyllaume Rousseau
+ */
 public class DeadlockDetector extends DeadlockAlgorithm {
 
+	/**
+	 * This constructor initializes the data of the deadlock detection
+	 * algorithm with the content of the text file designated by inputPath.
+	 * @param inputPath - path of the input file
+	 * @throws IOException if the file designated by inputPath is non-existent
+	 * or does not have the extension .txt
+	 */
 	public DeadlockDetector(String inputPath) throws IOException {
-		super(inputPath, RESULT_SUFFIX);
+		super(inputPath, RESULT_SUFFIX); // Can throw IOException.
 		work = new IntMatrix(available);
 		for(int i=0; i<processCount; i++) {
 			end[i] = allocation.rowSum(i) == 0;
@@ -61,6 +72,12 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 		return keepLooping;
 	}
 
+	/**
+	 * Starts the deadlock detection algorithm.
+	 * @param args - The input file path is the only argument.
+	 * @throws Exception if the DeadlockDetector constructor or
+	 * DeadlockAlgorithm.execute throws one
+	 */
 	public static void main(String[] args) throws Exception {
 		DeadlockDetector dd = new DeadlockDetector(args[0]);
 		dd.execute();
