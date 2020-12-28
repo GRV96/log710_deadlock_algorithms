@@ -1,3 +1,7 @@
+package files;
+
+import algorithms.IntMatrix;
+
 /**
  * Instances of this class extract data required by the deadlock algorithms
  * from input files. When a line of text containing numbers is mentioned in

@@ -1,3 +1,5 @@
+package algorithms;
+
 /**
  * This class represents 2-dimensional matrices containing integral numbers.
  * @author Guyllaume Rousseau

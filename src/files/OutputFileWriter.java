@@ -1,3 +1,5 @@
+package files;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -16,7 +18,7 @@ public class OutputFileWriter {
 	private static final String NEW_LINE = "\n";
 
 	/**
-	 * This object represents the file into which the output is written.
+	 * This object represents the file in which the output is written.
 	 */
 	private File outputFile = null;
 

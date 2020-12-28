@@ -1,5 +1,12 @@
+package algorithms;
+
 import java.io.File;
 import java.io.IOException;
+
+import files.FileContent;
+import files.FileUtil;
+import files.InputFileReader;
+import files.OutputFileWriter;
 
 /**
  * This abstract class contains the data and methods that all deadlock
