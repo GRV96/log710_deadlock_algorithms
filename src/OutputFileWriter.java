@@ -5,13 +5,13 @@ import java.util.Iterator;
 
 /**
  * This class writes lines of text from a FileContent object in a text file.
- * The path to the output file is given to the constructor as a parameter.
+ * The path to the output file is a constructor parameter.
  * @author Guyllaume Rousseau
  */
 public class OutputFileWriter {
 
 	/**
-	 * A String object consisting of only the "\n" character
+	 * A String object only containing the '\n' character
 	 */
 	private static final String NEW_LINE = "\n";
 
