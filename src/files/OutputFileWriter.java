@@ -18,6 +18,12 @@ public class OutputFileWriter {
 	private static final String NEW_LINE = "\n";
 
 	/**
+	 * A number appended to the output file's name to differentiate it from an
+	 * existing file.
+	 */
+	private int fileNumber = 2;
+
+	/**
 	 * This object represents the file in which the output is written.
 	 */
 	private File outputFile = null;
@@ -40,6 +46,7 @@ public class OutputFileWriter {
 			throw new NullPointerException(
 					"Parameter outputPath cannot be null.");
 		}
+		outputFile = new File(outputPath);
 	}
 
 	/**
@@ -49,15 +56,9 @@ public class OutputFileWriter {
 	 * created
 	 */
 	private void createOutputFile() throws IOException {
-		int dotIndex = outputPath.lastIndexOf(FileUtil.PERIOD);
-		String pathAndName = outputPath.substring(0, dotIndex);
-		String extension = outputPath.substring(dotIndex);
-		outputFile = new File(pathAndName + extension);
-
-		int fileNumber = 2;
 		while(!outputFile.createNewFile()) {
-			outputFile = new File(pathAndName + fileNumber + extension);
-			fileNumber++;
+			outputFile = new File(FileUtil.addSuffixToPath(outputPath,
+					Integer.toString(fileNumber++)));
 		}
 	}
 
