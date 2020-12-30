@@ -68,13 +68,7 @@ public class RequestEvaluator extends DeadlockPreventer {
 		this.recordBankersAlgoData = recordBankersAlgoData;
 		resourceTypeCount = inputReader.getResourceTypeCount();
 		keyboardScanner = new Scanner(System.in);
-
-		int[][] reqArray = {{-1, -1, -1},
-				{-1, -1, -1},
-				{-1, -1, -1},
-				{-1, -1, -1},
-				{-1, -1, -1}};
-		request = new IntMatrix(reqArray);
+		request = new IntMatrix(processCount, resourceTypeCount, -1);
 	}
 
 	@Override

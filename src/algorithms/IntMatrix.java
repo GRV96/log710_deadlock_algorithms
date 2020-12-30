@@ -11,6 +11,25 @@ public class IntMatrix {
 	private int[][] matrix;
 
 	/**
+	 * This constructor creates a matrix with the specified number of rows and
+	 * columns. All its cells are are set to the value of parameter content.
+	 * @param rows - this matrix's number of rows
+	 * @param columns - this matrix's number of columns
+	 * @param content - the number in all this matrix's cells
+	 */
+	public IntMatrix(int rows, int columns, int content) {
+		this.rows = rows;
+		this.columns = columns;
+
+		matrix = new int[rows][columns];
+		for (int i=0; i<rows; i++) {
+			for (int j=0; j<columns; j++) {
+				matrix[i][j] = content;
+			}
+		}
+	}
+
+	/**
 	 * This constructor creates a row matrix by copying the content of a
 	 * 1-dimensional int array.
 	 * @param content - a 1-dimensional int array
@@ -18,7 +37,7 @@ public class IntMatrix {
 	 */
 	public IntMatrix(int[] content) throws IllegalArgumentException {
 		if(content.length == 0) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Row length is not constant.");
 		}
 		rows = 1;
 		columns = content.length;
@@ -35,7 +54,7 @@ public class IntMatrix {
 	 */
 	public IntMatrix(int[][] content) throws IllegalArgumentException {
 		if(!rowLengthIsConstant(content)) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Row length is not constant.");
 		}
 		rows = content.length;
 		columns = content[0].length;
