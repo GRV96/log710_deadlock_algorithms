@@ -1,6 +1,7 @@
 package algorithms;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -98,6 +99,9 @@ public class RequestEvaluator extends DeadlockPreventer {
 
 	@Override
 	protected boolean loop() {
+		workRecord.clear();
+		endRecord.clear();
+
 		String line = PROC_REQ_PROMPT;
 		System.out.print("\n" + line);
 		String procAndReqStr = keyboardScanner.nextLine();
@@ -142,20 +146,16 @@ public class RequestEvaluator extends DeadlockPreventer {
 			need.substractionOnRow(request, procNumber);
 
 			boolean safeState = systemStateIsSafe();
-			if(recordBankersAlgoData) {
-				fileContent.addLine(null);
-			}
-			else {
-				recordArray(END_TITLE, end);
-				fileContent.addLine(null);
-			}
+
 			recordIntMatrix(ALLOCATION_TITLE, allocation);
 			fileContent.addLine(null);
 			recordIntMatrix(AVAILABLE_TITLE, available);
 			fileContent.addLine(null);
 			recordIntMatrix(NEED_TITLE, need);
 			fileContent.addLine(null);
-			recordIntMatrix(WORK_TITLE, work);
+			recordArrayStates(WORK_TITLE, workRecord);
+			fileContent.addLine(null);
+			recordArrayStates(END_TITLE, endRecord);
 			fileContent.addLine(null);
 
 			boolean execProc = false;
@@ -283,6 +283,9 @@ public class RequestEvaluator extends DeadlockPreventer {
 		}
 		while(true) {
 			int procNumber = bankersAlgorithmIter(recordBankersAlgoData);
+			workRecord.add(work.rowToArray(0));
+			endRecord.add(Arrays.copyOf(end, end.length));
+
 			if(procNumber < 0) {
 				return false;
 			}
