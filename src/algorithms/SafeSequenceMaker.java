@@ -1,6 +1,7 @@
 package algorithms;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * This class attempts to make a sequence of processes that can be executed
@@ -37,6 +38,14 @@ public class SafeSequenceMaker extends DeadlockPreventer {
 	}
 
 	@Override
+	protected void afterLoop() {
+		fileContent.addLine(null, 2);
+		recordArrayStates(WORK_TITLE, workRecord);
+		fileContent.addLine(null);
+		recordArrayStates(END_TITLE, endRecord);
+	}
+
+	@Override
 	protected boolean beforeLoop() {
 		safeSeqLength = 0;
 		safeSeqLine = "Safe sequence: ";
@@ -55,12 +64,14 @@ public class SafeSequenceMaker extends DeadlockPreventer {
 
 		announceBankersAlgorithm();
 		int procNumber = bankersAlgorithmIter(true);
+		endRecord.add(Arrays.copyOf(end, end.length));
 		fileContent.addLine(null);
 		if(procNumber >= 0) {
 			addProcToSafeSeq(procNumber);
 			recordProcessToExecute(procNumber);
 			fileContent.addLine(null);
 			recordIntMatrix(WORK_TITLE, work);
+			workRecord.add(work.rowToArray(0));
 			fileContent.addLine(null);
 			recordSafeSequence();
 			keepLooping = safeSeqLength < processCount;

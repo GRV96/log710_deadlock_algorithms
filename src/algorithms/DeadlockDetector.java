@@ -1,6 +1,7 @@
 package algorithms;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * This class implements a deadlock detection algorithm.
@@ -21,6 +22,14 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 		for(int i=0; i<processCount; i++) {
 			end[i] = allocation.rowSum(i) == 0;
 		}
+	}
+
+	@Override
+	protected void afterLoop() {
+		fileContent.addLine(null);
+		recordArrayStates(WORK_TITLE, workRecord);
+		fileContent.addLine(null);
+		recordArrayStates(END_TITLE, endRecord);
 	}
 
 	@Override
@@ -51,8 +60,10 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 			recordProcessToExecute(procIndex);
 			fileContent.addLine(null);
 			recordIntMatrix(WORK_TITLE, work);
+			workRecord.add(work.rowToArray(0));
 			fileContent.addLine(null);
 			recordArray(END_TITLE, end);
+			endRecord.add(Arrays.copyOf(end, end.length));
 		}
 		else {
 			String procNumbers = "";

@@ -22,8 +22,8 @@ public class IntMatrix {
 		this.columns = columns;
 
 		matrix = new int[rows][columns];
-		for (int i=0; i<rows; i++) {
-			for (int j=0; j<columns; j++) {
+		for(int i=0; i<rows; i++) {
+			for(int j=0; j<columns; j++) {
 				matrix[i][j] = content;
 			}
 		}
@@ -266,6 +266,19 @@ public class IntMatrix {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Creates an array containing a copy of the specified row of this matrix.
+	 * @param row - a row index
+	 * @return the content of the specified row in an array
+	 */
+	public Integer[] rowToArray(int row) {
+		Integer[] rowArray = new Integer[columns];
+		for(int j=0; j<columns; j++) {
+			rowArray[j] = matrix[row][j];
+		}
+		return rowArray;
 	}
 
 	/**

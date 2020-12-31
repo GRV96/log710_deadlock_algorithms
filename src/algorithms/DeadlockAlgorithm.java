@@ -2,6 +2,9 @@ package algorithms;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import files.FileContent;
 import files.FileUtil;
@@ -101,9 +104,20 @@ public abstract class DeadlockAlgorithm {
 	protected Boolean[] end = null;
 
 	/**
-	 * The number of the current iteration
+	 * The number of the current iteration. Iteration number starts at 1.
 	 */
 	protected int iteration;
+
+	/**
+	 * The state of the work matrix can be saved in this list at each
+	 * iteration.
+	 */
+	protected List<Integer[]> workRecord = null;
+
+	/**
+	 * The state of the end array can be saved in this list at each iteration.
+	 */
+	protected List<Boolean[]> endRecord = null;
 
 	/**
 	 * This constructor initializes the data of a deadlock algorithm with the
@@ -134,13 +148,35 @@ public abstract class DeadlockAlgorithm {
 		processCount = inputReader.getProcessCount();
 
 		allocation = inputReader.getAllocationMatrix();
-
 		initAvailableMatrix();
-
 		request = inputReader.getRequestMatrix();
 
 		end = new Boolean[processCount];
+
+		workRecord = new ArrayList<Integer[]>();
+		endRecord = new ArrayList<Boolean[]>();
 	}
+
+	/**
+	 * Converts an array to a line of text. Array elements are separated by
+	 * spaces in the text line.
+	 * @param <T> - the array's data type
+	 * @param array - the array to convert
+	 * @return a line of text containing the array's elements
+	 */
+	private <T> String arrayToTextLine(T[] array) {
+		String line = "";
+		for(int i=0; i<array.length; i++) {
+			line += array[i] + " ";
+		}
+		return line;
+	}
+
+	/**
+	 * This method is meant to be overridden. It is executed once after the
+	 * algorithm ends. The default implementation does nothing.
+	 */
+	protected void afterLoop() {}
 
 	/**
 	 * This method is meant to be overridden. It is executed once before the
@@ -166,6 +202,7 @@ public abstract class DeadlockAlgorithm {
 		while(keepLooping) {
 			keepLooping = loop();
 		}
+		afterLoop();
 
 		outputWriter.writeToFile(fileContent);
 	}
@@ -200,10 +237,7 @@ public abstract class DeadlockAlgorithm {
 	 */
 	protected <T> void recordArray(String arrayTitle, T[] array) {
 		fileContent.addLine(arrayTitle);
-		String line = "";
-		for(int i=0; i<array.length; i++) {
-			line += array[i] + " ";
-		}
+		String line = arrayToTextLine(array);
 		fileContent.addLine(line);
 	}
 
@@ -217,12 +251,30 @@ public abstract class DeadlockAlgorithm {
 	 * @return the line of text that represents the array and was recorded
 	 */
 	protected <T> String recordArrayOneLine(String arrayTitle, T[] array) {
-		String line = arrayTitle + ": ";
-		for(int i=0; i<array.length; i++) {
-			line += array[i] + " ";
-		}
+		String line = arrayTitle + ": " + arrayToTextLine(array);
 		fileContent.addLine(line);
 		return line;
+	}
+
+	/**
+	 * Records in fileConten an array's states through this algorithm's
+	 * iterations.
+	 * @param <T> - the arrays' data type
+	 * @param title - The title is recorded on the line above the states's
+	 * record.
+	 * @param stateList - Contains an array's successive states.
+	 */
+	protected <T> void recordArrayStates(String title, List<T[]> stateList) {
+		fileContent.addLine(title);
+		int iterCount = 1;
+		Iterator<T[]> stateIter = stateList.iterator();
+		while(stateIter.hasNext()) {
+			T[] array = stateIter.next();
+			String line = Integer.toString(iterCount)
+					+ ") " + arrayToTextLine(array);
+			fileContent.addLine(line);
+			iterCount++;
+		}
 	}
 
 	/**
@@ -234,10 +286,8 @@ public abstract class DeadlockAlgorithm {
 	protected void recordIntMatrix(String matrixTitle, IntMatrix matrix) {
 		fileContent.addLine(matrixTitle);
 		for(int i=0; i<matrix.rows; i++) {
-			String line = "";
-			for(int j=0; j<matrix.columns; j++) {
-				line += matrix.get(i, j) + " ";
-			}
+			Integer[] array = matrix.rowToArray(i);
+			String line = arrayToTextLine(array);
 			fileContent.addLine(line);
 		}
 	}
