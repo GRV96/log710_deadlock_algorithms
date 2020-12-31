@@ -32,7 +32,7 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 	@Override
 	protected boolean beforeLoop() {
 		fileContent.addLine(null);
-		recordArray(END_TITLE, end);
+		recordArray(END_TITLE, booleanArrayToCharArray(end));
 		return true;
 	}
 
@@ -59,7 +59,7 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 			fileContent.addLine(null);
 			recordIntMatrix(WORK_TITLE, work);
 			fileContent.addLine(null);
-			recordArray(END_TITLE, end);
+			recordArray(END_TITLE, booleanArrayToCharArray(end));
 		}
 		else {
 			String procNumbers = "";

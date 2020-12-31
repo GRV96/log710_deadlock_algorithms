@@ -79,7 +79,7 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 		}
 
 		if(recordData) {
-			recordArrayOneLine(END_TITLE, end);
+			recordArrayOneLine(END_TITLE, booleanArrayToCharArray(end));
 		}
 
 		return procIndex;

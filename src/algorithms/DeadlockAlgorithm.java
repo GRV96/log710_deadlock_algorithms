@@ -3,7 +3,6 @@ package algorithms;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -35,6 +34,12 @@ public abstract class DeadlockAlgorithm {
 	protected static final String END_TITLE = "End";
 
 	/**
+	 * Title of the end boolean array's change
+	 */
+	protected static final String END_THROUGH_ITERS_TITLE =
+			"End through iterations";
+
+	/**
 	 * Title of the request matrix
 	 */
 	protected static final String REQUEST_TITLE = "Request";
@@ -43,6 +48,12 @@ public abstract class DeadlockAlgorithm {
 	 * Title of the work matrix
 	 */
 	protected static final String WORK_TITLE = "Work";
+
+	/**
+	 * Title of the work matrix's change
+	 */
+	protected static final String WORK_THROUGH_ITERS_TITLE =
+			"Work through iterations";
 
 	/**
 	 * A suffix that can be appended to the input file's name to form the
@@ -117,8 +128,9 @@ public abstract class DeadlockAlgorithm {
 
 	/**
 	 * The state of the end array can be saved in this list at each iteration.
+	 * Character 'T' means true; 'F' means false.
 	 */
-	protected List<Boolean[]> endStates = null;
+	protected List<Character[]> endStates = null;
 
 	/**
 	 * This constructor initializes the data of a deadlock algorithm with the
@@ -155,7 +167,7 @@ public abstract class DeadlockAlgorithm {
 		end = new Boolean[processCount];
 
 		workStates = new ArrayList<Integer[]>();
-		endStates = new ArrayList<Boolean[]>();
+		endStates = new ArrayList<Character[]>();
 	}
 
 	/**
@@ -187,6 +199,23 @@ public abstract class DeadlockAlgorithm {
 	 * @return true if the algorithm can be executed, false otherwise
 	 */
 	protected boolean beforeLoop() {return true;}
+
+	/**
+	 * Converts an array of Boolean objects to an array of Character objects.
+	 * In the output array, 'T' means true, and 'F' means false.
+	 * @param boolArray - an array of Boolean objects
+	 * @return an array of Character objects
+	 */
+	protected static Character[] booleanArrayToCharArray(Boolean[] boolArray) {
+		int valueCount = boolArray.length;
+		Character[] charArray = new Character[valueCount];
+
+		for(int i=0; i<valueCount; i++) {
+			charArray[i] = boolArray[i]? 'T': 'F';
+		}
+
+		return charArray;
+	}
 
 	/**
 	 * This method executes the deadlock algorithm. It records the available
@@ -338,16 +367,31 @@ public abstract class DeadlockAlgorithm {
 	 * separated by an empty line.
 	 */
 	protected void recordWorkAndEndStates() {
-		recordArrayStates(WORK_TITLE, workStates);
+		recordArrayStates(WORK_THROUGH_ITERS_TITLE, workStates);
 		fileContent.addLine(null);
-		recordArrayStates(END_TITLE, endStates);
+		recordArrayStates(END_THROUGH_ITERS_TITLE, endStates);
 	}
 
 	/**
-	 * Adds work's and end's current state to their respective list.
+	 * Adds end's current state to its state list.
+	 */
+	protected void saveEndState() {
+		Character[] endAsCharArray = booleanArrayToCharArray(end);
+		endStates.add(endAsCharArray);
+	}
+
+	/**
+	 * Adds work's current state to its state list.
+	 */
+	protected void saveWorkState() {
+		workStates.add(work.rowToArray(0));
+	}
+
+	/**
+	 * Adds work's and end's current state to their respective state list.
 	 */
 	protected void saveWorkAndEndState() {
-		workStates.add(work.rowToArray(0));
-		endStates.add(Arrays.copyOf(end, end.length));
+		saveWorkState();
+		saveEndState();
 	}
 }
