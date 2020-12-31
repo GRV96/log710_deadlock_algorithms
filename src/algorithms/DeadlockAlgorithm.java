@@ -3,6 +3,7 @@ package algorithms;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -112,12 +113,12 @@ public abstract class DeadlockAlgorithm {
 	 * The state of the work matrix can be saved in this list at each
 	 * iteration.
 	 */
-	protected List<Integer[]> workRecord = null;
+	protected List<Integer[]> workStates = null;
 
 	/**
 	 * The state of the end array can be saved in this list at each iteration.
 	 */
-	protected List<Boolean[]> endRecord = null;
+	protected List<Boolean[]> endStates = null;
 
 	/**
 	 * This constructor initializes the data of a deadlock algorithm with the
@@ -153,8 +154,8 @@ public abstract class DeadlockAlgorithm {
 
 		end = new Boolean[processCount];
 
-		workRecord = new ArrayList<Integer[]>();
-		endRecord = new ArrayList<Boolean[]>();
+		workStates = new ArrayList<Integer[]>();
+		endStates = new ArrayList<Boolean[]>();
 	}
 
 	/**
@@ -257,7 +258,7 @@ public abstract class DeadlockAlgorithm {
 	}
 
 	/**
-	 * Records in fileConten an array's states through this algorithm's
+	 * Records in fileContent an array's states through this algorithm's
 	 * iterations.
 	 * @param <T> - the arrays' data type
 	 * @param title - The title is recorded on the line above the states's
@@ -330,5 +331,23 @@ public abstract class DeadlockAlgorithm {
 	 */
 	protected void recordProcessToExecute(int procIndex) {
 		fileContent.addLine("Process " + procIndex + " executed");
+	}
+
+	/**
+	 * Records work's and end's successive states in fileContent. They are
+	 * separated by an empty line.
+	 */
+	protected void recordWorkAndEndStates() {
+		recordArrayStates(WORK_TITLE, workStates);
+		fileContent.addLine(null);
+		recordArrayStates(END_TITLE, endStates);
+	}
+
+	/**
+	 * Adds work's and end's current state to their respective list.
+	 */
+	protected void saveWorkAndEndState() {
+		workStates.add(work.rowToArray(0));
+		endStates.add(Arrays.copyOf(end, end.length));
 	}
 }
