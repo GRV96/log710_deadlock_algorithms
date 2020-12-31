@@ -2,6 +2,9 @@ package algorithms;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import files.FileContent;
 import files.FileUtil;
@@ -31,6 +34,12 @@ public abstract class DeadlockAlgorithm {
 	protected static final String END_TITLE = "End";
 
 	/**
+	 * Title of the end boolean array's change
+	 */
+	protected static final String END_THROUGH_ITERS_TITLE =
+			"End through iterations";
+
+	/**
 	 * Title of the request matrix
 	 */
 	protected static final String REQUEST_TITLE = "Request";
@@ -39,6 +48,12 @@ public abstract class DeadlockAlgorithm {
 	 * Title of the work matrix
 	 */
 	protected static final String WORK_TITLE = "Work";
+
+	/**
+	 * Title of the work matrix's change
+	 */
+	protected static final String WORK_THROUGH_ITERS_TITLE =
+			"Work through iterations";
 
 	/**
 	 * A suffix that can be appended to the input file's name to form the
@@ -101,9 +116,21 @@ public abstract class DeadlockAlgorithm {
 	protected Boolean[] end = null;
 
 	/**
-	 * The number of the current iteration
+	 * The number of the current iteration. Iteration number starts at 1.
 	 */
 	protected int iteration;
+
+	/**
+	 * The state of the work matrix can be saved in this list at each
+	 * iteration.
+	 */
+	protected List<Integer[]> workStates = null;
+
+	/**
+	 * The state of the end array can be saved in this list at each iteration.
+	 * Character 'T' means true; 'F' means false.
+	 */
+	protected List<Character[]> endStates = null;
 
 	/**
 	 * This constructor initializes the data of a deadlock algorithm with the
@@ -134,13 +161,35 @@ public abstract class DeadlockAlgorithm {
 		processCount = inputReader.getProcessCount();
 
 		allocation = inputReader.getAllocationMatrix();
-
 		initAvailableMatrix();
-
 		request = inputReader.getRequestMatrix();
 
 		end = new Boolean[processCount];
+
+		workStates = new ArrayList<Integer[]>();
+		endStates = new ArrayList<Character[]>();
 	}
+
+	/**
+	 * Converts an array to a line of text. Array elements are separated by
+	 * spaces in the text line.
+	 * @param <T> - the array's data type
+	 * @param array - the array to convert
+	 * @return a line of text containing the array's elements
+	 */
+	private <T> String arrayToTextLine(T[] array) {
+		String line = "";
+		for(int i=0; i<array.length; i++) {
+			line += array[i] + " ";
+		}
+		return line;
+	}
+
+	/**
+	 * This method is meant to be overridden. It is executed once after the
+	 * algorithm ends. The default implementation does nothing.
+	 */
+	protected void afterLoop() {}
 
 	/**
 	 * This method is meant to be overridden. It is executed once before the
@@ -150,6 +199,23 @@ public abstract class DeadlockAlgorithm {
 	 * @return true if the algorithm can be executed, false otherwise
 	 */
 	protected boolean beforeLoop() {return true;}
+
+	/**
+	 * Converts an array of Boolean objects to an array of Character objects.
+	 * In the output array, 'T' means true, and 'F' means false.
+	 * @param boolArray - an array of Boolean objects
+	 * @return an array of Character objects
+	 */
+	protected static Character[] booleanArrayToCharArray(Boolean[] boolArray) {
+		int valueCount = boolArray.length;
+		Character[] charArray = new Character[valueCount];
+
+		for(int i=0; i<valueCount; i++) {
+			charArray[i] = boolArray[i]? 'T': 'F';
+		}
+
+		return charArray;
+	}
 
 	/**
 	 * This method executes the deadlock algorithm. It records the available
@@ -166,6 +232,7 @@ public abstract class DeadlockAlgorithm {
 		while(keepLooping) {
 			keepLooping = loop();
 		}
+		afterLoop();
 
 		outputWriter.writeToFile(fileContent);
 	}
@@ -200,10 +267,7 @@ public abstract class DeadlockAlgorithm {
 	 */
 	protected <T> void recordArray(String arrayTitle, T[] array) {
 		fileContent.addLine(arrayTitle);
-		String line = "";
-		for(int i=0; i<array.length; i++) {
-			line += array[i] + " ";
-		}
+		String line = arrayToTextLine(array);
 		fileContent.addLine(line);
 	}
 
@@ -217,12 +281,41 @@ public abstract class DeadlockAlgorithm {
 	 * @return the line of text that represents the array and was recorded
 	 */
 	protected <T> String recordArrayOneLine(String arrayTitle, T[] array) {
-		String line = arrayTitle + ": ";
-		for(int i=0; i<array.length; i++) {
-			line += array[i] + " ";
-		}
+		String line = arrayTitle + ": " + arrayToTextLine(array);
 		fileContent.addLine(line);
 		return line;
+	}
+
+	/**
+	 * Records in fileContent an array's states through this algorithm's
+	 * iterations.
+	 * @param <T> - the arrays' data type
+	 * @param title - The title is recorded on the line above the states's
+	 * record.
+	 * @param stateList - Contains an array's successive states.
+	 */
+	protected <T> void recordArrayStates(String title, List<T[]> stateList) {
+		fileContent.addLine(title);
+		int iterCount = 1;
+		Iterator<T[]> stateIter = stateList.iterator();
+		while(stateIter.hasNext()) {
+			T[] array = stateIter.next();
+			String line = Integer.toString(iterCount)
+					+ ") " + arrayToTextLine(array);
+			fileContent.addLine(line);
+			iterCount++;
+		}
+	}
+
+	/**
+	 * Records the end array in fileContent and adds its current state to
+	 * its state list. End's elements are represented by 'T' (true) and 'F'
+	 * (false).
+	 */
+	protected void recordEndAndSaveItsState() {
+		Character[] endAsCharArray = booleanArrayToCharArray(end);
+		recordArray(END_TITLE, endAsCharArray);
+		endStates.add(endAsCharArray);
 	}
 
 	/**
@@ -234,10 +327,8 @@ public abstract class DeadlockAlgorithm {
 	protected void recordIntMatrix(String matrixTitle, IntMatrix matrix) {
 		fileContent.addLine(matrixTitle);
 		for(int i=0; i<matrix.rows; i++) {
-			String line = "";
-			for(int j=0; j<matrix.columns; j++) {
-				line += matrix.get(i, j) + " ";
-			}
+			Integer[] array = matrix.rowToArray(i);
+			String line = arrayToTextLine(array);
 			fileContent.addLine(line);
 		}
 	}
@@ -280,5 +371,47 @@ public abstract class DeadlockAlgorithm {
 	 */
 	protected void recordProcessToExecute(int procIndex) {
 		fileContent.addLine("Process " + procIndex + " executed");
+	}
+
+	/**
+	 * Records work's and end's successive states in fileContent. They are
+	 * separated by an empty line.
+	 */
+	protected void recordWorkAndEndStates() {
+		recordArrayStates(WORK_THROUGH_ITERS_TITLE, workStates);
+		fileContent.addLine(null);
+		recordArrayStates(END_THROUGH_ITERS_TITLE, endStates);
+	}
+
+	/**
+	 * Records the work matrix in fileContent and adds its current state to
+	 * its state list.
+	 */
+	protected void recordWorkAndSaveItsState() {
+		recordIntMatrix(WORK_TITLE, work);
+		workStates.add(work.rowToArray(0));
+	}
+
+	/**
+	 * Adds end's current state to its state list.
+	 */
+	protected void saveEndState() {
+		Character[] endAsCharArray = booleanArrayToCharArray(end);
+		endStates.add(endAsCharArray);
+	}
+
+	/**
+	 * Adds work's current state to its state list.
+	 */
+	protected void saveWorkState() {
+		workStates.add(work.rowToArray(0));
+	}
+
+	/**
+	 * Adds work's and end's current state to their respective state list.
+	 */
+	protected void saveWorkAndEndState() {
+		saveWorkState();
+		saveEndState();
 	}
 }
