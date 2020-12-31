@@ -16,8 +16,20 @@ public class IntMatrix {
 	 * @param rows - this matrix's number of rows
 	 * @param columns - this matrix's number of columns
 	 * @param content - the number in all this matrix's cells
+	 * @throws IllegalArgumentException if the number of rows or columns is 0
+	 * or less
 	 */
-	public IntMatrix(int rows, int columns, int content) {
+	public IntMatrix(int rows, int columns, int content)
+			throws IllegalArgumentException {
+		if(rows <= 0) {
+			throw new IllegalArgumentException(
+					"The number of rows must be greater than 0.");
+		}
+		if(columns <= 0) {
+			throw new IllegalArgumentException(
+					"The number of columns must be greater than 0.");
+		}
+
 		this.rows = rows;
 		this.columns = columns;
 
