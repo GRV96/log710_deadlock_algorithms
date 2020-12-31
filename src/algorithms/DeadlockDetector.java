@@ -52,14 +52,13 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 		if(procIndex > -1) {
 			work.addition(allocation.rowToIntMatrix(procIndex));
 			end[procIndex] = true;
-			saveWorkAndEndState();
 
 			recordIterationNumber(iteration);
 			recordProcessToExecute(procIndex);
 			fileContent.addLine(null);
-			recordIntMatrix(WORK_TITLE, work);
+			recordWorkAndSaveItsState();
 			fileContent.addLine(null);
-			recordArray(END_TITLE, booleanArrayToCharArray(end));
+			recordEndAndSaveItsState();
 		}
 		else {
 			String procNumbers = "";

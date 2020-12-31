@@ -66,7 +66,8 @@ public class SafeSequenceMaker extends DeadlockPreventer {
 			addProcToSafeSeq(procNumber);
 			recordProcessToExecute(procNumber);
 			fileContent.addLine(null);
-			recordIntMatrix(WORK_TITLE, work);
+			recordWorkAndSaveItsState();
+			saveEndState();
 			fileContent.addLine(null);
 			recordSafeSequence();
 			keepLooping = safeSeqLength < processCount;
@@ -76,7 +77,6 @@ public class SafeSequenceMaker extends DeadlockPreventer {
 			keepLooping = false;
 		}
 
-		saveWorkAndEndState();
 		iteration++;
 		return keepLooping;
 	}

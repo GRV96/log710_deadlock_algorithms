@@ -308,6 +308,17 @@ public abstract class DeadlockAlgorithm {
 	}
 
 	/**
+	 * Records the end array in fileContent and adds its current state to
+	 * its state list. End's elements are represented by 'T' (true) and 'F'
+	 * (false).
+	 */
+	protected void recordEndAndSaveItsState() {
+		Character[] endAsCharArray = booleanArrayToCharArray(end);
+		recordArray(END_TITLE, endAsCharArray);
+		endStates.add(endAsCharArray);
+	}
+
+	/**
 	 * Records a matrix in fileContent so it will be written in the output
 	 * file. The values in the matrix's rows are separated with spaces.
 	 * @param matrixTitle - The title is recorded on the line above the matrix.
@@ -370,6 +381,15 @@ public abstract class DeadlockAlgorithm {
 		recordArrayStates(WORK_THROUGH_ITERS_TITLE, workStates);
 		fileContent.addLine(null);
 		recordArrayStates(END_THROUGH_ITERS_TITLE, endStates);
+	}
+
+	/**
+	 * Records the work matrix in fileContent and adds its current state to
+	 * its state list.
+	 */
+	protected void recordWorkAndSaveItsState() {
+		recordIntMatrix(WORK_TITLE, work);
+		workStates.add(work.rowToArray(0));
 	}
 
 	/**
