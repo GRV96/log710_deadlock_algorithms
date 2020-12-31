@@ -111,12 +111,16 @@ public class IntMatrix {
 	 * this matrix.
 	 * @param other - another instance of IntMatrix
 	 * @param row - the index of the row in which the addition is to be
-	 * performed.
-	 * @throws IllegalArgumentException if dimensionsAreEqual(other) returns
-	 * false
+	 * performed
+	 * @throws IllegalArgumentException if row is out of bounds or
+	 * dimensionsAreEqual(other) returns false
 	 */
 	public void additionOnRow(IntMatrix other, int row)
 			throws IllegalArgumentException {
+		if(!rowIndexIsInBounds(row)) {
+			throw new IllegalArgumentException(
+					"This matrix does not have row " + row + ".");
+		}
 		if(!dimensionsAreEqual(other)) {
 			throw new IllegalArgumentException(
 					"The matrices have different dimensions.");
@@ -127,16 +131,24 @@ public class IntMatrix {
 	}
 
 	/**
+	 * Indicates whether the given index matches a column of this matrix.
+	 * @param columnIndex - the index of a column
+	 * @return true if columnIndex ranges from 0 to columns-1, false otherwise
+	 */
+	public boolean columnIndexIsInBounds(int columnIndex) {
+		return 0 <= columnIndex && columnIndex < columns;
+	}
+
+	/**
 	 * Calculates the sum of the numbers in the specified column.
 	 * @param column - a column index
 	 * @return the sum of the numbers in the column
-	 * @throws IllegalArgumentException if this matrix does not have a column
-	 * matching the given column index
+	 * @throws IllegalArgumentException if column is out of bounds
 	 */
 	public int columnSum(int column) throws IllegalArgumentException {
-		if(column<0 || columns<column) {
-			throw new IllegalArgumentException("This matrix does not have column "
-					+ column + ".");
+		if(!columnIndexIsInBounds(column)) {
+			throw new IllegalArgumentException(
+					"This matrix does not have column " + column + ".");
 		}
 		int sum = 0;
 		for(int i=0; i<rows; i++) {
@@ -256,6 +268,15 @@ public class IntMatrix {
 	}
 
 	/**
+	 * Indicates whether the given index matches a row of this matrix.
+	 * @param rowIndex - the index of a row
+	 * @return true if rowIndex ranges from 0 to rows-1, false otherwise
+	 */
+	public boolean rowIndexIsInBounds(int rowIndex) {
+		return 0 <= rowIndex && rowIndex < rows;
+	}
+
+	/**
 	 * Determines whether a 2-dimensional array's rows all have the same
 	 * length. The first index represents rows; the second represents columns.
 	 * @param intArray2d - a 2-dimensional array
@@ -283,9 +304,13 @@ public class IntMatrix {
 	/**
 	 * Creates an array containing a copy of the specified row of this matrix.
 	 * @param row - a row index
-	 * @return the content of the specified row in an array
+	 * @return the content of the specified row in an array or null if row is
+	 * out of bounds
 	 */
 	public Integer[] rowToArray(int row) {
+		if(!rowIndexIsInBounds(row)) {
+			return null;
+		}
 		Integer[] rowArray = new Integer[columns];
 		for(int j=0; j<columns; j++) {
 			rowArray[j] = matrix[row][j];
@@ -297,10 +322,11 @@ public class IntMatrix {
 	 * Creates a row matrix containing the numbers in the specified row of
 	 * this matrix.
 	 * @param row - a row index
-	 * @return a new matrix containing the specified row
+	 * @return a new matrix containing the specified row or null if row is out
+	 * of bounds
 	 */
 	public IntMatrix rowToIntMatrix(int row) {
-		if(row<0 || rows<=row) {
+		if(!rowIndexIsInBounds(row)) {
 			return null;
 		}
 		return new IntMatrix(matrix[row]);
@@ -315,7 +341,7 @@ public class IntMatrix {
 	 * @return a string containing the numbers in the given row
 	 */
 	public String rowToString(int row, String separator) {
-		if(row<0 || rows<=row) {
+		if(!rowIndexIsInBounds(row)) {
 			return null;
 		}
 
@@ -331,13 +357,12 @@ public class IntMatrix {
 	 * Calculates the sum of the numbers in the specified row.
 	 * @param row - a row index
 	 * @return the sum of the numbers in the row
-	 * @throws IllegalArgumentException if this matrix does not have a row
-	 * matching the given row index
+	 * @throws IllegalArgumentException if row is out of bounds
 	 */
 	public int rowSum(int row) throws IllegalArgumentException {
-		if(row<0 || rows<row) {
-			throw new IllegalArgumentException("This matrix does not have row "
-					+ row + ".");
+		if(!rowIndexIsInBounds(row)) {
+			throw new IllegalArgumentException(
+					"This matrix does not have row " + row + ".");
 		}
 		int sum = 0;
 		for(int j=0; j<columns; j++) {
