@@ -192,8 +192,12 @@ public class IntMatrix {
 	 * Copies the content of a matrix into another matrix.
 	 * @param destination - the matrix in which the copy is performed
 	 * @param source - the copied matrix
+	 * @throws IllegalArgumentException if destination and source do not have
+	 * the same dimensions as destination
 	 */
-	private static void copyContent(IntMatrix destination, IntMatrix source) {
+	private static void copyContent(IntMatrix destination, IntMatrix source)
+			throws IllegalArgumentException {
+		destination.exceptionForDifferentDimensions(source);
 		copyContent(destination.matrix, source.matrix);
 	}
 
