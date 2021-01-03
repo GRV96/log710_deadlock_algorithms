@@ -332,15 +332,18 @@ public class IntMatrix {
 		if(rowCount == 0) {
 			return false;
 		}
+
 		else if(rowCount == 1) {
 			return true;
 		}
+
 		final int rowLength = intArray2d[0].length;
 		for(int i=1; i<rowCount; i++) {
 			if(intArray2d[i].length != rowLength) {
 				return false;
 			}
 		}
+
 		return true;
 	}
 

@@ -37,7 +37,7 @@ public abstract class DeadlockAlgorithm {
 	 * Title of the end boolean array's change
 	 */
 	protected static final String END_THROUGH_ITERS_TITLE =
-			"End through iterations";
+			"End through the iterations";
 
 	/**
 	 * Title of the request matrix
@@ -53,7 +53,7 @@ public abstract class DeadlockAlgorithm {
 	 * Title of the work matrix's change
 	 */
 	protected static final String WORK_THROUGH_ITERS_TITLE =
-			"Work through iterations";
+			"Work through the iterations";
 
 	/**
 	 * A suffix that can be appended to the input file's name to form the
