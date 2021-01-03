@@ -94,10 +94,7 @@ public class IntMatrix {
 	 * false
 	 */
 	public void addition(IntMatrix other) throws IllegalArgumentException {
-		if(!dimensionsAreEqual(other)) {
-			throw new IllegalArgumentException(
-					"The matrices have different dimensions.");
-		}
+		exceptionForDifferentDimensions(other);
 		for(int i=0; i<rows; i++) {
 			for(int j=0; j<columns; j++) {
 				matrix[i][j] += other.matrix[i][j];
@@ -118,11 +115,7 @@ public class IntMatrix {
 	public void additionOnRow(IntMatrix other, int row)
 			throws IllegalArgumentException {
 		exceptionForIllegalRowIndex(row);
-
-		if(!dimensionsAreEqual(other)) {
-			throw new IllegalArgumentException(
-					"The matrices have different dimensions.");
-		}
+		exceptionForDifferentDimensions(other);
 
 		for(int j=0; j<columns; j++) {
 			matrix[row][j] += other.matrix[row][j];
@@ -214,6 +207,23 @@ public class IntMatrix {
 	}
 
 	/**
+	 * Throws an IllegalArgumentException if the other matrix does not have
+	 * the same dimensions as this one.
+	 * @param other - another instance of IntMatrix
+	 * @throws IllegalArgumentException if other does not have the same
+	 * dimensions as this
+	 */
+	private void exceptionForDifferentDimensions(IntMatrix other)
+			throws IllegalArgumentException {
+		if(!dimensionsAreEqual(other)) {
+			throw new IllegalArgumentException(
+					"The matrices must have the same dimensions. This: " + rows
+					+ "×" + columns + "; other: " + other.rows + "×"
+					+ other.columns + ".");
+		}
+	}
+
+	/**
 	 * Throws an IllegalArgumentException if the given column index is out of
 	 * bounds.
 	 * @param columnIndex - a column index
@@ -283,10 +293,8 @@ public class IntMatrix {
 	 */
 	public boolean isLeqToMat(IntMatrix other)
 			throws IllegalArgumentException {
-		if(!dimensionsAreEqual(other)) {
-			throw new IllegalArgumentException(
-					"The matrices have different dimensions.");
-		}
+		exceptionForDifferentDimensions(other);
+
 		for(int i=0; i<rows; i++) {
 			for(int j=0; j<columns; j++) {
 				if(get(i, j) > other.get(i, j)) {
@@ -294,6 +302,7 @@ public class IntMatrix {
 				}
 			}
 		}
+
 		return true;
 	}
 
