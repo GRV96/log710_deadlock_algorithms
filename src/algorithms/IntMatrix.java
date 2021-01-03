@@ -334,17 +334,17 @@ public class IntMatrix {
 	/**
 	 * Creates an array containing a copy of the specified row of this matrix.
 	 * @param row - a row index
-	 * @return the content of the specified row in an array or null if row is
-	 * out of bounds
+	 * @return the content of the specified row in an array
+	 * @throws IllegalArgumentException if row is out of bounds
 	 */
 	public Integer[] rowToArray(int row) {
-		if(!rowIndexIsInBounds(row)) {
-			return null;
-		}
+		exceptionForIllegalRowIndex(row);
+
 		Integer[] rowArray = new Integer[columns];
 		for(int j=0; j<columns; j++) {
 			rowArray[j] = matrix[row][j];
 		}
+
 		return rowArray;
 	}
 
@@ -352,13 +352,11 @@ public class IntMatrix {
 	 * Creates a row matrix containing the numbers in the specified row of
 	 * this matrix.
 	 * @param row - a row index
-	 * @return a new matrix containing the specified row or null if row is out
-	 * of bounds
+	 * @return a new matrix containing the specified row
+	 * @throws IllegalArgumentException if row is out of bounds
 	 */
 	public IntMatrix rowToIntMatrix(int row) {
-		if(!rowIndexIsInBounds(row)) {
-			return null;
-		}
+		exceptionForIllegalRowIndex(row);
 		return new IntMatrix(matrix[row]);
 	}
 
@@ -369,11 +367,11 @@ public class IntMatrix {
 	 * @param row - a row index
 	 * @param separator - a sequence of characters to separate the numbers
 	 * @return a string containing the numbers in the given row
+	 * @throws IllegalArgumentException if row is out of bounds
 	 */
-	public String rowToString(int row, String separator) {
-		if(!rowIndexIsInBounds(row)) {
-			return null;
-		}
+	public String rowToString(int row, String separator)
+			throws IllegalArgumentException {
+		exceptionForIllegalRowIndex(row);
 
 		String rowStr = "";
 		for(int j=0; j<columns; j++) {
