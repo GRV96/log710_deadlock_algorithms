@@ -117,14 +117,13 @@ public class IntMatrix {
 	 */
 	public void additionOnRow(IntMatrix other, int row)
 			throws IllegalArgumentException {
-		if(!rowIndexIsInBounds(row)) {
-			throw new IllegalArgumentException(
-					"This matrix does not have row " + row + ".");
-		}
+		exceptionForIllegalRowIndex(row);
+
 		if(!dimensionsAreEqual(other)) {
 			throw new IllegalArgumentException(
 					"The matrices have different dimensions.");
 		}
+
 		for(int j=0; j<columns; j++) {
 			matrix[row][j] += other.matrix[row][j];
 		}
@@ -146,14 +145,13 @@ public class IntMatrix {
 	 * @throws IllegalArgumentException if column is out of bounds
 	 */
 	public int columnSum(int column) throws IllegalArgumentException {
-		if(!columnIndexIsInBounds(column)) {
-			throw new IllegalArgumentException(
-					"This matrix does not have column " + column + ".");
-		}
+		exceptionForIllegalColumnIndex(column);
+
 		int sum = 0;
 		for(int i=0; i<rows; i++) {
 			sum += matrix[i][column];
 		}
+
 		return sum;
 	}
 
@@ -216,14 +214,46 @@ public class IntMatrix {
 	}
 
 	/**
+	 * Throws an IllegalArgumentException if the given column index is out of
+	 * bounds.
+	 * @param columnIndex - a column index
+	 * @throws IllegalArgumentException if columnIndex is out of bounds
+	 */
+	private void exceptionForIllegalColumnIndex(int columnIndex)
+			throws IllegalArgumentException {
+		if(!columnIndexIsInBounds(columnIndex)) {
+			throw new IllegalArgumentException(
+					"Column indices range from 0 to " + (columns-1)
+					+ ". Index " + columnIndex + "is out of bounds.");
+		}
+	}
+
+	/**
+	 * Throws an IllegalArgumentException if the given row index is out of
+	 * bounds.
+	 * @param rowIndex - a row index
+	 * @throws IllegalArgumentException if rowIndex is out of bounds
+	 */
+	private void exceptionForIllegalRowIndex(int rowIndex)
+			throws IllegalArgumentException {
+		if(!rowIndexIsInBounds(rowIndex)) {
+			throw new IllegalArgumentException(
+					"Row indices range from 0 to "+ (rows-1)
+					+ ". Index " + rowIndex + " is out of bounds.");
+		}
+	}
+
+	/**
 	 * Accesses the number at the given coordinates in this matrix.
 	 * @param row - a row index
 	 * @param column - a column index
 	 * @return the number at the given coordinates
-	 * @throws ArrayIndexOutOfBoundsException if row or column is out of bounds
+	 * @throws IllegalArgumentException if row or column is out of bounds
 	 */
 	public int get(int row, int column)
-			throws ArrayIndexOutOfBoundsException {
+			throws IllegalArgumentException {
+		exceptionForIllegalRowIndex(row);
+		exceptionForIllegalColumnIndex(column);
 		return matrix[row][column];
 	}
 
@@ -360,14 +390,13 @@ public class IntMatrix {
 	 * @throws IllegalArgumentException if row is out of bounds
 	 */
 	public int rowSum(int row) throws IllegalArgumentException {
-		if(!rowIndexIsInBounds(row)) {
-			throw new IllegalArgumentException(
-					"This matrix does not have row " + row + ".");
-		}
+		exceptionForIllegalRowIndex(row);
+
 		int sum = 0;
 		for(int j=0; j<columns; j++) {
 			sum += matrix[row][j];
 		}
+
 		return sum;
 	}
 
@@ -376,10 +405,12 @@ public class IntMatrix {
 	 * @param row - a row index
 	 * @param column - a column index
 	 * @param number - the number to put at the given coordinates.
-	 * @throws ArrayIndexOutOfBoundsException if row or column is out of bounds
+	 * @throws IllegalArgumentException if row or column is out of bounds
 	 */
 	public void set(int row, int column, int number)
-			throws ArrayIndexOutOfBoundsException {
+			throws IllegalArgumentException {
+		exceptionForIllegalRowIndex(row);
+		exceptionForIllegalColumnIndex(column);
 		matrix[row][column] = number;
 	}
 
