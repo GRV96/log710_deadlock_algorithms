@@ -49,8 +49,9 @@ public class IntMatrix {
 	 */
 	public IntMatrix(int[] content) throws IllegalArgumentException {
 		if(content.length == 0) {
-			throw new IllegalArgumentException("Row length is not constant.");
+			throw new IllegalArgumentException("Content's length is 0.");
 		}
+
 		rows = 1;
 		columns = content.length;
 		matrix = new int[rows][columns];
@@ -68,6 +69,7 @@ public class IntMatrix {
 		if(!rowLengthIsConstant(content)) {
 			throw new IllegalArgumentException("Row length is not constant.");
 		}
+
 		rows = content.length;
 		columns = content[0].length;
 		matrix = new int[rows][columns];
@@ -95,6 +97,7 @@ public class IntMatrix {
 	 */
 	public void addition(IntMatrix other) throws IllegalArgumentException {
 		exceptionForDifferentDimensions(other);
+
 		for(int i=0; i<rows; i++) {
 			for(int j=0; j<columns; j++) {
 				matrix[i][j] += other.matrix[i][j];
@@ -158,9 +161,11 @@ public class IntMatrix {
 	public IntMatrix columnSumMatrix()
 			throws IllegalArgumentException {
 		int[] sumArray = new int[columns];
+
 		for(int j=0; j<columns; j++) {
 			sumArray[j] = columnSum(j);
 		}
+
 		return new IntMatrix(sumArray);
 	}
 
@@ -278,11 +283,13 @@ public class IntMatrix {
 	 */
 	public IntMatrix getOpposite() {
 		IntMatrix opposite = new IntMatrix(this);
+
 		for(int i=0; i<rows; i++) {
 			for(int j=0; j<columns; j++) {
 				opposite.matrix[i][j] *= -1;
 			}
 		}
+
 		return opposite;
 	}
 
