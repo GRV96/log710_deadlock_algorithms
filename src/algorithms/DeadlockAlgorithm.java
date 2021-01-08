@@ -19,38 +19,45 @@ import files.OutputFileWriter;
 public abstract class DeadlockAlgorithm {
 
 	/**
-	 * Title of the allocation matrix
+	 * This message is written in the output file if the allocated resources
+	 * exceed the number of existent resources.
+	 */
+	private static final String ALLOC_EXCEEDS_RES_MSG =
+			"ERROR! The allocation exceeds the existent resources.";
+
+	/**
+	 * Title of matrix allocation
 	 */
 	protected static final String ALLOCATION_TITLE = "Allocation";
 
 	/**
-	 * Title of the available matrix
+	 * Title of matrix available
 	 */
 	protected static final String AVAILABLE_TITLE = "Available";
 
 	/**
-	 * Title of the end boolean array
+	 * Title of boolean array end
 	 */
 	protected static final String END_TITLE = "End";
 
 	/**
-	 * Title of the end boolean array's change
+	 * Title of boolean array end's state list
 	 */
 	protected static final String END_THROUGH_ITERS_TITLE =
 			"End through the iterations";
 
 	/**
-	 * Title of the request matrix
+	 * Title of matrix request
 	 */
 	protected static final String REQUEST_TITLE = "Request";
 
 	/**
-	 * Title of the work matrix
+	 * Title of matrix work
 	 */
 	protected static final String WORK_TITLE = "Work";
 
 	/**
-	 * Title of the work matrix's change
+	 * Title of matrix work's state list
 	 */
 	protected static final String WORK_THROUGH_ITERS_TITLE =
 			"Work through the iterations";
@@ -75,6 +82,10 @@ public abstract class DeadlockAlgorithm {
 	 */
 	protected InputFileReader inputReader = null;
 
+	/**
+	 * This object creates the output file and stores lines of text meant to
+	 * be written in it.
+	 */
 	protected OutputFileWriter outputWriter = null;
 
 	/**
@@ -83,35 +94,40 @@ public abstract class DeadlockAlgorithm {
 	protected int processCount = -1;
 
 	/**
-	 * The allocation matrix matches the processes (rows) with the number of
+	 * Matrix allocation matches the processes (rows) with the number of
 	 * resources of each type (columns) allocated to them.
 	 */
 	protected IntMatrix allocation = null;
 
 	/**
-	 * The available matrix indicates the number of available resources of
-	 * each type (columns). This is a row matrix.
+	 * True if the allocated resources do not exceed the number of existent
+	 * resources.
+	 */
+	private boolean allocLeqResources = false;
+
+	/**
+	 * Matrix available indicates the number of available resources of each
+	 * type (columns). This is a row matrix.
 	 */
 	protected IntMatrix available = null;
 
 	/**
-	 * The request matrix indicates the number of resources of each type
-	 * (columns) requested by the processes (rows).
+	 * Matrix request indicates the number of resources of each type (columns)
+	 * requested by the processes (rows).
 	 */
 	protected IntMatrix request = null;
 
 	/**
-	 * The work matrix is initialized with the content of available. It is
-	 * changed and compared to another matrix in each iteration of an
-	 * algorithm. This is a row matrix whose length is equal to the number of
-	 * resource types.
+	 * Matrix work is initialized with the content of available. It is changed
+	 * and compared to another matrix in each iteration of an algorithm. This
+	 * is a row matrix whose length is equal to the number of resource types.
 	 */
 	protected IntMatrix work = null;
 
 	/**
-	 * The end array indicates whether a process has been executed (true) or
-	 * not (false). Its length is equal to the number of processes involved in
-	 * the algorithm.
+	 * Boolean array end indicates whether a process has been executed (true)
+	 * or not (false). Its length is equal to the number of processes involved
+	 * in the algorithm.
 	 */
 	protected Boolean[] end = null;
 
@@ -121,13 +137,12 @@ public abstract class DeadlockAlgorithm {
 	protected int iteration;
 
 	/**
-	 * The state of the work matrix can be saved in this list at each
-	 * iteration.
+	 * The state of matrix work can be saved in this list at each iteration.
 	 */
 	protected List<Integer[]> workStates = null;
 
 	/**
-	 * The state of the end array can be saved in this list at each iteration.
+	 * The state of array end can be saved in this list at each iteration.
 	 * Character 'T' means true; 'F' means false.
 	 */
 	protected List<Character[]> endStates = null;
@@ -160,8 +175,15 @@ public abstract class DeadlockAlgorithm {
 
 		processCount = inputReader.getProcessCount();
 
+		IntMatrix resources = inputReader.getResourceMatrix();
 		allocation = inputReader.getAllocationMatrix();
-		initAvailableMatrix();
+		// If false, available contains at least one negative number.
+		allocLeqResources = allocation.columnSumMatrix().isLeqToMat(resources);
+
+		available = resources;
+		IntMatrix allocColumnSum = allocation.columnSumMatrix();
+		available.substraction(allocColumnSum);
+
 		request = inputReader.getRequestMatrix();
 
 		end = new Boolean[processCount];
@@ -218,14 +240,21 @@ public abstract class DeadlockAlgorithm {
 	}
 
 	/**
-	 * This method executes the deadlock algorithm. It records the available
-	 * matrix in fileContent, calls beforeLoop and, if it returns true, calls
-	 * method loop repeatedly until it returns false.
+	 * This method executes the deadlock algorithm. It records matrix available
+	 * in fileContent, calls beforeLoop and, if it returns true, calls method
+	 * loop repeatedly until it returns false.
 	 * @throws Exception if loop throws one
 	 */
 	public final void execute() throws Exception {
 		fileContent.addLine(null);
 		recordIntMatrix(AVAILABLE_TITLE, available);
+
+		if(!allocLeqResources) {
+			fileContent.addLine(null);
+			fileContent.addLine(ALLOC_EXCEEDS_RES_MSG);
+			outputWriter.writeToFile(fileContent);
+			return;
+		}
 
 		iteration = 1;
 		boolean keepLooping = beforeLoop();
@@ -235,18 +264,6 @@ public abstract class DeadlockAlgorithm {
 		afterLoop();
 
 		outputWriter.writeToFile(fileContent);
-	}
-
-	/**
-	 * Initializes the row matrix available. Available is created as a copy of
-	 * the resource matrix from the input file, then the sum of every column
-	 * of the allocation matrix is substracted from the corresponding cell of
-	 * available.
-	 */
-	protected void initAvailableMatrix() {
-		available = inputReader.getResourceMatrix();
-		IntMatrix allocColumnSum = allocation.columnSumMatrix();
-		available.substraction(allocColumnSum);
 	}
 
 	/**
@@ -384,8 +401,8 @@ public abstract class DeadlockAlgorithm {
 	}
 
 	/**
-	 * Records the work matrix in fileContent and adds its current state to
-	 * its state list.
+	 * Records matrix work in fileContent and adds its current state to its
+	 * state list.
 	 */
 	protected void recordWorkAndSaveItsState() {
 		recordIntMatrix(WORK_TITLE, work);

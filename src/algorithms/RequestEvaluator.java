@@ -91,7 +91,7 @@ public class RequestEvaluator extends DeadlockPreventer {
 		}
 		fileContent.addLine(line);
 
-		initAvailableMatrix();
+		//initAvailableMatrix(); TODO
 
 		return true;
 	}
