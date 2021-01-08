@@ -112,14 +112,15 @@ public class RequestEvaluator extends DeadlockPreventer {
 		}
 		fileContent.addLine(null, 2);
 		fileContent.addLine(line + procAndReqStr);
-		fileContent.addLine(null);
 
 		int[] procAndReq = new int[resourceTypeCount+1];
 		try {
 			makeProcAndReqArray(procAndReqStr, procAndReq);
 		}
 		catch(Exception e) {
-			System.err.println("Incorrect input!");
+			line = "Incorrect input!";
+			System.err.println(line);
+			fileContent.addLine(line);
 			return true;
 		}
 		int procNumber = procAndReq[0];
@@ -127,6 +128,8 @@ public class RequestEvaluator extends DeadlockPreventer {
 		for(int j=0; j<resourceTypeCount; j++) {
 			request.set(procNumber, j, procAndReq[j+1]);
 		}
+
+		fileContent.addLine(null);
 
 		IntMatrix needRow = need.rowToIntMatrix(procNumber);
 		IntMatrix requestRow = request.rowToIntMatrix(procNumber);
