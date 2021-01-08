@@ -133,7 +133,7 @@ public class RequestEvaluator extends DeadlockPreventer {
 		catch(IllegalArgumentException iae) {
 			// Thrown by IntMatrix.set if procNumber >= processCount
 			line = "Process numbers range from 0 to " + (processCount-1)
-					+ ". Index " + procNumber + " is out of bounds.";
+					+ ". There is no process " + procNumber + ".";
 			System.err.println(line);
 			fileContent.addLine(line);
 			return true;
@@ -205,6 +205,7 @@ public class RequestEvaluator extends DeadlockPreventer {
 				System.out.println(line);
 				fileContent.addLine(line);
 			}
+
 			if(!execProc) { // execProc is false if safeState is false.
 				// Cancel allocation
 				available = availableCopy;
