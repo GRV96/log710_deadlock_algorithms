@@ -125,8 +125,18 @@ public class RequestEvaluator extends DeadlockPreventer {
 		}
 		int procNumber = procAndReq[0];
 
-		for(int j=0; j<resourceTypeCount; j++) {
-			request.set(procNumber, j, procAndReq[j+1]);
+		try {
+			for(int j=0; j<resourceTypeCount; j++) {
+				request.set(procNumber, j, procAndReq[j+1]);
+			}
+		}
+		catch(IllegalArgumentException iae) {
+			// Thrown by IntMatrix.set if procNumber >= processCount
+			line = "Process numbers range from 0 to " + (processCount-1)
+					+ ". Index " + procNumber + " is out of bounds.";
+			System.err.println(line);
+			fileContent.addLine(line);
+			return true;
 		}
 
 		fileContent.addLine(null);
