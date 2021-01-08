@@ -72,6 +72,11 @@ public class RequestEvaluator extends DeadlockPreventer {
 	}
 
 	@Override
+	protected void afterLoop() {
+		System.out.println();
+	}
+
+	@Override
 	protected boolean beforeLoop() {
 		fileContent.addLine(null);
 		recordIntMatrix(NEED_TITLE, need);

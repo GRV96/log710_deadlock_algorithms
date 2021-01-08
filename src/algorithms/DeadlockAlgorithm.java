@@ -252,7 +252,7 @@ public abstract class DeadlockAlgorithm {
 		recordIntMatrix(AVAILABLE_TITLE, available);
 
 		if(!allocLeqResources) {
-			System.err.println(ALLOC_EXCEEDS_RES_MSG);
+			System.err.print(ALLOC_EXCEEDS_RES_MSG + "\n\n");
 			fileContent.addLine(null);
 			fileContent.addLine(ALLOC_EXCEEDS_RES_MSG);
 			outputWriter.writeToFile(fileContent);
