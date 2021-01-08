@@ -294,10 +294,10 @@ public class IntMatrix {
 	}
 
 	/**
-	 * Determines whether every number in this matrix is lesser or equal to
+	 * Determines whether every number in this matrix is less than or equal to
 	 * the number in other at the same coordinates.
 	 * @param other - another instance of IntMatrix
-	 * @return true if every number in this matrix is lesser or equal to the
+	 * @return true if every number in this matrix is less than or equal to the
 	 * corresponding number in other, false otherwise
 	 * @throws IllegalArgumentException if dimensionsAreEqual(other) returns
 	 * false

@@ -100,10 +100,10 @@ public abstract class DeadlockAlgorithm {
 	protected IntMatrix allocation = null;
 
 	/**
-	 * True if the allocated resources are lesser or equal to the number of
+	 * True if the allocated resources are less than or equal to the number of
 	 * existent resources. More precisely, this field is true if the sum of
-	 * each column j of matrix Allocation is lesser or equal to the number in
-	 * cell (0, j) of matrix Resources. This field is false otherwise.
+	 * each column j of matrix Allocation is less than or equal to the number
+	 * in cell (0, j) of matrix Resources. This field is false otherwise.
 	 */
 	protected final boolean allocLeqResources;
 
@@ -244,7 +244,8 @@ public abstract class DeadlockAlgorithm {
 	/**
 	 * This method executes the deadlock algorithm. It records matrix Available
 	 * in fileContent, calls beforeLoop and, if it returns true, calls method
-	 * loop repeatedly until it returns false.
+	 * loop repeatedly until it returns false. At last, execute calls afterLoop
+	 * then writes the output file.
 	 * @throws Exception if loop throws one
 	 */
 	public final void execute() throws Exception {

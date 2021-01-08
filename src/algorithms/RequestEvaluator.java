@@ -115,7 +115,13 @@ public class RequestEvaluator extends DeadlockPreventer {
 		fileContent.addLine(null);
 
 		int[] procAndReq = new int[resourceTypeCount+1];
-		makeProcAndReqArray(procAndReqStr, procAndReq);
+		try {
+			makeProcAndReqArray(procAndReqStr, procAndReq);
+		}
+		catch(Exception e) {
+			System.err.println("Incorrect input!");
+			return true;
+		}
 		int procNumber = procAndReq[0];
 
 		for(int j=0; j<resourceTypeCount; j++) {
@@ -209,18 +215,24 @@ public class RequestEvaluator extends DeadlockPreventer {
 	}
 
 	/**
-	 * Fills an array containing the process index and the number of resources
-	 * of each type that it requests.
+	 * Fills an array with a process' index and the number of resources of
+	 * each type that it requests. Those numbers are obtained from
+	 * procAndReqStr, where they are separated by spaces. They must be natural
+	 * integers.
 	 * @param procAndReqStr - the string entered by the user representing a
 	 * process and a resource request
 	 * @param procAndReqArray - the array that will contain the process index
 	 * (index 0) and the resources it requests (other indices)
+	 * @throws ArrayIndexOutOfBoundsException if the number of integers in
+	 * procAndReqStr is less than procAndReqArray.length
+	 * @throws NumberFormatException if Integer.parseUnsignedInt throws one
 	 */
 	private static void makeProcAndReqArray(String procAndReqStr,
-			int[] procAndReqArray) {
+			int[] procAndReqArray) throws ArrayIndexOutOfBoundsException,
+	NumberFormatException {
 		String[] strArray = procAndReqStr.split(" ");
 		for(int i=0; i<procAndReqArray.length; i++) {
-			procAndReqArray[i] = Integer.parseInt(strArray[i]);
+			procAndReqArray[i] = Integer.parseUnsignedInt(strArray[i]);
 		}
 	}
 
