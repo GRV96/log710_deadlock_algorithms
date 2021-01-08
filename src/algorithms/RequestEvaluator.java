@@ -91,8 +91,6 @@ public class RequestEvaluator extends DeadlockPreventer {
 		}
 		fileContent.addLine(line);
 
-		//initAvailableMatrix(); TODO
-
 		return true;
 	}
 
@@ -267,8 +265,8 @@ public class RequestEvaluator extends DeadlockPreventer {
 	 * This method runs the banker's algorithm to determine whether the system's
 	 * current state is safe.
 	 * @return true if the system's state is safe, false otherwise
-	 * @throws IllegalArgumentException if an addition is attempted with the
-	 * work matrix and a matrix of different dimensions in
+	 * @throws IllegalArgumentException if an addition is attempted with
+	 * matrix Work and a matrix of different dimensions in
 	 * DeadlockPreventer.bankersAlgorithmIter.
 	 */
 	private boolean systemStateIsSafe() throws IllegalArgumentException {

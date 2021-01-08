@@ -60,8 +60,8 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 	 * @param recordData - If true, the banker's algorithm's data is recorded
 	 * in the output file.
 	 * @return the index of a process safe to execute or -1 if there is none
-	 * @throws IllegalArgumentException if an addition is attempted with the
-	 * work matrix and a matrix of different dimensions
+	 * @throws IllegalArgumentException if an addition is attempted with
+	 * matrix Work and a matrix of different dimensions
 	 */
 	protected int bankersAlgorithmIter(boolean recordData)
 			throws IllegalArgumentException {
@@ -86,9 +86,9 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 	}
 
 	/**
-	 * Determines whether all the squares of the end array contain true.
-	 * @return true if all the squares of the end array contain true of false
-	 * if at least one square contains false.
+	 * Determines whether all the elements of array End are true.
+	 * @return true if all the elements of array End are true, false if at
+	 * least one element is false.
 	 */
 	protected boolean endArrayIsTrue() {
 		for(int i=0; i<end.length; i++) {
@@ -100,7 +100,7 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 	}
 
 	/**
-	 * Sets all the values in end to false.
+	 * Sets all the values in array End to false.
 	 */
 	protected void initEndArray() {
 		for(int i=0; i<processCount; i++) {
