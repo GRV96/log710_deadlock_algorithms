@@ -43,7 +43,7 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 	public DeadlockPreventer(String inputPath, String outputPathSuffix)
 			throws IOException {
 		super(inputPath, outputPathSuffix); // Can throw IOException.
-		maximum = inputReader.getMaximumMatrix();
+		maximum = inputReader.getMatrixMaximum();
 		need = new IntMatrix(maximum);
 		need.substraction(allocation);
 	}

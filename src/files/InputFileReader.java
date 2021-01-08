@@ -12,10 +12,11 @@ public class InputFileReader {
 
 	private static final String PROCESS_COUNT = "Processes: ";
 	private static final String RESOURCE_TYPE_COUNT = "Resource types: ";
-	private static final String RESOURCE_ARRAY = "Resources";
-	private static final String ALLOCATION_MATRIX = "Allocation";
-	private static final String MAXIMUM_MATRIX = "Maximum";
-	private static final String REQUEST_MATRIX = "Request";
+
+	private static final String MATRIX_ALLOCATION_TITLE = "Allocation";
+	private static final String MATRIX_MAXIMUM_TITLE = "Maximum";
+	private static final String MATRIX_REQUEST_TITLE = "Request";
+	private static final String MATRIX_RESOURCES_TITLE = "Resources";
 
 	private int processCount = -1;
 	private int resourceTypeCount = -1;
@@ -91,19 +92,35 @@ public class InputFileReader {
 	}
 
 	/**
-	 * Accessor of the allocation matrix
-	 * @return a copy of the allocation matrix
+	 * Accessor of matrix Allocation
+	 * @return a copy of matrix Allocation
 	 */
-	public IntMatrix getAllocationMatrix() {
+	public IntMatrix getMatrixAllocation() {
 		return allocation==null? null: new IntMatrix(allocation);
 	}
 
 	/**
-	 * Accessor of the maximum matrix
-	 * @return a copy of the maximum matrix
+	 * Accessor of matrix Maximum
+	 * @return a copy of matrix Maximum
 	 */
-	public IntMatrix getMaximumMatrix() {
+	public IntMatrix getMatrixMaximum() {
 		return maximum==null? null: new IntMatrix(maximum);
+	}
+
+	/**
+	 * Accessor of matrix Request
+	 * @return a copy of matrix Request
+	 */
+	public IntMatrix getMatrixRequest() {
+		return request==null? null: new IntMatrix(request);
+	}
+
+	/**
+	 * Accessor of matrix Resources
+	 * @return a copy of matrix Resources
+	 */
+	public IntMatrix getMatrixResources() {
+		return resources==null? null: new IntMatrix(resources);
 	}
 
 	/**
@@ -117,22 +134,6 @@ public class InputFileReader {
 	 * @return the number of resource types
 	 */
 	public int getResourceTypeCount() {return resourceTypeCount;}
-
-	/**
-	 * Accessor of the resource matrix
-	 * @return a copy of the resource matrix
-	 */
-	public IntMatrix getResourceMatrix() {
-		return resources==null? null: new IntMatrix(resources);
-	}
-
-	/**
-	 * Accessor of the request matrix
-	 * @return a copy of the request matrix
-	 */
-	public IntMatrix getRequestMatrix() {
-		return request==null? null: new IntMatrix(request);
-	}
 
 	/**
 	 * Fills intArray2d with integral numbers from lines recorded in
@@ -186,29 +187,29 @@ public class InputFileReader {
 		// Can throw NumberFormatException.
 		processCount = Integer.parseUnsignedInt(procCountStr);
 
-		String resourceCountStr =
+		String resourceTypeCountStr =
 				fileContent.getLine(1).substring(RESOURCE_TYPE_COUNT.length());
 		// Can throw NumberFormatException.
-		resourceTypeCount = Integer.parseUnsignedInt(resourceCountStr);
+		resourceTypeCount = Integer.parseUnsignedInt(resourceTypeCountStr);
 
 		int lineCount = fileContent.getLineCount();
 		for(int lineIndex=2; lineIndex<lineCount; lineIndex++) {
 			String line = fileContent.getLine(lineIndex);
 
-			if(line.equals(ALLOCATION_MATRIX)) {
+			if(line.equals(MATRIX_ALLOCATION_TITLE)) {
 				allocation = extractIntMatrix(fileContent,
 						lineIndex+1, processCount, resourceTypeCount);
 				lineIndex += processCount;
 			}
-			else if(line.equals(MAXIMUM_MATRIX)) {
+			else if(line.equals(MATRIX_MAXIMUM_TITLE)) {
 				maximum = extractIntMatrix(fileContent,
 						lineIndex+1, processCount, resourceTypeCount);
 			}
-			else if(line.equals(RESOURCE_ARRAY)) {
+			else if(line.equals(MATRIX_RESOURCES_TITLE)) {
 				resources = extractIntMatrix(fileContent,
 						++lineIndex, 1, resourceTypeCount);
 			}
-			else if(line.equals(REQUEST_MATRIX)) {
+			else if(line.equals(MATRIX_REQUEST_TITLE)) {
 				request = extractIntMatrix(fileContent,
 						lineIndex+1, processCount, resourceTypeCount);
 				lineIndex += processCount;

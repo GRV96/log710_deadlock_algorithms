@@ -177,8 +177,8 @@ public abstract class DeadlockAlgorithm {
 
 		processCount = inputReader.getProcessCount();
 
-		IntMatrix resources = inputReader.getResourceMatrix();
-		allocation = inputReader.getAllocationMatrix();
+		IntMatrix resources = inputReader.getMatrixResources();
+		allocation = inputReader.getMatrixAllocation();
 		// If false, Available contains at least one negative number.
 		allocLeqResources = allocation.columnSumMatrix().isLeqToMat(resources);
 
@@ -186,7 +186,7 @@ public abstract class DeadlockAlgorithm {
 		IntMatrix allocColumnSum = allocation.columnSumMatrix();
 		available.substraction(allocColumnSum);
 
-		request = inputReader.getRequestMatrix();
+		request = inputReader.getMatrixRequest();
 
 		end = new Boolean[processCount];
 
