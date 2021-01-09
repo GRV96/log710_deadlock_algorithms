@@ -66,9 +66,7 @@ public class IntMatrix {
 	 * if IntMatrix.rowLengthIsConstant(content) returns false
 	 */
 	public IntMatrix(int[][] content) throws IllegalArgumentException {
-		if(!rowLengthIsConstant(content)) {
-			throw new IllegalArgumentException("Row length is not constant.");
-		}
+		exceptionForVaryingRowLength(content);
 
 		rows = content.length;
 		columns = content[0].length;
@@ -263,6 +261,20 @@ public class IntMatrix {
 	}
 
 	/**
+	 * Throws an IllegalArgumentException if the rows of intArray2d do not
+	 * have the same length.
+	 * @param intArray2d - a 2-dimensional integer array
+	 * @throws IllegalArgumentException if IntMatrix.rowLengthIsConstant
+	 * returns false
+	 */
+	private static void exceptionForVaryingRowLength(int[][] intArray2d)
+			throws IllegalArgumentException {
+		if(!rowLengthIsConstant(intArray2d)) {
+			throw new IllegalArgumentException("Row length is not constant.");
+		}
+	}
+
+	/**
 	 * Accesses the number at the given coordinates in this matrix.
 	 * @param row - a row index
 	 * @param column - a column index
@@ -327,9 +339,10 @@ public class IntMatrix {
 	}
 
 	/**
-	 * Determines whether a 2-dimensional array's rows all have the same
-	 * length. The first index represents rows; the second represents columns.
-	 * @param intArray2d - a 2-dimensional array
+	 * Determines whether a 2-dimensional integer array's rows all have the
+	 * same length. The first index represents rows; the second represents
+	 * columns.
+	 * @param intArray2d - a 2-dimensional integer array
 	 * @return false if intArray2d has no row or all its rows do not have the
 	 * same length; true if intArray2d has one row or all its rows have the same
 	 * length
@@ -339,7 +352,6 @@ public class IntMatrix {
 		if(rowCount == 0) {
 			return false;
 		}
-
 		else if(rowCount == 1) {
 			return true;
 		}
