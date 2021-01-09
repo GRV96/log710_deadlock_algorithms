@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import data.IntMatrix;
 import files.FileContent;
 import files.FileUtil;
 import files.InputFileReader;

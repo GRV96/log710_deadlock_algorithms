@@ -2,6 +2,8 @@ package algorithms;
 
 import java.io.IOException;
 
+import data.IntMatrix;
+
 /**
  * This class attempts to make a sequence of processes that can be executed
  * in that sequence's order without putting the system in an unsafe state. The

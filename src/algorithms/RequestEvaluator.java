@@ -3,6 +3,8 @@ package algorithms;
 import java.io.IOException;
 import java.util.Scanner;
 
+import data.IntMatrix;
+
 /**
  * This interactive class determines whether requests entered by the user in
  * the console would put the system in an unsafe state, i.e. a state in which

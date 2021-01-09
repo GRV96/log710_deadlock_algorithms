@@ -1,6 +1,6 @@
 package files;
 
-import algorithms.IntMatrix;
+import data.IntMatrix;
 
 /**
  * Instances of this class extract data required by the deadlock algorithms

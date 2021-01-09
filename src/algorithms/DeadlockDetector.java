@@ -2,6 +2,8 @@ package algorithms;
 
 import java.io.IOException;
 
+import data.IntMatrix;
+
 /**
  * This class implements a deadlock detection algorithm.
  * @author Guyllaume Rousseau

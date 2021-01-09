@@ -2,6 +2,8 @@ package algorithms;
 
 import java.io.IOException;
 
+import data.IntMatrix;
+
 /**
  * This abstract class contains the data and methods that all deadlock
  * prevention algorithms may need.
