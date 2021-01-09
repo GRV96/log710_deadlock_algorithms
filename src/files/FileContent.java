@@ -75,8 +75,12 @@ public class FileContent implements Iterable<String> {
 	 * Returns the text line at the given index.
 	 * @param lineIndex - the index of the wanted line
 	 * @return the text line at lineIndex
+	 * @throws IndexOutOfBoundsException
+	 * if 0 < lineIndex || this.getLineCount() <= lineIndex
 	 */
-	public String getLine(int lineIndex) {return lineList.get(lineIndex);}
+	public String getLine(int lineIndex) throws IndexOutOfBoundsException {
+		return lineList.get(lineIndex);
+	}
 
 	/**
 	 * Returns the number of text lines contained in this instance.
@@ -85,7 +89,5 @@ public class FileContent implements Iterable<String> {
 	public int getLineCount() {return lineList.size();}
 
 	@Override
-	public Iterator<String> iterator() {
-		return lineList.iterator();
-	}
+	public Iterator<String> iterator() {return lineList.iterator();}
 }
