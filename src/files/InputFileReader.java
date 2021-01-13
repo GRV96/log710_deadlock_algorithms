@@ -45,6 +45,23 @@ public class InputFileReader {
 	}
 
 	/**
+	 * Throws an InputFileException if the number of columns in matrix is
+	 * different from the number of resource types.
+	 * @param matrix - an IntMatrix instance defined according to the input
+	 * file
+	 * @param matrixTitle - the title of matrix
+	 * @throws InputFileException if matrix.columns != resourceTypeCount
+	 */
+	private void exceptionForColumnCount(IntMatrix matrix, String matrixTitle)
+			throws InputFileException {
+		if(matrix.columns != resourceTypeCount) {
+			throw new InputFileException("The number of columns in "
+					+ matrixTitle
+					+ " does not match the number of resource types.");
+		}
+	}
+
+	/**
 	 * Creates an IntMatrix instance from rows of integral numbers recorded in
 	 * fileContent.
 	 * @param fileContent - a FileContent instance containing lines of integral
@@ -100,7 +117,7 @@ public class InputFileReader {
 			catch(IllegalArgumentException iae) {
 				throw new InputFileException(
 						"the matrix contains no element or "
-						+ "its rows have different lengths.");
+								+ "its rows have different lengths.");
 			}
 		}
 		return matrix;
@@ -278,6 +295,7 @@ public class InputFileReader {
 							MATRIX_ALLOCATION_TITLE, ife.getMessage());
 					throw new InputFileException(message);
 				}
+				exceptionForColumnCount(allocation, MATRIX_ALLOCATION_TITLE);
 				lineIndex += processCount;
 			}
 			else if(line.equals(MATRIX_MAXIMUM_TITLE)) {
@@ -290,6 +308,7 @@ public class InputFileReader {
 							MATRIX_MAXIMUM_TITLE, ife.getMessage());
 					throw new InputFileException(message);
 				}
+				exceptionForColumnCount(maximum, MATRIX_MAXIMUM_TITLE);
 			}
 			else if(line.equals(MATRIX_RESOURCES_TITLE)) {
 				try {
@@ -300,6 +319,7 @@ public class InputFileReader {
 							MATRIX_RESOURCES_TITLE, ife.getMessage());
 					throw new InputFileException(message);
 				}
+				exceptionForColumnCount(resources, MATRIX_RESOURCES_TITLE);
 			}
 			else if(line.equals(MATRIX_REQUEST_TITLE)) {
 				try {
@@ -311,6 +331,7 @@ public class InputFileReader {
 							MATRIX_REQUEST_TITLE, ife.getMessage());
 					throw new InputFileException(message);
 				}
+				exceptionForColumnCount(request, MATRIX_REQUEST_TITLE);
 				lineIndex += processCount;
 			}
 		}
