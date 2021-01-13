@@ -1,5 +1,7 @@
 package files;
 
+import java.util.regex.PatternSyntaxException;
+
 import data.IntMatrix;
 
 /**
@@ -17,6 +19,8 @@ public class InputFileReader {
 	private static final String MATRIX_MAXIMUM_TITLE = "Maximum";
 	private static final String MATRIX_REQUEST_TITLE = "Request";
 	private static final String MATRIX_RESOURCES_TITLE = "Resources";
+
+	private static final String SPACE_STR = " ";
 
 	private int processCount = -1;
 	private int resourceTypeCount = -1;
@@ -44,26 +48,25 @@ public class InputFileReader {
 	 * numbers
 	 * @param startLine - the index of the first line of integral numbers
 	 * @param lines - the number of lines of the matrix to create
-	 * @param columns - the number of columns of the matrix to create
 	 * @return a new IntMatrix containing integral numbers from the specified
-	 * lines of fileContent
+	 * lines of fileContent or null if lines is less than 1
 	 * @throws IllegalArgumentException if a constructor of IntMatrix receives
 	 * an invalid array of integral numbers
 	 * @throws NumberFormatException if parsing a string for an int fails
 	 */
 	private static IntMatrix extractIntMatrix(FileContent fileContent,
-			int startLine, int lines, int columns)
+			int startLine, int lines)
 					throws IllegalArgumentException, NumberFormatException {
 		IntMatrix matrix = null;
 		if(lines == 1) {
-			int[] intArray = new int[columns];
-			lineToIntArray(fileContent.getLine(startLine), intArray);
+			int[] intArray =
+					lineToIntArray(fileContent.getLine(startLine), SPACE_STR);
 			matrix = new IntMatrix(intArray);
 		}
 		else if(lines >= 2) {
 			int endLine = startLine + lines;
-			int[][] intArray2d = new int[lines][columns];
-			linesToIntArray2d(fileContent, startLine, endLine, intArray2d);
+			int[][] intArray2d = linesToIntArray2d(fileContent, startLine,
+					endLine, SPACE_STR);
 			matrix = new IntMatrix(intArray2d);
 		}
 		return matrix;
@@ -136,41 +139,64 @@ public class InputFileReader {
 	public int getResourceTypeCount() {return resourceTypeCount;}
 
 	/**
-	 * Fills intArray2d with integral numbers from lines recorded in
-	 * fileContent.
+	 * Creates a 2-dimensional array filled with integral numbers from lines
+	 * stored in fileContent.
 	 * @param fileContent - a FileContent instance containing lines of integral
 	 * numbers
 	 * @param startLine - the index of the first line of integral numbers
 	 * @param endLine - the index of the last line of integral numbers + 1
-	 * @param intArray2d - a 2-dimensional int array
+	 * @param separator - a regular expression matching the characters that
+	 * separate the numbers in string line
+	 * @return a 2-dimensional array containing the numbers from the selected
+	 * lines
+	 * @throws IllegalArgumentException if endLine is less than or equal to
+	 * startLine
 	 * @throws NumberFormatException if parsing a string for an int fails
+	 * @throws PatternSyntaxException if the syntax of regular expression
+	 * separator is invalid
 	 */
-	private static void linesToIntArray2d(FileContent fileContent,
-			int startLine, int endLine, int[][] intArray2d)
-					throws NumberFormatException {
+	private static int[][] linesToIntArray2d(FileContent fileContent,
+			int startLine, int endLine, String separator)
+					throws IllegalArgumentException,
+					NumberFormatException, PatternSyntaxException {
+		if(endLine <= startLine) {
+			throw new IllegalArgumentException(
+					"Parameter endLine must be greater than startLine.");
+		}
+
+		int[][] intArray2d = new int[endLine-startLine][];
 		for(int i=0, lineIndex=startLine; lineIndex<endLine; i++, lineIndex++) {
 			String line = fileContent.getLine(lineIndex);
-			lineToIntArray(line, intArray2d[i]);
+			intArray2d[i] = lineToIntArray(line, separator);
 		}
+		return intArray2d;
 	}
 
 	/**
-	 * Fills intArray with integral numbers from a line of text.
+	 * Creates an array filled with integral numbers from a line of text. In
+	 * that line, the numbers must be separated by a sequence of characters
+	 * matching parameter separator.
 	 * @param line - a line of text containing integral numbers
-	 * @param intArray - a 1-dimensional int array
+	 * @param separator - a regular expression matching the characters that
+	 * separate the numbers in string line
+	 * @return an array containing the integral numbers from line
 	 * @throws NumberFormatException if parsing a string for an int fails
+	 * @throws PatternSyntaxException if the syntax of regular expression
+	 * separator is invalid
 	 */
-	private static void lineToIntArray(String line, int[] intArray)
-			throws NumberFormatException {
-		String[] numbers = line.split(" ");
+	private static int[] lineToIntArray(String line, String separator)
+			throws NumberFormatException, PatternSyntaxException {
+		// Can throw PatternSyntaxException.
+		String[] numbers = line.split(separator);
+		int arrayLength = numbers.length;
+		int[] intArray = new int[arrayLength];
 
-		int length = numbers.length>=intArray.length?
-				intArray.length: numbers.length;
-
-		for(int j=0; j<length; j++) {
+		for(int j=0; j<arrayLength; j++) {
 			// Can throw NumberFormatException.
 			intArray[j] = Integer.parseInt(numbers[j]);
 		}
+
+		return intArray;
 	}
 
 	/**
@@ -198,20 +224,19 @@ public class InputFileReader {
 
 			if(line.equals(MATRIX_ALLOCATION_TITLE)) {
 				allocation = extractIntMatrix(fileContent,
-						lineIndex+1, processCount, resourceTypeCount);
+						lineIndex+1, processCount);
 				lineIndex += processCount;
 			}
 			else if(line.equals(MATRIX_MAXIMUM_TITLE)) {
 				maximum = extractIntMatrix(fileContent,
-						lineIndex+1, processCount, resourceTypeCount);
+						lineIndex+1, processCount);
 			}
 			else if(line.equals(MATRIX_RESOURCES_TITLE)) {
-				resources = extractIntMatrix(fileContent,
-						++lineIndex, 1, resourceTypeCount);
+				resources = extractIntMatrix(fileContent, ++lineIndex, 1);
 			}
 			else if(line.equals(MATRIX_REQUEST_TITLE)) {
 				request = extractIntMatrix(fileContent,
-						lineIndex+1, processCount, resourceTypeCount);
+						lineIndex+1, processCount);
 				lineIndex += processCount;
 			}
 		}
