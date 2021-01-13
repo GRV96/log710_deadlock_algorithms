@@ -84,12 +84,11 @@ public class InputFileReader {
 			}
 		}
 		else { // lines >= 2
-			int endLine = startLine + lines;
 			int[][] intArray2d = null;
 
 			try {
 				intArray2d = linesToIntArray2d(fileContent, startLine,
-						endLine, SPACE_STR);
+						lines, SPACE_STR);
 			}
 			catch(NumberFormatException nfe) {
 				throw new InputFileException(INT_PARSING_EXCEP_MSG);
@@ -179,27 +178,27 @@ public class InputFileReader {
 	 * @param fileContent - a FileContent instance containing lines of integral
 	 * numbers
 	 * @param startLine - the index of the first line of integral numbers
-	 * @param endLine - the index of the last line of integral numbers + 1
+	 * @param lines - the number of lines of the array to create
 	 * @param separator - a regular expression matching the characters that
 	 * separate the numbers in string line
 	 * @return a 2-dimensional array containing the numbers from the selected
 	 * lines
-	 * @throws IllegalArgumentException if endLine is less than or equal to
-	 * startLine
+	 * @throws IllegalArgumentException if lines is less than 1
 	 * @throws NumberFormatException if parsing a string for an int fails
 	 * @throws PatternSyntaxException if the syntax of regular expression
 	 * separator is invalid
 	 */
 	private static int[][] linesToIntArray2d(FileContent fileContent,
-			int startLine, int endLine, String separator)
+			int startLine, int lines, String separator)
 					throws IllegalArgumentException,
 					NumberFormatException, PatternSyntaxException {
-		if(endLine <= startLine) {
+		if(lines < 1) {
 			throw new IllegalArgumentException(
-					"Parameter endLine must be greater than startLine.");
+					"Parameter lines must be greater than or equal to 1.");
 		}
 
-		int[][] intArray2d = new int[endLine-startLine][];
+		int[][] intArray2d = new int[lines][];
+		int endLine = startLine + lines;
 		for(int i=0, lineIndex=startLine; lineIndex<endLine; i++, lineIndex++) {
 			String line = fileContent.getLine(lineIndex);
 			intArray2d[i] = lineToIntArray(line, separator);
