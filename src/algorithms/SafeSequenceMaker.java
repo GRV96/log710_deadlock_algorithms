@@ -3,6 +3,7 @@ package algorithms;
 import java.io.IOException;
 
 import data.IntMatrix;
+import files.InputFileException;
 
 /**
  * This class attempts to make a sequence of processes that can be executed
@@ -21,11 +22,13 @@ public class SafeSequenceMaker extends DeadlockPreventer {
 	 * This constructor initializes the data necessary to make a sequence of
 	 * safe process executions.
 	 * @param inputPath - path of the input file
+	 * @throws InputFileException if the input file contains a fault
 	 * @throws IOException if the file designated by inputPath is non-existent
 	 * or does not have the extension .txt
 	 */
-	public SafeSequenceMaker(String inputPath) throws IOException {
-		super(inputPath, SAFE_SEQ_SUFFIX); // Can throw IOException.
+	public SafeSequenceMaker(String inputPath)
+			throws InputFileException, IOException {
+		super(inputPath, SAFE_SEQ_SUFFIX);
 	}
 
 	/**

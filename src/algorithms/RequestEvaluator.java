@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import data.IntMatrix;
+import files.InputFileException;
 
 /**
  * This interactive class determines whether requests entered by the user in
@@ -61,11 +62,13 @@ public class RequestEvaluator extends DeadlockPreventer {
 	 * @param inputPath - path of the input file
 	 * @param recordBankersAlgoData - If true, detailed data from the banker's
 	 * algorithm will be recorded in the output file.
+	 * @throws InputFileException if the input file contains a fault
 	 * @throws IOException if the file designated by inputPath is non-existent
 	 * or does not have the extension .txt
 	 */
 	public RequestEvaluator(String inputPath, boolean recordBankersAlgoData)
-			throws IOException {
+			throws InputFileException, IOException {
+		// Can throw InputFileException or IOException.
 		super(inputPath, REQ_EVAL_SUFFIX);
 		this.recordBankersAlgoData = recordBankersAlgoData;
 		resourceTypeCount = inputReader.getResourceTypeCount();

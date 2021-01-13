@@ -9,6 +9,7 @@ import java.util.List;
 import data.IntMatrix;
 import files.FileContent;
 import files.FileUtil;
+import files.InputFileException;
 import files.InputFileReader;
 import files.OutputFileWriter;
 
@@ -156,11 +157,12 @@ public abstract class DeadlockAlgorithm {
 	 * @param inputPath - path of the input file
 	 * @param outputPathSuffix - a suffix to append to the input file's name
 	 * to form that of the output file
+	 * @throws InputFileException if the input file contains a fault
 	 * @throws IOException if the file designated by inputPath is non-existent
 	 * or does not have the extension .txt
 	 */
 	protected DeadlockAlgorithm(String inputPath, String outputPathSuffix)
-			throws IOException {
+			throws InputFileException, IOException {
 		String extension = FileUtil.getFileExtension(inputPath);
 		if(extension==null || !extension.equals(FileUtil.TXT_EXTENSION)) {
 			throw new IOException("The input file must have the extension \""

@@ -20,6 +20,9 @@ public class InputFileReader {
 	private static final String MATRIX_REQUEST_TITLE = "Request";
 	private static final String MATRIX_RESOURCES_TITLE = "Resources";
 
+	private static final String INT_PARSING_EXCEP_MSG =
+			"a string cannot be parsed as an integer.";
+
 	private static final String SPACE_STR = " ";
 
 	private int processCount = -1;
@@ -34,10 +37,10 @@ public class InputFileReader {
 	 * This constructor reads the data from a FileContent instance.
 	 * @param inputFileContent - a FileContent instance containing data
 	 * required by a deadlock algorithm
-	 * @throws NumberFormatException if parsing a string for an int fails
+	 * @throws InputFileException if the input file contains a fault
 	 */
 	public InputFileReader(FileContent inputFileContent)
-			throws NumberFormatException {
+			throws InputFileException {
 		parseInputLines(inputFileContent);
 	}
 
@@ -50,24 +53,56 @@ public class InputFileReader {
 	 * @param lines - the number of lines of the matrix to create
 	 * @return a new IntMatrix containing integral numbers from the specified
 	 * lines of fileContent or null if lines is less than 1
-	 * @throws IllegalArgumentException if a constructor of IntMatrix receives
-	 * an invalid array of integral numbers
-	 * @throws NumberFormatException if parsing a string for an int fails
+	 * @throws IllegalArgumentException if lines is less than 1
+	 * @throws InputFileException if the input file contains a fault
 	 */
 	private static IntMatrix extractIntMatrix(FileContent fileContent,
 			int startLine, int lines)
-					throws IllegalArgumentException, NumberFormatException {
+					throws IllegalArgumentException, InputFileException {
 		IntMatrix matrix = null;
-		if(lines == 1) {
-			int[] intArray =
-					lineToIntArray(fileContent.getLine(startLine), SPACE_STR);
-			matrix = new IntMatrix(intArray);
+		if(lines < 1) {
+			throw new IllegalArgumentException(
+					"Parameter lines must be greater than or equal to 1.");
 		}
-		else if(lines >= 2) {
+		else if(lines == 1) {
+			int[] intArray = null;
+
+			try {
+				intArray = lineToIntArray(
+						fileContent.getLine(startLine), SPACE_STR);
+			}
+			catch(NumberFormatException nfe) {
+				throw new InputFileException(INT_PARSING_EXCEP_MSG);
+			}
+
+			try {
+				matrix = new IntMatrix(intArray);
+			}
+			catch(IllegalArgumentException iae) {
+				throw new InputFileException(
+						"the matrix contains no element.");
+			}
+		}
+		else { // lines >= 2
 			int endLine = startLine + lines;
-			int[][] intArray2d = linesToIntArray2d(fileContent, startLine,
-					endLine, SPACE_STR);
-			matrix = new IntMatrix(intArray2d);
+			int[][] intArray2d = null;
+
+			try {
+				intArray2d = linesToIntArray2d(fileContent, startLine,
+						endLine, SPACE_STR);
+			}
+			catch(NumberFormatException nfe) {
+				throw new InputFileException(INT_PARSING_EXCEP_MSG);
+			}
+
+			try {
+				matrix = new IntMatrix(intArray2d);
+			}
+			catch(IllegalArgumentException iae) {
+				throw new InputFileException(
+						"the matrix contains no element or "
+						+ "its rows have different lengths.");
+			}
 		}
 		return matrix;
 	}
@@ -204,39 +239,79 @@ public class InputFileReader {
 	 * number of resource types and the matrices needed by a deadlock
 	 * algorithm.
 	 * @param fileContent - a FileContent instance
-	 * @throws NumberFormatException if parsing a string for an int fails
+	 * @throws InputFileException if the input file contains a fault
 	 */
 	private void parseInputLines(FileContent fileContent)
-			throws NumberFormatException {
+			throws InputFileException {
 		String procCountStr =
 				fileContent.getLine(0).substring(PROCESS_COUNT.length());
-		// Can throw NumberFormatException.
-		processCount = Integer.parseUnsignedInt(procCountStr);
+		try {
+			processCount = Integer.parseUnsignedInt(procCountStr);
+		}
+		catch(NumberFormatException nfe) {
+			throw new InputFileException(
+					"Error when parsing the number of processes: "
+							+ procCountStr);
+		}
 
 		String resourceTypeCountStr =
 				fileContent.getLine(1).substring(RESOURCE_TYPE_COUNT.length());
-		// Can throw NumberFormatException.
-		resourceTypeCount = Integer.parseUnsignedInt(resourceTypeCountStr);
+		try {
+			resourceTypeCount = Integer.parseUnsignedInt(resourceTypeCountStr);
+		}
+		catch(NumberFormatException nfe) {
+			throw new InputFileException(
+					"Error when parsing the number of resource types: "
+							+ resourceTypeCountStr);
+		}
 
 		int lineCount = fileContent.getLineCount();
 		for(int lineIndex=2; lineIndex<lineCount; lineIndex++) {
 			String line = fileContent.getLine(lineIndex);
 
 			if(line.equals(MATRIX_ALLOCATION_TITLE)) {
-				allocation = extractIntMatrix(fileContent,
-						lineIndex+1, processCount);
+				try {
+					allocation = extractIntMatrix(fileContent,
+							lineIndex+1, processCount);
+				}
+				catch (InputFileException ife) {
+					String message = InputFileException.makeMessage(
+							MATRIX_ALLOCATION_TITLE, ife.getMessage());
+					throw new InputFileException(message);
+				}
 				lineIndex += processCount;
 			}
 			else if(line.equals(MATRIX_MAXIMUM_TITLE)) {
-				maximum = extractIntMatrix(fileContent,
-						lineIndex+1, processCount);
+				try {
+					maximum = extractIntMatrix(fileContent,
+							lineIndex+1, processCount);
+				}
+				catch (InputFileException ife) {
+					String message = InputFileException.makeMessage(
+							MATRIX_MAXIMUM_TITLE, ife.getMessage());
+					throw new InputFileException(message);
+				}
 			}
 			else if(line.equals(MATRIX_RESOURCES_TITLE)) {
-				resources = extractIntMatrix(fileContent, ++lineIndex, 1);
+				try {
+					resources = extractIntMatrix(fileContent, ++lineIndex, 1);
+				}
+				catch (InputFileException ife) {
+					String message = InputFileException.makeMessage(
+							MATRIX_RESOURCES_TITLE, ife.getMessage());
+					throw new InputFileException(message);
+				}
 			}
 			else if(line.equals(MATRIX_REQUEST_TITLE)) {
-				request = extractIntMatrix(fileContent,
-						lineIndex+1, processCount);
+				try {
+					request = extractIntMatrix(fileContent,
+							lineIndex+1, processCount);
+				}
+				catch (InputFileException ife) {
+					String message = InputFileException.makeMessage(
+							MATRIX_REQUEST_TITLE, ife.getMessage());
+					throw new InputFileException(message);
+				}
 				lineIndex += processCount;
 			}
 		}

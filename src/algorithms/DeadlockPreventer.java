@@ -3,6 +3,7 @@ package algorithms;
 import java.io.IOException;
 
 import data.IntMatrix;
+import files.InputFileException;
 
 /**
  * This abstract class contains the data and methods that all deadlock
@@ -39,12 +40,14 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 	 * algorithm with the content of the text file designated by inputPath.
 	 * @param inputPath - path of the input file
 	 * @param outputPathSuffix - a suffix to append to the input file's name
+	 * @throws InputFileException if the input file contains a fault
 	 * @throws IOException if the file designated by inputPath is non-existent
 	 * or does not have the extension .txt
 	 */
 	public DeadlockPreventer(String inputPath, String outputPathSuffix)
-			throws IOException {
-		super(inputPath, outputPathSuffix); // Can throw IOException.
+			throws InputFileException, IOException {
+		// Can throw InputFileException or IOException.
+		super(inputPath, outputPathSuffix);
 		maximum = inputReader.getMatrixMaximum();
 		need = new IntMatrix(maximum);
 		need.substraction(allocation);

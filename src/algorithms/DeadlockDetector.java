@@ -3,6 +3,7 @@ package algorithms;
 import java.io.IOException;
 
 import data.IntMatrix;
+import files.InputFileException;
 
 /**
  * This class implements a deadlock detection algorithm.
@@ -14,11 +15,14 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 	 * This constructor initializes the data of the deadlock detection
 	 * algorithm with the content of the text file designated by inputPath.
 	 * @param inputPath - path of the input file
+	 * @throws InputFileException if the input file contains a fault
 	 * @throws IOException if the file designated by inputPath is non-existent
 	 * or does not have the extension .txt
 	 */
-	public DeadlockDetector(String inputPath) throws IOException {
-		super(inputPath, RESULT_SUFFIX); // Can throw IOException.
+	public DeadlockDetector(String inputPath)
+			throws InputFileException, IOException {
+		// Can throw InputFileException or IOException.
+		super(inputPath, RESULT_SUFFIX);
 		work = new IntMatrix(available);
 		for(int i=0; i<processCount; i++) {
 			end[i] = allocation.rowSum(i) == 0;
