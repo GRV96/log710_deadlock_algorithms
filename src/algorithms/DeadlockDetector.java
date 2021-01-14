@@ -55,7 +55,7 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 			}
 		}
 
-		if(procIndex > -1) {
+		if(procIndex >= 0) {
 			work.addition(allocation.rowToIntMatrix(procIndex));
 			end[procIndex] = true;
 
