@@ -21,7 +21,7 @@ public class InputFileReader {
 	private static final String MATRIX_RESOURCES_TITLE = "Resources";
 
 	private static final String INT_PARSING_EXCEP_MSG =
-			"a string cannot be parsed as an integer.";
+			"failure to parse an unsigned integer.";
 
 	private static final String SPACE_STR = " ";
 
@@ -260,7 +260,8 @@ public class InputFileReader {
 	 * @param separator - a regular expression matching the characters that
 	 * separate the numbers in string line
 	 * @return an array containing the integral numbers from line
-	 * @throws NumberFormatException if parsing a string for an int fails
+	 * @throws NumberFormatException if parsing a string for an unsigned
+	 * integer fails
 	 * @throws PatternSyntaxException if the syntax of regular expression
 	 * separator is invalid
 	 */
@@ -273,7 +274,7 @@ public class InputFileReader {
 
 		for(int j=0; j<arrayLength; j++) {
 			// Can throw NumberFormatException.
-			intArray[j] = Integer.parseInt(numbers[j]);
+			intArray[j] = Integer.parseUnsignedInt(numbers[j]);
 		}
 
 		return intArray;
