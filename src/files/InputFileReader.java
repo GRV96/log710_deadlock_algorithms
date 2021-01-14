@@ -304,6 +304,11 @@ public class InputFileReader {
 							"Error when parsing the number of processes: "
 									+ procCountStr);
 				}
+
+				if(processCount < 2) {
+					throw new InputFileException(
+							"At least two processes must be involved.");
+				}
 			}
 			else if(line.indexOf(RES_TYPE_COUNT_INDICATION) >= 0) {
 				String resourceTypeCountStr =
@@ -316,6 +321,11 @@ public class InputFileReader {
 					throw new InputFileException(
 							"Error when parsing the number of resource types: "
 									+ resourceTypeCountStr);
+				}
+
+				if(resourceTypeCount < 1) {
+					throw new InputFileException(
+							"There must be at least one resource type.");
 				}
 			}
 			else if(line.equals(MATRIX_ALLOCATION_TITLE)) {
