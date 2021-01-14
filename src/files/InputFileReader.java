@@ -127,7 +127,7 @@ public class InputFileReader {
 			}
 			catch(IllegalArgumentException iae) {
 				throw new InputFileException(
-						"the matrix contains no element.");
+						"it does not contain any element.");
 			}
 		}
 		else { // lines >= 2
@@ -146,8 +146,7 @@ public class InputFileReader {
 			}
 			catch(IllegalArgumentException iae) {
 				throw new InputFileException(
-						"the matrix contains no element or "
-								+ "its rows have different lengths.");
+						"its rows have different lengths.");
 			}
 		}
 		return matrix;
