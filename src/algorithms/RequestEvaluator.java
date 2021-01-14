@@ -57,8 +57,10 @@ public class RequestEvaluator extends DeadlockPreventer {
 	private Scanner keyboardScanner;
 
 	/**
-	 * This constructor initializes the data needed to evaluate the safety of
-	 * process executions.
+	 * This constructor parses the text file designated by inputPath in order
+	 * to obtain the data required to evaluate the safety of process
+	 * executions. In addition to the data obtained by the superclass'
+	 * constructor, it initializes the number of resource types.
 	 * @param inputPath - path of the input file
 	 * @param recordBankersAlgoData - If true, detailed data from the banker's
 	 * algorithm will be recorded in the output file.

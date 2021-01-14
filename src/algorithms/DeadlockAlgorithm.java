@@ -152,8 +152,9 @@ public abstract class DeadlockAlgorithm {
 	protected List<Character[]> endStates = null;
 
 	/**
-	 * This constructor initializes the data of a deadlock algorithm with the
-	 * content of the text file designated by inputPath.
+	 * This constructor parses the text file designated by inputPath in order
+	 * to obtain the data that all deadlock algorithms require. It initializes
+	 * the number of processes and matrices Resources, Allocation and Available.
 	 * @param inputPath - path of the input file
 	 * @param outputPathSuffix - a suffix to append to the input file's name
 	 * to form that of the output file

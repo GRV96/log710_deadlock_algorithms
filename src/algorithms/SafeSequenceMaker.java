@@ -19,8 +19,8 @@ public class SafeSequenceMaker extends DeadlockPreventer {
 	private String safeSeqLine = null;
 
 	/**
-	 * This constructor initializes the data necessary to make a sequence of
-	 * safe process executions.
+	 * This constructor parses the text file designated by inputPath in order
+	 * to obtain the data that the safe sequence making algorithm requires.
 	 * @param inputPath - path of the input file
 	 * @throws InputFileException if the input file contains a fault
 	 * @throws IOException if the file designated by inputPath is non-existent

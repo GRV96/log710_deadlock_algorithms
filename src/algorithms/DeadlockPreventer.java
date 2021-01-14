@@ -37,8 +37,10 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 	protected IntMatrix need = null;
 
 	/**
-	 * This constructor initializes the data of a deadlock prevention
-	 * algorithm with the content of the text file designated by inputPath.
+	 * This constructor parses the text file designated by inputPath in order
+	 * to obtain the data that the deadlock prevention algorithms require. In
+	 * addition to the data obtained by the superclass' constructor, it
+	 * initializes matrices Maximum and Need.
 	 * @param inputPath - path of the input file
 	 * @param outputPathSuffix - a suffix to append to the input file's name
 	 * @throws InputFileException if the input file contains a fault
@@ -111,7 +113,7 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 	}
 
 	/**
-	 * Sets all the values in array End to false.
+	 * Sets all the values in Boolean array End to false.
 	 */
 	protected void initEndArray() {
 		for(int i=0; i<processCount; i++) {

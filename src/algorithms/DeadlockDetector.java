@@ -13,8 +13,10 @@ import files.InputFileReader;
 public class DeadlockDetector extends DeadlockAlgorithm {
 
 	/**
-	 * This constructor initializes the data of the deadlock detection
-	 * algorithm with the content of the text file designated by inputPath.
+	 * This constructor parses the text file designated by inputPath in order
+	 * to obtain the data that the deadlock detection algorithms require. In
+	 * addition to the data obtained by the superclass' constructor, it
+	 * initializes matrices Request and Work and the Boolean array End.
 	 * @param inputPath - path of the input file
 	 * @throws InputFileException if the input file contains a fault
 	 * @throws IOException if the file designated by inputPath is non-existent
