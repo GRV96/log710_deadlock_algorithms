@@ -213,6 +213,32 @@ public class IntMatrix {
 		return rows == other.rows && columns == other.columns;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof IntMatrix)) {
+			return false;
+		}
+
+		IntMatrix other = (IntMatrix) obj;
+
+		if(!dimensionsAreEqual(other)) {
+			return false;
+		}
+
+		for(int i=0; i<rows; i++) {
+			int[] row = matrix[i];
+			int[] otherRow = other.matrix[i];
+
+			for(int j=0; j<columns; j++) {
+				if(row[j] != otherRow[j]) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
 	/**
 	 * Throws an IllegalArgumentException if the other matrix does not have
 	 * the same dimensions as this one.
