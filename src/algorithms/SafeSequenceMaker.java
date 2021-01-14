@@ -3,6 +3,7 @@ package algorithms;
 import java.io.IOException;
 
 import data.IntMatrix;
+import files.InputFileException;
 
 /**
  * This class attempts to make a sequence of processes that can be executed
@@ -18,14 +19,16 @@ public class SafeSequenceMaker extends DeadlockPreventer {
 	private String safeSeqLine = null;
 
 	/**
-	 * This constructor initializes the data necessary to make a sequence of
-	 * safe process executions.
+	 * This constructor parses the text file designated by inputPath in order
+	 * to obtain the data that the safe sequence making algorithm requires.
 	 * @param inputPath - path of the input file
+	 * @throws InputFileException if the input file contains a fault
 	 * @throws IOException if the file designated by inputPath is non-existent
 	 * or does not have the extension .txt
 	 */
-	public SafeSequenceMaker(String inputPath) throws IOException {
-		super(inputPath, SAFE_SEQ_SUFFIX); // Can throw IOException.
+	public SafeSequenceMaker(String inputPath)
+			throws InputFileException, IOException {
+		super(inputPath, SAFE_SEQ_SUFFIX);
 	}
 
 	/**
@@ -86,12 +89,18 @@ public class SafeSequenceMaker extends DeadlockPreventer {
 	/**
 	 * Starts the algorithm that makes safe process execution sequences.
 	 * @param args - The input file path is the only argument.
-	 * @throws Exception if the SafeSequenceMaker constructor or
-	 * DeadlockAlgorithm.execute throws one
 	 */
-	public static void main(String[] args) throws Exception {
-		SafeSequenceMaker ssm = new SafeSequenceMaker(args[0]);
-		ssm.execute();
+	public static void main(String[] args) {
+		try {
+			SafeSequenceMaker ssm = new SafeSequenceMaker(args[0]);
+			ssm.execute();
+		}
+		catch(InputFileException ife) {
+			System.err.println(ife.getMessage());
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

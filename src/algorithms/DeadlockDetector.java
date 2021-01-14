@@ -3,6 +3,8 @@ package algorithms;
 import java.io.IOException;
 
 import data.IntMatrix;
+import files.InputFileException;
+import files.InputFileReader;
 
 /**
  * This class implements a deadlock detection algorithm.
@@ -11,15 +13,29 @@ import data.IntMatrix;
 public class DeadlockDetector extends DeadlockAlgorithm {
 
 	/**
-	 * This constructor initializes the data of the deadlock detection
-	 * algorithm with the content of the text file designated by inputPath.
+	 * This constructor parses the text file designated by inputPath in order
+	 * to obtain the data that the deadlock detection algorithms require. In
+	 * addition to the data obtained by the superclass' constructor, it
+	 * initializes matrices Request and Work and the Boolean array End.
 	 * @param inputPath - path of the input file
+	 * @throws InputFileException if the input file contains a fault
 	 * @throws IOException if the file designated by inputPath is non-existent
 	 * or does not have the extension .txt
 	 */
-	public DeadlockDetector(String inputPath) throws IOException {
-		super(inputPath, RESULT_SUFFIX); // Can throw IOException.
+	public DeadlockDetector(String inputPath)
+			throws InputFileException, IOException {
+		// Can throw InputFileException or IOException.
+		super(inputPath, RESULT_SUFFIX);
+
+		request = inputReader.getMatrixRequest();
+		if(request == null) {
+			String message = makeUndefinedMatrixMsg(
+					InputFileReader.MATRIX_REQUEST_TITLE);
+			throw new InputFileException(message);
+		}
+
 		work = new IntMatrix(available);
+
 		for(int i=0; i<processCount; i++) {
 			end[i] = allocation.rowSum(i) == 0;
 		}
@@ -51,7 +67,7 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 			}
 		}
 
-		if(procIndex > -1) {
+		if(procIndex >= 0) {
 			work.addition(allocation.rowToIntMatrix(procIndex));
 			end[procIndex] = true;
 
@@ -85,11 +101,17 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 	/**
 	 * Starts the deadlock detection algorithm.
 	 * @param args - The input file path is the only argument.
-	 * @throws Exception if the DeadlockDetector constructor or
-	 * DeadlockAlgorithm.execute throws one
 	 */
-	public static void main(String[] args) throws Exception {
-		DeadlockDetector dd = new DeadlockDetector(args[0]);
-		dd.execute();
+	public static void main(String[] args) {
+		try {
+			DeadlockDetector dd = new DeadlockDetector(args[0]);
+			dd.execute();
+		}
+		catch(InputFileException ife) {
+			System.err.println(ife.getMessage());
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

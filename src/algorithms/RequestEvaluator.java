@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import data.IntMatrix;
+import files.InputFileException;
 
 /**
  * This interactive class determines whether requests entered by the user in
@@ -56,16 +57,20 @@ public class RequestEvaluator extends DeadlockPreventer {
 	private Scanner keyboardScanner;
 
 	/**
-	 * This constructor initializes the data needed to evaluate the safety of
-	 * process executions.
+	 * This constructor parses the text file designated by inputPath in order
+	 * to obtain the data required to evaluate the safety of process
+	 * executions. In addition to the data obtained by the superclass'
+	 * constructor, it initializes the number of resource types.
 	 * @param inputPath - path of the input file
 	 * @param recordBankersAlgoData - If true, detailed data from the banker's
 	 * algorithm will be recorded in the output file.
+	 * @throws InputFileException if the input file contains a fault
 	 * @throws IOException if the file designated by inputPath is non-existent
 	 * or does not have the extension .txt
 	 */
 	public RequestEvaluator(String inputPath, boolean recordBankersAlgoData)
-			throws IOException {
+			throws InputFileException, IOException {
+		// Can throw InputFileException or IOException.
 		super(inputPath, REQ_EVAL_SUFFIX);
 		this.recordBankersAlgoData = recordBankersAlgoData;
 		resourceTypeCount = inputReader.getResourceTypeCount();
@@ -258,13 +263,19 @@ public class RequestEvaluator extends DeadlockPreventer {
 	 * <p>0: path of the input file
 	 * <p>1: a string meaning true or false. If true, detailed data of the
 	 * banker's algorithm will be recorded in the output file.
-	 * @throws Exception if the RequestEvaluator constructor or
-	 * DeadlockAlgorithm.execute throws one
 	 */
-	public static void main(String[] args) throws Exception {
-		boolean recordBAData = stringToBoolean(args[1]);
-		RequestEvaluator re = new RequestEvaluator(args[0], recordBAData);
-		re.execute();
+	public static void main(String[] args) {
+		try {
+			boolean recordBAData = stringToBoolean(args[1]);
+			RequestEvaluator re = new RequestEvaluator(args[0], recordBAData);
+			re.execute();
+		}
+		catch(InputFileException ife) {
+			System.err.println(ife.getMessage());
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

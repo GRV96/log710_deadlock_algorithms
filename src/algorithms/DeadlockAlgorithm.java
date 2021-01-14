@@ -9,6 +9,7 @@ import java.util.List;
 import data.IntMatrix;
 import files.FileContent;
 import files.FileUtil;
+import files.InputFileException;
 import files.InputFileReader;
 import files.OutputFileWriter;
 
@@ -151,16 +152,18 @@ public abstract class DeadlockAlgorithm {
 	protected List<Character[]> endStates = null;
 
 	/**
-	 * This constructor initializes the data of a deadlock algorithm with the
-	 * content of the text file designated by inputPath.
+	 * This constructor parses the text file designated by inputPath in order
+	 * to obtain the data that all deadlock algorithms require. It initializes
+	 * the number of processes and matrices Resources, Allocation and Available.
 	 * @param inputPath - path of the input file
 	 * @param outputPathSuffix - a suffix to append to the input file's name
 	 * to form that of the output file
+	 * @throws InputFileException if the input file contains a fault
 	 * @throws IOException if the file designated by inputPath is non-existent
 	 * or does not have the extension .txt
 	 */
 	protected DeadlockAlgorithm(String inputPath, String outputPathSuffix)
-			throws IOException {
+			throws InputFileException, IOException {
 		String extension = FileUtil.getFileExtension(inputPath);
 		if(extension==null || !extension.equals(FileUtil.TXT_EXTENSION)) {
 			throw new IOException("The input file must have the extension \""
@@ -179,15 +182,24 @@ public abstract class DeadlockAlgorithm {
 		processCount = inputReader.getProcessCount();
 
 		IntMatrix resources = inputReader.getMatrixResources();
+		if(resources == null) {
+			String message = makeUndefinedMatrixMsg(
+					InputFileReader.MATRIX_RESOURCES_TITLE);
+			throw new InputFileException(message);
+		}
+
 		allocation = inputReader.getMatrixAllocation();
+		if(allocation == null) {
+			String message = makeUndefinedMatrixMsg(
+					InputFileReader.MATRIX_ALLOCATION_TITLE);
+			throw new InputFileException(message);
+		}
 		// If false, Available contains at least one negative number.
 		allocLeqResources = allocation.columnSumMatrix().isLeqToMat(resources);
 
 		available = resources;
 		IntMatrix allocColumnSum = allocation.columnSumMatrix();
 		available.substraction(allocColumnSum);
-
-		request = inputReader.getMatrixRequest();
 
 		end = new Boolean[processCount];
 
@@ -279,6 +291,15 @@ public abstract class DeadlockAlgorithm {
 	 * @throws Exception if necessary
 	 */
 	protected abstract boolean loop() throws Exception;
+
+	/**
+	 * Creates a message signaling that the specified matrix is undefined.
+	 * @param matrixTitle - title of an undefined matrix
+	 * @return the created message
+	 */
+	protected static String makeUndefinedMatrixMsg(String matrixTitle) {
+		return "Matrix " + matrixTitle + " is undefined.";
+	}
 
 	/**
 	 * Records a 1-dimensional array in fileContent so it will be written in
