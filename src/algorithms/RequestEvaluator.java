@@ -261,13 +261,16 @@ public class RequestEvaluator extends DeadlockPreventer {
 	 * <p>0: path of the input file
 	 * <p>1: a string meaning true or false. If true, detailed data of the
 	 * banker's algorithm will be recorded in the output file.
-	 * @throws Exception if the RequestEvaluator constructor or
-	 * DeadlockAlgorithm.execute throws one
 	 */
-	public static void main(String[] args) throws Exception {
-		boolean recordBAData = stringToBoolean(args[1]);
-		RequestEvaluator re = new RequestEvaluator(args[0], recordBAData);
-		re.execute();
+	public static void main(String[] args) {
+		try {
+			boolean recordBAData = stringToBoolean(args[1]);
+			RequestEvaluator re = new RequestEvaluator(args[0], recordBAData);
+			re.execute();
+		}
+		catch(Exception e) {
+			System.err.println(e.getMessage());
+		}
 	}
 
 	/**

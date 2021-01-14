@@ -89,12 +89,15 @@ public class SafeSequenceMaker extends DeadlockPreventer {
 	/**
 	 * Starts the algorithm that makes safe process execution sequences.
 	 * @param args - The input file path is the only argument.
-	 * @throws Exception if the SafeSequenceMaker constructor or
-	 * DeadlockAlgorithm.execute throws one
 	 */
-	public static void main(String[] args) throws Exception {
-		SafeSequenceMaker ssm = new SafeSequenceMaker(args[0]);
-		ssm.execute();
+	public static void main(String[] args) {
+		try {
+			SafeSequenceMaker ssm = new SafeSequenceMaker(args[0]);
+			ssm.execute();
+		}
+		catch(Exception e) {
+			System.err.println(e.getMessage());
+		}
 	}
 
 	/**
