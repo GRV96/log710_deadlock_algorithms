@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import data.IntMatrix;
 import files.InputFileException;
+import files.InputFileReader;
 
 /**
  * This class implements a deadlock detection algorithm.
@@ -23,7 +24,16 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 			throws InputFileException, IOException {
 		// Can throw InputFileException or IOException.
 		super(inputPath, RESULT_SUFFIX);
+
+		request = inputReader.getMatrixRequest();
+		if(request == null) {
+			String message = makeUndefinedMatrixMsg(
+					InputFileReader.MATRIX_REQUEST_TITLE);
+			throw new InputFileException(message);
+		}
+
 		work = new IntMatrix(available);
+
 		for(int i=0; i<processCount; i++) {
 			end[i] = allocation.rowSum(i) == 0;
 		}
@@ -95,8 +105,11 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 			DeadlockDetector dd = new DeadlockDetector(args[0]);
 			dd.execute();
 		}
+		catch(InputFileException ife) {
+			System.err.println(ife.getMessage());
+		}
 		catch(Exception e) {
-			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 }

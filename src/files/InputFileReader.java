@@ -15,10 +15,10 @@ public class InputFileReader {
 	private static final String PROCESS_COUNT_INDICATION = "Processes: ";
 	private static final String RES_TYPE_COUNT_INDICATION = "Resource types: ";
 
-	private static final String MATRIX_ALLOCATION_TITLE = "Allocation";
-	private static final String MATRIX_MAXIMUM_TITLE = "Maximum";
-	private static final String MATRIX_REQUEST_TITLE = "Request";
-	private static final String MATRIX_RESOURCES_TITLE = "Resources";
+	public static final String MATRIX_ALLOCATION_TITLE = "Allocation";
+	public static final String MATRIX_MAXIMUM_TITLE = "Maximum";
+	public static final String MATRIX_REQUEST_TITLE = "Request";
+	public static final String MATRIX_RESOURCES_TITLE = "Resources";
 
 	private static final String INT_PARSING_EXCEP_MSG =
 			"failure to parse an unsigned integer.";

@@ -181,15 +181,24 @@ public abstract class DeadlockAlgorithm {
 		processCount = inputReader.getProcessCount();
 
 		IntMatrix resources = inputReader.getMatrixResources();
+		if(resources == null) {
+			String message = makeUndefinedMatrixMsg(
+					InputFileReader.MATRIX_RESOURCES_TITLE);
+			throw new InputFileException(message);
+		}
+
 		allocation = inputReader.getMatrixAllocation();
+		if(allocation == null) {
+			String message = makeUndefinedMatrixMsg(
+					InputFileReader.MATRIX_ALLOCATION_TITLE);
+			throw new InputFileException(message);
+		}
 		// If false, Available contains at least one negative number.
 		allocLeqResources = allocation.columnSumMatrix().isLeqToMat(resources);
 
 		available = resources;
 		IntMatrix allocColumnSum = allocation.columnSumMatrix();
 		available.substraction(allocColumnSum);
-
-		request = inputReader.getMatrixRequest();
 
 		end = new Boolean[processCount];
 
@@ -281,6 +290,15 @@ public abstract class DeadlockAlgorithm {
 	 * @throws Exception if necessary
 	 */
 	protected abstract boolean loop() throws Exception;
+
+	/**
+	 * Creates a message signaling that the specified matrix is undefined.
+	 * @param matrixTitle - title of an undefined matrix
+	 * @return the created message
+	 */
+	protected static String makeUndefinedMatrixMsg(String matrixTitle) {
+		return "Matrix " + matrixTitle + " is undefined.";
+	}
 
 	/**
 	 * Records a 1-dimensional array in fileContent so it will be written in

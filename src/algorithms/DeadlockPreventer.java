@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import data.IntMatrix;
 import files.InputFileException;
+import files.InputFileReader;
 
 /**
  * This abstract class contains the data and methods that all deadlock
@@ -49,6 +50,11 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 		// Can throw InputFileException or IOException.
 		super(inputPath, outputPathSuffix);
 		maximum = inputReader.getMatrixMaximum();
+		if(maximum == null) {
+			String message = makeUndefinedMatrixMsg(
+					InputFileReader.MATRIX_MAXIMUM_TITLE);
+			throw new InputFileException(message);
+		}
 		need = new IntMatrix(maximum);
 		need.substraction(allocation);
 	}

@@ -95,8 +95,11 @@ public class SafeSequenceMaker extends DeadlockPreventer {
 			SafeSequenceMaker ssm = new SafeSequenceMaker(args[0]);
 			ssm.execute();
 		}
+		catch(InputFileException ife) {
+			System.err.println(ife.getMessage());
+		}
 		catch(Exception e) {
-			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 

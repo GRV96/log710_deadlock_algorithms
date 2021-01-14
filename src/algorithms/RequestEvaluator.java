@@ -268,8 +268,11 @@ public class RequestEvaluator extends DeadlockPreventer {
 			RequestEvaluator re = new RequestEvaluator(args[0], recordBAData);
 			re.execute();
 		}
+		catch(InputFileException ife) {
+			System.err.println(ife.getMessage());
+		}
 		catch(Exception e) {
-			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
