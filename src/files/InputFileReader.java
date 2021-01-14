@@ -12,8 +12,8 @@ import data.IntMatrix;
  */
 public class InputFileReader {
 
-	private static final String PROCESS_COUNT = "Processes: ";
-	private static final String RESOURCE_TYPE_COUNT = "Resource types: ";
+	private static final String PROCESS_COUNT_INDICATION = "Processes: ";
+	private static final String RES_TYPE_COUNT_INDICATION = "Resource types: ";
 
 	private static final String MATRIX_ALLOCATION_TITLE = "Allocation";
 	private static final String MATRIX_MAXIMUM_TITLE = "Maximum";
@@ -58,6 +58,36 @@ public class InputFileReader {
 			throw new InputFileException("The number of columns in "
 					+ matrixTitle
 					+ " does not match the number of resource types.");
+		}
+	}
+
+	/**
+	 * Throws an InputFileException if the number of processes or resource
+	 * types is undefined. The exceptions' message signals that an attempt to
+	 * parse the specified matrix was made in this condition.
+	 * @param matrixTitle - the title of a matrix in the input file
+	 * @throws InputFileException if the number of processes or resource types
+	 * is currently undefined
+	 */
+	private void exceptionForUndefProcResCount(String matrixTitle)
+			throws InputFileException {
+		if(processCount < 0) {
+			if(resourceTypeCount < 0) {
+				throw new InputFileException("Attempt to parse matrix "
+						+ matrixTitle
+						+ " while the number of processes and "
+						+ "resource types is undefined");
+			}
+			else {
+				throw new InputFileException("Attempt to parse matrix "
+						+ matrixTitle
+						+ " while the number of processes is undefined");
+			}
+		}
+		else if(resourceTypeCount < 0) {
+			throw new InputFileException("Attempt to parse matrix "
+					+ matrixTitle
+					+ " while the number of resource types is undefined");
 		}
 	}
 
@@ -259,33 +289,37 @@ public class InputFileReader {
 	 */
 	private void parseInputLines(FileContent fileContent)
 			throws InputFileException {
-		String procCountStr =
-				fileContent.getLine(0).substring(PROCESS_COUNT.length());
-		try {
-			processCount = Integer.parseUnsignedInt(procCountStr);
-		}
-		catch(NumberFormatException nfe) {
-			throw new InputFileException(
-					"Error when parsing the number of processes: "
-							+ procCountStr);
-		}
-
-		String resourceTypeCountStr =
-				fileContent.getLine(1).substring(RESOURCE_TYPE_COUNT.length());
-		try {
-			resourceTypeCount = Integer.parseUnsignedInt(resourceTypeCountStr);
-		}
-		catch(NumberFormatException nfe) {
-			throw new InputFileException(
-					"Error when parsing the number of resource types: "
-							+ resourceTypeCountStr);
-		}
-
 		int lineCount = fileContent.getLineCount();
-		for(int lineIndex=2; lineIndex<lineCount; lineIndex++) {
+		for(int lineIndex=0; lineIndex<lineCount; lineIndex++) {
 			String line = fileContent.getLine(lineIndex);
 
-			if(line.equals(MATRIX_ALLOCATION_TITLE)) {
+			if(line.indexOf(PROCESS_COUNT_INDICATION) >= 0) {
+				String procCountStr =
+						line.substring(PROCESS_COUNT_INDICATION.length());
+				try {
+					processCount = Integer.parseUnsignedInt(procCountStr);
+				}
+				catch(NumberFormatException nfe) {
+					throw new InputFileException(
+							"Error when parsing the number of processes: "
+									+ procCountStr);
+				}
+			}
+			else if(line.indexOf(RES_TYPE_COUNT_INDICATION) >= 0) {
+				String resourceTypeCountStr =
+						line.substring(RES_TYPE_COUNT_INDICATION.length());
+				try {
+					resourceTypeCount =
+							Integer.parseUnsignedInt(resourceTypeCountStr);
+				}
+				catch(NumberFormatException nfe) {
+					throw new InputFileException(
+							"Error when parsing the number of resource types: "
+									+ resourceTypeCountStr);
+				}
+			}
+			else if(line.equals(MATRIX_ALLOCATION_TITLE)) {
+				exceptionForUndefProcResCount(MATRIX_ALLOCATION_TITLE);
 				try {
 					allocation = extractIntMatrix(fileContent,
 							lineIndex+1, processCount);
@@ -299,6 +333,7 @@ public class InputFileReader {
 				lineIndex += processCount;
 			}
 			else if(line.equals(MATRIX_MAXIMUM_TITLE)) {
+				exceptionForUndefProcResCount(MATRIX_MAXIMUM_TITLE);
 				try {
 					maximum = extractIntMatrix(fileContent,
 							lineIndex+1, processCount);
@@ -311,6 +346,7 @@ public class InputFileReader {
 				exceptionForColumnCount(maximum, MATRIX_MAXIMUM_TITLE);
 			}
 			else if(line.equals(MATRIX_RESOURCES_TITLE)) {
+				exceptionForUndefProcResCount(MATRIX_RESOURCES_TITLE);
 				try {
 					resources = extractIntMatrix(fileContent, ++lineIndex, 1);
 				}
@@ -322,6 +358,7 @@ public class InputFileReader {
 				exceptionForColumnCount(resources, MATRIX_RESOURCES_TITLE);
 			}
 			else if(line.equals(MATRIX_REQUEST_TITLE)) {
+				exceptionForUndefProcResCount(MATRIX_REQUEST_TITLE);
 				try {
 					request = extractIntMatrix(fileContent,
 							lineIndex+1, processCount);
