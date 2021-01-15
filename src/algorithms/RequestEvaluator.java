@@ -120,9 +120,9 @@ public class RequestEvaluator extends DeadlockPreventer {
 		fileContent.addLine(null, 2);
 		fileContent.addLine(line + procAndReqStr);
 
-		int[] procAndReq = new int[resourceTypeCount+1];
+		int[] procAndReq = null;
 		try {
-			makeProcAndReqArray(procAndReqStr, procAndReq);
+			procAndReq = makeProcAndReqArray(procAndReqStr);
 		}
 		catch(Exception e) {
 			line = "Incorrect input! " + e.getMessage();
@@ -236,21 +236,20 @@ public class RequestEvaluator extends DeadlockPreventer {
 	}
 
 	/**
-	 * Fills an array with a process' index and the number of resources of
-	 * each type requested by that process. Those numbers are obtained from
+	 * Creates an array containing a process' index and the number of resources
+	 * of each type requested by that process. Those numbers are obtained from
 	 * procAndReqStr, where they are separated by spaces. They must be natural
 	 * integers.
-	 * @param procAndReqStr - the string entered by the user representing a
+	 * @param procAndReqStr - a string entered by the user representing a
 	 * process and a resource request
-	 * @param procAndReqArray - the array that will contain the process index
-	 * (index 0) and the resources it requests (other indices)
 	 * @throws IllegalArgumentException if the number of integers in
 	 * procAndReqStr is not the number of resource types + 1
 	 * @throws NumberFormatException if Integer.parseUnsignedInt throws one
+	 * @return an array containing the process index (index 0) and the
+	 * resources that it requests (other indices)
 	 */
-	private void makeProcAndReqArray(String procAndReqStr,
-			int[] procAndReqArray)
-					throws IllegalArgumentException, NumberFormatException {
+	private int[] makeProcAndReqArray(String procAndReqStr)
+			throws IllegalArgumentException, NumberFormatException {
 		String[] strArray = procAndReqStr.split(" ");
 		int arrayLength = strArray.length;
 
@@ -260,9 +259,12 @@ public class RequestEvaluator extends DeadlockPreventer {
 					+ " numbers of resources are expected.");
 		}
 
+		int[] procAndReqArray = new int[arrayLength];
 		for(int i=0; i<arrayLength; i++) {
 			procAndReqArray[i] = Integer.parseUnsignedInt(strArray[i]);
 		}
+
+		return procAndReqArray;
 	}
 
 	/**
