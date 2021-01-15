@@ -1,4 +1,4 @@
-package algorithms;
+package data;
 
 /**
  * This class represents 2-dimensional matrices containing integral numbers.
@@ -49,8 +49,9 @@ public class IntMatrix {
 	 */
 	public IntMatrix(int[] content) throws IllegalArgumentException {
 		if(content.length == 0) {
-			throw new IllegalArgumentException("Row length is not constant.");
+			throw new IllegalArgumentException("Content's length is 0.");
 		}
+
 		rows = 1;
 		columns = content.length;
 		matrix = new int[rows][columns];
@@ -65,9 +66,8 @@ public class IntMatrix {
 	 * if IntMatrix.rowLengthIsConstant(content) returns false
 	 */
 	public IntMatrix(int[][] content) throws IllegalArgumentException {
-		if(!rowLengthIsConstant(content)) {
-			throw new IllegalArgumentException("Row length is not constant.");
-		}
+		exceptionForVaryingRowLength(content);
+
 		rows = content.length;
 		columns = content[0].length;
 		matrix = new int[rows][columns];
@@ -94,10 +94,8 @@ public class IntMatrix {
 	 * false
 	 */
 	public void addition(IntMatrix other) throws IllegalArgumentException {
-		if(!dimensionsAreEqual(other)) {
-			throw new IllegalArgumentException(
-					"The matrices have different dimensions.");
-		}
+		exceptionForDifferentDimensions(other);
+
 		for(int i=0; i<rows; i++) {
 			for(int j=0; j<columns; j++) {
 				matrix[i][j] += other.matrix[i][j];
@@ -117,14 +115,9 @@ public class IntMatrix {
 	 */
 	public void additionOnRow(IntMatrix other, int row)
 			throws IllegalArgumentException {
-		if(!rowIndexIsInBounds(row)) {
-			throw new IllegalArgumentException(
-					"This matrix does not have row " + row + ".");
-		}
-		if(!dimensionsAreEqual(other)) {
-			throw new IllegalArgumentException(
-					"The matrices have different dimensions.");
-		}
+		exceptionForIllegalRowIndex(row);
+		exceptionForDifferentDimensions(other);
+
 		for(int j=0; j<columns; j++) {
 			matrix[row][j] += other.matrix[row][j];
 		}
@@ -146,14 +139,13 @@ public class IntMatrix {
 	 * @throws IllegalArgumentException if column is out of bounds
 	 */
 	public int columnSum(int column) throws IllegalArgumentException {
-		if(!columnIndexIsInBounds(column)) {
-			throw new IllegalArgumentException(
-					"This matrix does not have column " + column + ".");
-		}
+		exceptionForIllegalColumnIndex(column);
+
 		int sum = 0;
 		for(int i=0; i<rows; i++) {
 			sum += matrix[i][column];
 		}
+
 		return sum;
 	}
 
@@ -167,9 +159,11 @@ public class IntMatrix {
 	public IntMatrix columnSumMatrix()
 			throws IllegalArgumentException {
 		int[] sumArray = new int[columns];
+
 		for(int j=0; j<columns; j++) {
 			sumArray[j] = columnSum(j);
 		}
+
 		return new IntMatrix(sumArray);
 	}
 
@@ -201,8 +195,12 @@ public class IntMatrix {
 	 * Copies the content of a matrix into another matrix.
 	 * @param destination - the matrix in which the copy is performed
 	 * @param source - the copied matrix
+	 * @throws IllegalArgumentException if destination and source do not have
+	 * the same dimensions as destination
 	 */
-	private static void copyContent(IntMatrix destination, IntMatrix source) {
+	private static void copyContent(IntMatrix destination, IntMatrix source)
+			throws IllegalArgumentException {
+		destination.exceptionForDifferentDimensions(source);
 		copyContent(destination.matrix, source.matrix);
 	}
 
@@ -215,15 +213,104 @@ public class IntMatrix {
 		return rows == other.rows && columns == other.columns;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof IntMatrix)) {
+			return false;
+		}
+
+		IntMatrix other = (IntMatrix) obj;
+
+		if(!dimensionsAreEqual(other)) {
+			return false;
+		}
+
+		for(int i=0; i<rows; i++) {
+			int[] row = matrix[i];
+			int[] otherRow = other.matrix[i];
+
+			for(int j=0; j<columns; j++) {
+				if(row[j] != otherRow[j]) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Throws an IllegalArgumentException if the other matrix does not have
+	 * the same dimensions as this one.
+	 * @param other - another instance of IntMatrix
+	 * @throws IllegalArgumentException if other does not have the same
+	 * dimensions as this
+	 */
+	private void exceptionForDifferentDimensions(IntMatrix other)
+			throws IllegalArgumentException {
+		if(!dimensionsAreEqual(other)) {
+			throw new IllegalArgumentException(
+					"The matrices must have the same dimensions. This: " + rows
+					+ "×" + columns + "; other: " + other.rows + "×"
+					+ other.columns + ".");
+		}
+	}
+
+	/**
+	 * Throws an IllegalArgumentException if the given column index is out of
+	 * bounds.
+	 * @param columnIndex - a column index
+	 * @throws IllegalArgumentException if columnIndex is out of bounds
+	 */
+	private void exceptionForIllegalColumnIndex(int columnIndex)
+			throws IllegalArgumentException {
+		if(!columnIndexIsInBounds(columnIndex)) {
+			throw new IllegalArgumentException(
+					"Column indices range from 0 to " + (columns-1)
+					+ ". Index " + columnIndex + "is out of bounds.");
+		}
+	}
+
+	/**
+	 * Throws an IllegalArgumentException if the given row index is out of
+	 * bounds.
+	 * @param rowIndex - a row index
+	 * @throws IllegalArgumentException if rowIndex is out of bounds
+	 */
+	private void exceptionForIllegalRowIndex(int rowIndex)
+			throws IllegalArgumentException {
+		if(!rowIndexIsInBounds(rowIndex)) {
+			throw new IllegalArgumentException(
+					"Row indices range from 0 to "+ (rows-1)
+					+ ". Index " + rowIndex + " is out of bounds.");
+		}
+	}
+
+	/**
+	 * Throws an IllegalArgumentException if the rows of intArray2d do not
+	 * have the same length.
+	 * @param intArray2d - a 2-dimensional integer array
+	 * @throws IllegalArgumentException if IntMatrix.rowLengthIsConstant
+	 * returns false
+	 */
+	private static void exceptionForVaryingRowLength(int[][] intArray2d)
+			throws IllegalArgumentException {
+		if(!rowLengthIsConstant(intArray2d)) {
+			throw new IllegalArgumentException("Row length is not constant.");
+		}
+	}
+
 	/**
 	 * Accesses the number at the given coordinates in this matrix.
 	 * @param row - a row index
 	 * @param column - a column index
 	 * @return the number at the given coordinates
-	 * @throws ArrayIndexOutOfBoundsException if row or column is out of bounds
+	 * @throws IllegalArgumentException if row or column is out of bounds
 	 */
 	public int get(int row, int column)
-			throws ArrayIndexOutOfBoundsException {
+			throws IllegalArgumentException {
+		exceptionForIllegalRowIndex(row);
+		exceptionForIllegalColumnIndex(column);
 		return matrix[row][column];
 	}
 
@@ -234,29 +321,29 @@ public class IntMatrix {
 	 */
 	public IntMatrix getOpposite() {
 		IntMatrix opposite = new IntMatrix(this);
+
 		for(int i=0; i<rows; i++) {
 			for(int j=0; j<columns; j++) {
 				opposite.matrix[i][j] *= -1;
 			}
 		}
+
 		return opposite;
 	}
 
 	/**
-	 * Determines whether every number in this matrix is lesser or equal to
+	 * Determines whether every number in this matrix is less than or equal to
 	 * the number in other at the same coordinates.
 	 * @param other - another instance of IntMatrix
-	 * @return true if every number in this matrix is lesser or equal to the
+	 * @return true if every number in this matrix is less than or equal to the
 	 * corresponding number in other, false otherwise
 	 * @throws IllegalArgumentException if dimensionsAreEqual(other) returns
 	 * false
 	 */
 	public boolean isLeqToMat(IntMatrix other)
 			throws IllegalArgumentException {
-		if(!dimensionsAreEqual(other)) {
-			throw new IllegalArgumentException(
-					"The matrices have different dimensions.");
-		}
+		exceptionForDifferentDimensions(other);
+
 		for(int i=0; i<rows; i++) {
 			for(int j=0; j<columns; j++) {
 				if(get(i, j) > other.get(i, j)) {
@@ -264,6 +351,7 @@ public class IntMatrix {
 				}
 			}
 		}
+
 		return true;
 	}
 
@@ -277,9 +365,10 @@ public class IntMatrix {
 	}
 
 	/**
-	 * Determines whether a 2-dimensional array's rows all have the same
-	 * length. The first index represents rows; the second represents columns.
-	 * @param intArray2d - a 2-dimensional array
+	 * Determines whether a 2-dimensional integer array's rows all have the
+	 * same length. The first index represents rows; the second represents
+	 * columns.
+	 * @param intArray2d - a 2-dimensional integer array
 	 * @return false if intArray2d has no row or all its rows do not have the
 	 * same length; true if intArray2d has one row or all its rows have the same
 	 * length
@@ -292,29 +381,31 @@ public class IntMatrix {
 		else if(rowCount == 1) {
 			return true;
 		}
+
 		final int rowLength = intArray2d[0].length;
 		for(int i=1; i<rowCount; i++) {
 			if(intArray2d[i].length != rowLength) {
 				return false;
 			}
 		}
+
 		return true;
 	}
 
 	/**
 	 * Creates an array containing a copy of the specified row of this matrix.
 	 * @param row - a row index
-	 * @return the content of the specified row in an array or null if row is
-	 * out of bounds
+	 * @return the content of the specified row in an array
+	 * @throws IllegalArgumentException if row is out of bounds
 	 */
 	public Integer[] rowToArray(int row) {
-		if(!rowIndexIsInBounds(row)) {
-			return null;
-		}
+		exceptionForIllegalRowIndex(row);
+
 		Integer[] rowArray = new Integer[columns];
 		for(int j=0; j<columns; j++) {
 			rowArray[j] = matrix[row][j];
 		}
+
 		return rowArray;
 	}
 
@@ -322,13 +413,11 @@ public class IntMatrix {
 	 * Creates a row matrix containing the numbers in the specified row of
 	 * this matrix.
 	 * @param row - a row index
-	 * @return a new matrix containing the specified row or null if row is out
-	 * of bounds
+	 * @return a new matrix containing the specified row
+	 * @throws IllegalArgumentException if row is out of bounds
 	 */
 	public IntMatrix rowToIntMatrix(int row) {
-		if(!rowIndexIsInBounds(row)) {
-			return null;
-		}
+		exceptionForIllegalRowIndex(row);
 		return new IntMatrix(matrix[row]);
 	}
 
@@ -339,11 +428,11 @@ public class IntMatrix {
 	 * @param row - a row index
 	 * @param separator - a sequence of characters to separate the numbers
 	 * @return a string containing the numbers in the given row
+	 * @throws IllegalArgumentException if row is out of bounds
 	 */
-	public String rowToString(int row, String separator) {
-		if(!rowIndexIsInBounds(row)) {
-			return null;
-		}
+	public String rowToString(int row, String separator)
+			throws IllegalArgumentException {
+		exceptionForIllegalRowIndex(row);
 
 		String rowStr = "";
 		for(int j=0; j<columns; j++) {
@@ -360,14 +449,13 @@ public class IntMatrix {
 	 * @throws IllegalArgumentException if row is out of bounds
 	 */
 	public int rowSum(int row) throws IllegalArgumentException {
-		if(!rowIndexIsInBounds(row)) {
-			throw new IllegalArgumentException(
-					"This matrix does not have row " + row + ".");
-		}
+		exceptionForIllegalRowIndex(row);
+
 		int sum = 0;
 		for(int j=0; j<columns; j++) {
 			sum += matrix[row][j];
 		}
+
 		return sum;
 	}
 
@@ -376,10 +464,12 @@ public class IntMatrix {
 	 * @param row - a row index
 	 * @param column - a column index
 	 * @param number - the number to put at the given coordinates.
-	 * @throws ArrayIndexOutOfBoundsException if row or column is out of bounds
+	 * @throws IllegalArgumentException if row or column is out of bounds
 	 */
 	public void set(int row, int column, int number)
-			throws ArrayIndexOutOfBoundsException {
+			throws IllegalArgumentException {
+		exceptionForIllegalRowIndex(row);
+		exceptionForIllegalColumnIndex(column);
 		matrix[row][column] = number;
 	}
 

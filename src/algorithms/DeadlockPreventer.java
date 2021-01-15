@@ -2,6 +2,10 @@ package algorithms;
 
 import java.io.IOException;
 
+import data.IntMatrix;
+import files.InputFileException;
+import files.InputFileReader;
+
 /**
  * This abstract class contains the data and methods that all deadlock
  * prevention algorithms may need.
@@ -33,17 +37,26 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 	protected IntMatrix need = null;
 
 	/**
-	 * This constructor initializes the data of a deadlock prevention
-	 * algorithm with the content of the text file designated by inputPath.
+	 * This constructor parses the text file designated by inputPath in order
+	 * to obtain the data that the deadlock prevention algorithms require. In
+	 * addition to the data obtained by the superclass' constructor, it
+	 * initializes matrices Maximum and Need.
 	 * @param inputPath - path of the input file
 	 * @param outputPathSuffix - a suffix to append to the input file's name
+	 * @throws InputFileException if the input file contains a fault
 	 * @throws IOException if the file designated by inputPath is non-existent
 	 * or does not have the extension .txt
 	 */
 	public DeadlockPreventer(String inputPath, String outputPathSuffix)
-			throws IOException {
-		super(inputPath, outputPathSuffix); // Can throw IOException.
-		maximum = inputReader.getMaximumMatrix();
+			throws InputFileException, IOException {
+		// Can throw InputFileException or IOException.
+		super(inputPath, outputPathSuffix);
+		maximum = inputReader.getMatrixMaximum();
+		if(maximum == null) {
+			String message = makeUndefinedMatrixMsg(
+					InputFileReader.MATRIX_MAXIMUM_TITLE);
+			throw new InputFileException(message);
+		}
 		need = new IntMatrix(maximum);
 		need.substraction(allocation);
 	}
@@ -60,8 +73,8 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 	 * @param recordData - If true, the banker's algorithm's data is recorded
 	 * in the output file.
 	 * @return the index of a process safe to execute or -1 if there is none
-	 * @throws IllegalArgumentException if an addition is attempted with the
-	 * work matrix and a matrix of different dimensions
+	 * @throws IllegalArgumentException if an addition is attempted with
+	 * matrix Work and a matrix of different dimensions
 	 */
 	protected int bankersAlgorithmIter(boolean recordData)
 			throws IllegalArgumentException {
@@ -86,9 +99,9 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 	}
 
 	/**
-	 * Determines whether all the squares of the end array contain true.
-	 * @return true if all the squares of the end array contain true of false
-	 * if at least one square contains false.
+	 * Determines whether all the elements of array End are true.
+	 * @return true if all the elements of array End are true, false if at
+	 * least one element is false.
 	 */
 	protected boolean endArrayIsTrue() {
 		for(int i=0; i<end.length; i++) {
@@ -100,7 +113,7 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 	}
 
 	/**
-	 * Sets all the values in end to false.
+	 * Sets all the values in Boolean array End to false.
 	 */
 	protected void initEndArray() {
 		for(int i=0; i<processCount; i++) {
