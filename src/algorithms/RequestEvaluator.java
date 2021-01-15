@@ -35,6 +35,13 @@ public class RequestEvaluator extends DeadlockPreventer {
 			"Process and request (\"q\" to quit): ";
 
 	/**
+	 * All indications of incorrect console input should begin with this
+	 * string.
+	 */
+	private static final String INCORRECT_INPUT_WARNING =
+			"Incorrect input! ";
+
+	/**
 	 * A suffix appended to the input file's name to form the output file's
 	 * name
 	 */
@@ -125,7 +132,7 @@ public class RequestEvaluator extends DeadlockPreventer {
 			procAndReq = makeProcAndReqArray(procAndReqStr);
 		}
 		catch(Exception e) {
-			line = "Incorrect input! " + e.getMessage();
+			line = INCORRECT_INPUT_WARNING + e.getMessage();
 			System.err.println(line);
 			fileContent.addLine(line);
 			return true;
@@ -139,7 +146,8 @@ public class RequestEvaluator extends DeadlockPreventer {
 		}
 		catch(IllegalArgumentException iae) {
 			// Thrown by IntMatrix.set if procNumber >= processCount
-			line = "Process numbers range from 0 to " + (processCount-1)
+			line = INCORRECT_INPUT_WARNING
+					+ "Process numbers range from 0 to " + (processCount-1)
 					+ ". There is no process " + procNumber + ".";
 			System.err.println(line);
 			fileContent.addLine(line);
