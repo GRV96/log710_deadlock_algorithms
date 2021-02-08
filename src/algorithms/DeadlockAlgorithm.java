@@ -248,10 +248,25 @@ public abstract class DeadlockAlgorithm {
 		Character[] charArray = new Character[valueCount];
 
 		for(int i=0; i<valueCount; i++) {
-			charArray[i] = boolArray[i]? 'T': 'F';
+			charArray[i] = booleanToChar(boolArray[i], true);
 		}
 
 		return charArray;
+	}
+
+	/**
+	 * Converts a Boolean value to a character. The returned character is
+	 * upper or lower case depending on the caller's choice.
+	 * @param boolValue - the Boolean value to convert
+	 * @param upperCase - Determines whether the returned character is upper
+	 * or lower case.
+	 * @return 'T' or 'F' if parameter upperCase is true, 't' or 'f' otherwise
+	 */
+	protected static char booleanToChar(boolean boolValue, boolean upperCase) {
+		if(upperCase) {
+			return boolValue? 'T': 'F';
+		}
+		return boolValue? 't': 'f';
 	}
 
 	/**
