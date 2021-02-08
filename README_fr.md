@@ -25,7 +25,9 @@ un processus (premier indice, celui des rangées) et à un type de ressource
 (deuxième indice, celui des colonnes). Ils contiennent aussi des matrices
 rangées dont la signification est énoncée plus loin. Les nombres sur une même
 ligne d’une matrice sont séparés par des espaces. Il est primordial que n et m
-soient cohérents avec les dimensions des matrices. Leurs indices commencent à 0.
+soient cohérents avec les dimensions des matrices. Leurs indices commencent
+à 0. Toutes les matrices, données et calculées, ne peuvent contenir que des
+entiers naturels.
 
 Le dossier [cours_8_log710](/cours_8_log710) contient une explication des
 interblocages, l'énoncé des algorithmes de ce dépôt et des exercices.
@@ -82,9 +84,7 @@ de ressources disponibles de chaque type. Au début, chacune de ses cellules
 somme de la colonne j d’*Allocation*. *End* est un tableau de n booléens
 indiquant si un processus a été effectué (vrai) ou non (faux). Initialement,
 tous ses éléments sont faux. La matrice rangée *Work*, de longueur m, est une
-donnée servant à vérifier une condition dans l’algorithme de détection
-d’interblocage. *Available* et *Work* contiennent seulement des entiers
-naturels.
+donnée vérifiée dans l’algorithme de détection d’interblocage.
 
 L'algorithme de détection des interblocages est présenté aux pages 24 et 25 de
 [cours_8_log710/LOG710_Hiver2020-Deadlocks.pdf](/cours_8_log710/LOG710_Hiver2020-Deadlocks.pdf).

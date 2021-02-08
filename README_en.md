@@ -17,12 +17,13 @@ result file in their directory. The result file’s extension is also “.txt”
 
 The first line in the data file indicates the number of processes considered
 (n); the second line indicates the number of resource types (m) that they may
-request. The data file and the result file contain matrices of n rows by m
+access. The data file and the result file contain matrices of n rows by m
 columns associating data with a process (row index, the first one) and a
 resource type (column index, the second one). They also contain row matrices
 whose meaning is stated further into this document. The numbers on the same
 line in a matrix are separated by spaces. It is paramount that n and m be
-consistent with the matrices’ dimensions. Their indices start at 0.
+consistent with the matrices’ dimensions. Their indices start at 0. All
+matrices, given and calculated, may only contain natural integers.
 
 File [06-deadlocks.pdf](/06-deadlocks.pdf) contains an explaination of deadlocks,
 a statement of the algorithms in this repository and examples of their
@@ -78,7 +79,6 @@ difference between cell (0, j) of *Resources* and the sum of *Allocation*’s
 column j. *End* is an array of n Booleans indicating whether a process has been
 executed (true) or not (false). Initially, all its elements are false. Row matrix
 *Work*, of length m, is data that is checked in the deadlock detection algorithm.
-*Available* and *Work* contain only natural integers.
 
 The deadlock detection algorithm is presented in
 [06-deadlocks.pdf](/06-deadlocks.pdf)
