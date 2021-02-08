@@ -183,6 +183,9 @@ public class RequestEvaluator extends DeadlockPreventer {
 
 			boolean safeState = systemStateIsSafe();
 
+			if(recordBankersAlgoData) {
+				fileContent.addLine(null);
+			}
 			recordIntMatrix(ALLOCATION_TITLE, allocation);
 			fileContent.addLine(null);
 			recordIntMatrix(AVAILABLE_TITLE, available);

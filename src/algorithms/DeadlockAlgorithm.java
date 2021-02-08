@@ -220,7 +220,7 @@ public abstract class DeadlockAlgorithm {
 	 * @param array - the array to convert
 	 * @return a line of text containing the array's elements
 	 */
-	private <T> String arrayToTextLine(T[] array) {
+	private static <T> String arrayToTextLine(T[] array) {
 		String line = "";
 		for(int i=0; i<array.length; i++) {
 			line += array[i] + " ";
