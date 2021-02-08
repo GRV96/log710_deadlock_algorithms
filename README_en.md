@@ -39,6 +39,7 @@ java -jar .\deadlock_detector.jar .\deadlock_detection1.txt
 java -jar .\deadlock_detector.jar .\deadlock_detection2.txt
 java -jar .\deadlock_detector.jar .\deadlock_detection3.txt
 java -jar .\deadlock_detector.jar .\deadlock_detection4.txt
+java -jar .\deadlock_detector.jar .\deadlock_detection5.txt
 ```
 
 The data file defines matrices *Resources*, *Allocation* and *Request*. Row
@@ -47,7 +48,7 @@ the simulation. Matrix *Allocation* indicates the number of resources of each
 type initially allocated to each process. Matrix *Request* indicates the
 number of resources that each process requests from the system. The data file
 provided to deadlock_detector.jar must be conform to the following format,
-where “xi,j” is a natural integer at coordinates (i, j) in a matrix.
+where “xi,j” is a natural integer x at coordinates (i, j) in a matrix.
 
 ```
 Processes: n
@@ -72,11 +73,11 @@ xn-1,0 xn-1,1 xn-1,2 … xn-1,m-1
 ```
 
 In the result file, row matrix *Available* indicates the number of available
-resources of each type. Each of its cells (0, j) is the difference between
-cell (0, j) of *Resources* and the sum of *Allocation*’s column j. *End* is an
-array of n Booleans indicating whether a process has been executed (true) or
-not (false). Initially, all its elements are false. Row matrix *Work*, of
-length m, is data that is checked in the deadlock detection algorithm.
+resources of each type. At the begining, each of its cells (0, j) contains the
+difference between cell (0, j) of *Resources* and the sum of *Allocation*’s
+column j. *End* is an array of n Booleans indicating whether a process has been
+executed (true) or not (false). Initially, all its elements are false. Row matrix
+*Work*, of length m, is data that is checked in the deadlock detection algorithm.
 *Available* and *Work* contain only natural integers.
 
 The deadlock detection algorithm is presented in
@@ -89,8 +90,8 @@ to determine whether allocating the resources requested by a process would put
 the system in an unsafe state. The system’s state is safe if and only if it
 can avoid deadlocks; if its state is unsafe, deadlocks are possible, but not
 certain. *RequestEvaluator* and *SafeSequenceMaker* need data files conform to
-the following format. Files deadlock_prevention1.txt and
-deadlock_prevention2.txt are valid input examples.
+the following format. Files deadlock_prevention1.txt to
+deadlock_prevention5.txt are valid input examples.
 
 ```
 Processes: n
@@ -144,6 +145,7 @@ be run the following way.
 ```
 java -jar .\request_evaluator.jar .\deadlock_prevention1.txt 0
 java -jar .\request_evaluator.jar .\deadlock_prevention2.txt y
+java -jar .\request_evaluator.jar .\deadlock_prevention3.txt f
 ```
 
 First, the program indicates in the console whether the system’s initial state
@@ -203,6 +205,7 @@ as the only parameter as shown below.
 ```
 java -jar .\safe_sequence_maker.jar .\deadlock_prevention1.txt
 java -jar .\safe_sequence_maker.jar .\deadlock_prevention2.txt
+java -jar .\safe_sequence_maker.jar .\deadlock_prevention3.txt
 ```
 
 This program executes the banker’s algorithm. Its result file contains, for
