@@ -59,24 +59,27 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 		boolean keepLooping = true;
 		fileContent.addLine(null, 2);
 
-		int procIndex = -1;
+		int procNumber = -1;
 		for(int i=0; i<processCount; i++) {
 			if(!end[i] && request.rowToIntMatrix(i).isLeqToMat(work)) {
-				procIndex = i;
+				procNumber = i;
 				break;
 			}
 		}
 
-		if(procIndex >= 0) {
-			work.addition(allocation.rowToIntMatrix(procIndex));
-			end[procIndex] = true;
+		if(procNumber >= 0) {
+			work.addition(allocation.rowToIntMatrix(procNumber));
+			end[procNumber] = true;
 
 			recordIterationNumber(iteration);
-			recordProcessToExecute(procIndex);
+			recordProcessToExecute(procNumber);
 			fileContent.addLine(null);
-			recordWorkAndSaveItsState();
+			recordIntMatrix(REQUEST_TITLE + "[" + procNumber + "]",
+					request.rowToIntMatrix(procNumber));
 			fileContent.addLine(null);
 			recordEndAndSaveItsState();
+			fileContent.addLine(null);
+			recordWorkAndSaveItsState();
 		}
 		else {
 			String procNumbers = "";
