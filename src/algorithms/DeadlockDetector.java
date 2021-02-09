@@ -16,7 +16,7 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 	 * This constructor parses the text file designated by inputPath in order
 	 * to obtain the data that the deadlock detection algorithms require. In
 	 * addition to the data obtained by the superclass' constructor, it
-	 * initializes matrices Request and Work and the Boolean array End.
+	 * initializes matrices Request and Work and the Boolean array Finish.
 	 * @param inputPath - path of the input file
 	 * @throws InputFileException if the input file contains a fault
 	 * @throws IOException if the file designated by inputPath is non-existent
@@ -37,20 +37,20 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 		work = new IntMatrix(available);
 
 		for(int i=0; i<processCount; i++) {
-			end[i] = allocation.rowSum(i) == 0;
+			finish[i] = allocation.rowSum(i) == 0;
 		}
 	}
 
 	@Override
 	protected void afterLoop() {
 		fileContent.addLine(null);
-		recordWorkAndEndStates();
+		recordWorkAndFinishStates();
 	}
 
 	@Override
 	protected boolean beforeLoop() {
 		fileContent.addLine(null);
-		recordArray(END_TITLE, booleanArrayToCharArray(end));
+		recordArray(FINISH_TITLE, booleanArrayToCharArray(finish));
 		return true;
 	}
 
@@ -61,7 +61,7 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 
 		int procNumber = -1;
 		for(int i=0; i<processCount; i++) {
-			if(!end[i] && request.rowToIntMatrix(i).isLeqToMat(work)) {
+			if(!finish[i] && request.rowToIntMatrix(i).isLeqToMat(work)) {
 				procNumber = i;
 				break;
 			}
@@ -69,7 +69,7 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 
 		if(procNumber >= 0) {
 			work.addition(allocation.rowToIntMatrix(procNumber));
-			end[procNumber] = true;
+			finish[procNumber] = true;
 
 			recordIterationNumber(iteration);
 			recordProcessToExecute(procNumber);
@@ -77,14 +77,14 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 			recordIntMatrix(REQUEST_TITLE + "[" + procNumber + "]",
 					request.rowToIntMatrix(procNumber));
 			fileContent.addLine(null);
-			recordEndAndSaveItsState();
+			recordFinishAndSaveItsState();
 			fileContent.addLine(null);
 			recordWorkAndSaveItsState();
 		}
 		else {
 			String procNumbers = "";
 			for(int i=0; i<processCount; i++) {
-				if(!end[i]) {
+				if(!finish[i]) {
 					procNumbers += i + " ";
 				}
 			}

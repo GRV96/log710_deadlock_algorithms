@@ -81,7 +81,7 @@ xn-1,0 xn-1,1 xn-1,2 … xn-1,m-1
 Dans le fichier de résultats, la matrice rangée *Available* indique le nombre
 de ressources disponibles de chaque type. Au début, chacune de ses cellules
 (0, j) contient la différence entre la cellule (0, j) de *Resources* et la
-somme de la colonne j d’*Allocation*. *End* est un tableau de n booléens
+somme de la colonne j d’*Allocation*. *Finish* est un tableau de n booléens
 indiquant si un processus a été effectué (vrai) ou non (faux). Initialement,
 tous ses éléments sont faux. La matrice rangée *Work*, de longueur m, est une
 donnée vérifiée dans l’algorithme de détection d’interblocage.

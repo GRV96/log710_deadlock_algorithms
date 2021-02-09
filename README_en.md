@@ -76,9 +76,10 @@ xn-1,0 xn-1,1 xn-1,2 … xn-1,m-1
 In the result file, row matrix *Available* indicates the number of available
 resources of each type. At the begining, each of its cells (0, j) contains the
 difference between cell (0, j) of *Resources* and the sum of *Allocation*’s
-column j. *End* is an array of n Booleans indicating whether a process has been
-executed (true) or not (false). Initially, all its elements are false. Row matrix
-*Work*, of length m, is data that is checked in the deadlock detection algorithm.
+column j. *Finish* is an array of n Booleans indicating whether a process has
+been executed (true) or not (false). Initially, all its elements are false.
+Row matrix *Work*, of length m, is data that is checked in the deadlock
+detection algorithm.
 
 The deadlock detection algorithm is presented in
 [06-deadlocks.pdf](/06-deadlocks.pdf)

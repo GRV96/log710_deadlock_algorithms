@@ -116,7 +116,7 @@ public class RequestEvaluator extends DeadlockPreventer {
 	@Override
 	protected boolean loop() {
 		workStates.clear();
-		endStates.clear();
+		finishStates.clear();
 
 		String line = PROC_REQ_PROMPT;
 		System.out.print("\n" + line);
@@ -192,7 +192,7 @@ public class RequestEvaluator extends DeadlockPreventer {
 			fileContent.addLine(null);
 			recordIntMatrix(NEED_TITLE, need);
 			fileContent.addLine(null);
-			recordWorkAndEndStates();
+			recordWorkAndFinishStates();
 			fileContent.addLine(null);
 
 			boolean execProc = false;
@@ -335,7 +335,7 @@ public class RequestEvaluator extends DeadlockPreventer {
 	 * DeadlockPreventer.bankersAlgorithmIter.
 	 */
 	private boolean systemStateIsSafe() throws IllegalArgumentException {
-		initEndArray();
+		initFinishArray();
 		int safeSeqLength = 0;
 		work = new IntMatrix(available);
 		if(recordBankersAlgoData) {
@@ -343,7 +343,7 @@ public class RequestEvaluator extends DeadlockPreventer {
 		}
 		while(true) {
 			int procNumber = bankersAlgorithmIter(recordBankersAlgoData);
-			saveWorkAndEndState();
+			saveWorkAndFinishState();
 
 			if(procNumber < 0) {
 				return false;

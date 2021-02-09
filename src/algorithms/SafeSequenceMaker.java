@@ -44,14 +44,14 @@ public class SafeSequenceMaker extends DeadlockPreventer {
 	@Override
 	protected void afterLoop() {
 		fileContent.addLine(null, 2);
-		recordWorkAndEndStates();
+		recordWorkAndFinishStates();
 	}
 
 	@Override
 	protected boolean beforeLoop() {
 		safeSeqLength = 0;
 		safeSeqLine = "Safe sequence: ";
-		initEndArray();
+		initFinishArray();
 		work = new IntMatrix(available);
 		return true;
 	}
@@ -72,7 +72,7 @@ public class SafeSequenceMaker extends DeadlockPreventer {
 			recordProcessToExecute(procNumber);
 			fileContent.addLine(null);
 			recordWorkAndSaveItsState();
-			saveEndState();
+			saveFinishState();
 			fileContent.addLine(null);
 			recordSafeSequence();
 			keepLooping = safeSeqLength < processCount;
