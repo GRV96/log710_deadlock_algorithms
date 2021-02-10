@@ -38,15 +38,15 @@ public abstract class DeadlockAlgorithm {
 	protected static final String AVAILABLE_TITLE = "Available";
 
 	/**
-	 * Title of boolean array End
+	 * Title of boolean array Finish
 	 */
-	protected static final String END_TITLE = "End";
+	protected static final String FINISH_TITLE = "Finish";
 
 	/**
-	 * Title of boolean array End's state list
+	 * Title of boolean array Finish's state list
 	 */
-	protected static final String END_THROUGH_ITERS_TITLE =
-			"End through the iterations";
+	protected static final String FINISH_THROUGH_ITERS_TITLE =
+			"Finish through the iterations";
 
 	/**
 	 * Title of matrix Request
@@ -129,11 +129,11 @@ public abstract class DeadlockAlgorithm {
 	protected IntMatrix work = null;
 
 	/**
-	 * Boolean array End indicates whether a process has been executed (true)
-	 * or not (false). Its length is equal to the number of processes involved
-	 * in the algorithm.
+	 * Boolean array Finish indicates whether a process has been executed
+	 * (true) or not (false). Its length is equal to the number of processes
+	 * involved in the algorithm.
 	 */
-	protected Boolean[] end = null;
+	protected Boolean[] finish = null;
 
 	/**
 	 * The number of the current iteration. Iteration number starts at 1.
@@ -146,10 +146,10 @@ public abstract class DeadlockAlgorithm {
 	protected List<Integer[]> workStates = null;
 
 	/**
-	 * The state of array End can be saved in this list at each iteration.
+	 * The state of array Finish can be saved in this list at each iteration.
 	 * Character 'T' means true; 'F' means false.
 	 */
-	protected List<Character[]> endStates = null;
+	protected List<Character[]> finishStates = null;
 
 	/**
 	 * This constructor parses the text file designated by inputPath in order
@@ -201,10 +201,10 @@ public abstract class DeadlockAlgorithm {
 		IntMatrix allocColumnSum = allocation.columnSumMatrix();
 		available.substraction(allocColumnSum);
 
-		end = new Boolean[processCount];
+		finish = new Boolean[processCount];
 
 		workStates = new ArrayList<Integer[]>();
-		endStates = new ArrayList<Character[]>();
+		finishStates = new ArrayList<Character[]>();
 	}
 
 	/**
@@ -220,7 +220,7 @@ public abstract class DeadlockAlgorithm {
 	 * @param array - the array to convert
 	 * @return a line of text containing the array's elements
 	 */
-	private <T> String arrayToTextLine(T[] array) {
+	private static <T> String arrayToTextLine(T[] array) {
 		String line = "";
 		for(int i=0; i<array.length; i++) {
 			line += array[i] + " ";
@@ -248,10 +248,25 @@ public abstract class DeadlockAlgorithm {
 		Character[] charArray = new Character[valueCount];
 
 		for(int i=0; i<valueCount; i++) {
-			charArray[i] = boolArray[i]? 'T': 'F';
+			charArray[i] = booleanToChar(boolArray[i], true);
 		}
 
 		return charArray;
+	}
+
+	/**
+	 * Converts a Boolean value to a character. The returned character is
+	 * upper or lower case depending on the caller's choice.
+	 * @param boolValue - the Boolean value to convert
+	 * @param upperCase - Determines whether the returned character is upper
+	 * or lower case.
+	 * @return 'T' or 'F' if parameter upperCase is true, 't' or 'f' otherwise
+	 */
+	protected static char booleanToChar(boolean boolValue, boolean upperCase) {
+		if(upperCase) {
+			return boolValue? 'T': 'F';
+		}
+		return boolValue? 't': 'f';
 	}
 
 	/**
@@ -351,14 +366,14 @@ public abstract class DeadlockAlgorithm {
 	}
 
 	/**
-	 * Records the End array in fileContent and adds its current state to
-	 * its state list. End's elements are represented by 'T' (true) and 'F'
+	 * Records the Finish array in fileContent and adds its current state to
+	 * its state list. Finish's elements are represented by 'T' (true) and 'F'
 	 * (false).
 	 */
-	protected void recordEndAndSaveItsState() {
-		Character[] endAsCharArray = booleanArrayToCharArray(end);
-		recordArray(END_TITLE, endAsCharArray);
-		endStates.add(endAsCharArray);
+	protected void recordFinishAndSaveItsState() {
+		Character[] finishAsCharArray = booleanArrayToCharArray(finish);
+		recordArray(FINISH_TITLE, finishAsCharArray);
+		finishStates.add(finishAsCharArray);
 	}
 
 	/**
@@ -417,13 +432,13 @@ public abstract class DeadlockAlgorithm {
 	}
 
 	/**
-	 * Records Work's and End's successive states in fileContent. They are
+	 * Records Work's and Finish's successive states in fileContent. They are
 	 * separated by an empty line.
 	 */
-	protected void recordWorkAndEndStates() {
+	protected void recordWorkAndFinishStates() {
 		recordArrayStates(WORK_THROUGH_ITERS_TITLE, workStates);
 		fileContent.addLine(null);
-		recordArrayStates(END_THROUGH_ITERS_TITLE, endStates);
+		recordArrayStates(FINISH_THROUGH_ITERS_TITLE, finishStates);
 	}
 
 	/**
@@ -436,11 +451,11 @@ public abstract class DeadlockAlgorithm {
 	}
 
 	/**
-	 * Adds End's current state to its state list.
+	 * Adds Finish's current state to its state list.
 	 */
-	protected void saveEndState() {
-		Character[] endAsCharArray = booleanArrayToCharArray(end);
-		endStates.add(endAsCharArray);
+	protected void saveFinishState() {
+		Character[] finishAsCharArray = booleanArrayToCharArray(finish);
+		finishStates.add(finishAsCharArray);
 	}
 
 	/**
@@ -451,10 +466,10 @@ public abstract class DeadlockAlgorithm {
 	}
 
 	/**
-	 * Adds Work's and End's current state to their respective state list.
+	 * Adds Work's and Finish's current state to their respective state list.
 	 */
-	protected void saveWorkAndEndState() {
+	protected void saveWorkAndFinishState() {
 		saveWorkState();
-		saveEndState();
+		saveFinishState();
 	}
 }

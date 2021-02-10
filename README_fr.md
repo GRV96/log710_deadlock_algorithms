@@ -25,7 +25,9 @@ un processus (premier indice, celui des rangées) et à un type de ressource
 (deuxième indice, celui des colonnes). Ils contiennent aussi des matrices
 rangées dont la signification est énoncée plus loin. Les nombres sur une même
 ligne d’une matrice sont séparés par des espaces. Il est primordial que n et m
-soient cohérents avec les dimensions des matrices. Leurs indices commencent à 0.
+soient cohérents avec les dimensions des matrices. Leurs indices commencent
+à 0. Toutes les matrices, données et calculées, ne peuvent contenir que des
+entiers naturels.
 
 Le dossier [cours_8_log710](/cours_8_log710) contient une explication des
 interblocages, l'énoncé des algorithmes de ce dépôt et des exercices.
@@ -42,6 +44,7 @@ java -jar .\deadlock_detector.jar .\deadlock_detection1.txt
 java -jar .\deadlock_detector.jar .\deadlock_detection2.txt
 java -jar .\deadlock_detector.jar .\deadlock_detection3.txt
 java -jar .\deadlock_detector.jar .\deadlock_detection4.txt
+java -jar .\deadlock_detector.jar .\deadlock_detection5.txt
 ```
 
 Le fichier de données définit les matrices *Resources*, *Allocation* et
@@ -51,7 +54,7 @@ ressources de chaque type impliquées dans la simulation. La matrice
 allouées à chaque processus. La matrice *Request* indique le nombre de
 ressources que chaque processus demande au système. Le fichier de données
 fourni à deadlock_detector.jar doit être conforme au format suivant, où «xi,j»
-représente un entier naturel aux coordonnées (i, j) d’une matrice.
+représente un entier naturel x aux coordonnées (i, j) d’une matrice.
 
 ```
 Processes: n
@@ -76,13 +79,12 @@ xn-1,0 xn-1,1 xn-1,2 … xn-1,m-1
 ```
 
 Dans le fichier de résultats, la matrice rangée *Available* indique le nombre
-de ressources disponibles de chaque type. Chacune de ses cellules (0, j)
-contient la différence entre la cellule (0, j) de *Resources* et la somme de
-la colonne j d’*Allocation*. *End* est un tableau de n booléens indiquant si
-un processus a été effectué (vrai) ou non (faux). Initialement, tous ses
-éléments sont faux. La matrice rangée *Work*, de longueur m, est une donnée
-servant à vérifier une condition dans l’algorithme de détection d’interblocage.
-*Available* et *Work* contiennent seulement des entiers naturels.
+de ressources disponibles de chaque type. Au début, chacune de ses cellules
+(0, j) contient la différence entre la cellule (0, j) de *Resources* et la
+somme de la colonne j d’*Allocation*. *Finish* est un tableau de n booléens
+indiquant si un processus a été effectué (vrai) ou non (faux). Initialement,
+tous ses éléments sont faux. La matrice rangée *Work*, de longueur m, est une
+donnée vérifiée dans l’algorithme de détection d’interblocage.
 
 L'algorithme de détection des interblocages est présenté aux pages 24 et 25 de
 [cours_8_log710/LOG710_Hiver2020-Deadlocks.pdf](/cours_8_log710/LOG710_Hiver2020-Deadlocks.pdf).
@@ -94,8 +96,8 @@ demandées par un processus mettrait le système dans un état non sûr. L’ét
 système est sûr si et seulement s’il est capable d’éviter les interblocages;
 si son état est non sûr, les interblocages sont possibles, mais pas certains.
 *RequestEvaluator* et *SafeSequenceMaker* ont besoin de fichiers de données
-conformes au format suivant. Les fichiers deadlock_prevention1.txt et
-deadlock_prevention2.txt sont des exemples d’entrée valide.
+conformes au format suivant. Les fichiers deadlock_prevention1.txt à
+deadlock_prevention5.txt sont des exemples d’entrée valide.
 
 ```
 Processes: n
@@ -128,8 +130,8 @@ Dans le fichier de résultats généré par *RequestEvaluator* et
 *SafeSequenceMaker*, la matrice *Available* a la même signification que celle
 calculée par *DeadlockDetector*. La matrice *Need* indique le nombre de
 ressources supplémentaires dont un processus peut avoir besoin. La matrice
-rangée *Work*, de longueur m, est une donnée servant à vérifier une condition
-dans l’algorithme du banquier.
+rangée *Work*, de longueur m, est une donnée vérifiée dans l’algorithme du
+banquier.
 
 L'état sûr est défini aux pages 34 et 35 de
 [cours_8_log710/LOG710_Hiver2020-Deadlocks.pdf](/cours_8_log710/LOG710_Hiver2020-Deadlocks.pdf).
@@ -150,6 +152,7 @@ on peut exécuter request_evaluator.jar comme suit.
 ```
 java -jar .\request_evaluator.jar .\deadlock_prevention1.txt 0
 java -jar .\request_evaluator.jar .\deadlock_prevention2.txt y
+java -jar .\request_evaluator.jar .\deadlock_prevention3.txt f
 ```
 
 En premier lieu, le programme indique dans la console si l’état initial du
@@ -212,6 +215,7 @@ paramètre le chemin d’un fichier de données comme dans l’exemple ci-dessou
 ```
 java -jar .\safe_sequence_maker.jar .\deadlock_prevention1.txt
 java -jar .\safe_sequence_maker.jar .\deadlock_prevention2.txt
+java -jar .\safe_sequence_maker.jar .\deadlock_prevention3.txt
 ```
 
 Ce programme exécute l’algorithme du banquier. Son fichier de résultats

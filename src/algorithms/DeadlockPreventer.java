@@ -88,24 +88,24 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 
 		if(procIndex >= 0) {
 			work.addition(allocation.rowToIntMatrix(procIndex));
-			end[procIndex] = true;
+			finish[procIndex] = true;
 		}
 
 		if(recordData) {
-			recordArrayOneLine(END_TITLE, booleanArrayToCharArray(end));
+			recordArrayOneLine(FINISH_TITLE, booleanArrayToCharArray(finish));
 		}
 
 		return procIndex;
 	}
 
 	/**
-	 * Determines whether all the elements of array End are true.
-	 * @return true if all the elements of array End are true, false if at
+	 * Determines whether all the elements of array Finish are true.
+	 * @return true if all the elements of array Finish are true, false if at
 	 * least one element is false.
 	 */
-	protected boolean endArrayIsTrue() {
-		for(int i=0; i<end.length; i++) {
-			if(!end[i]) {
+	protected boolean finishArrayIsTrue() {
+		for(int i=0; i<finish.length; i++) {
+			if(!finish[i]) {
 				return false;
 			}
 		}
@@ -113,11 +113,11 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 	}
 
 	/**
-	 * Sets all the values in Boolean array End to false.
+	 * Sets all the values in Boolean array Finish to false.
 	 */
-	protected void initEndArray() {
+	protected void initArrayFinish() {
 		for(int i=0; i<processCount; i++) {
-			end[i] = false;
+			finish[i] = false;
 		}
 	}
 
@@ -134,10 +134,11 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 		IntMatrix needRow = need.rowToIntMatrix(procIndex);
 		if(recordData) {
 			fileContent.addLine("Process " + procIndex);
-			fileContent.addLine("End[" + procIndex + "]: " + end[procIndex]);
+			fileContent.addLine("Finish[" + procIndex + "]: "
+					+ booleanToChar(finish[procIndex], true));
 			recordIntMatrixRow(NEED_TITLE, need, procIndex);
 			recordIntMatrixRow(WORK_TITLE, work, 0);
 		}
-		return !end[procIndex] && needRow.isLeqToMat(work);
+		return !finish[procIndex] && needRow.isLeqToMat(work);
 	}
 }

@@ -82,6 +82,12 @@ public class RequestEvaluator extends DeadlockPreventer {
 		this.recordBankersAlgoData = recordBankersAlgoData;
 		resourceTypeCount = inputReader.getResourceTypeCount();
 		keyboardScanner = new Scanner(System.in);
+
+		/*
+		 * A row of matrix Request is filled with user input at each iteration
+		 * of method loop. Request does not need to be reset in method
+		 * beforeLoop. -1 represents undefined data.
+		 */
 		request = new IntMatrix(processCount, resourceTypeCount, -1);
 	}
 
@@ -116,7 +122,7 @@ public class RequestEvaluator extends DeadlockPreventer {
 	@Override
 	protected boolean loop() {
 		workStates.clear();
-		endStates.clear();
+		finishStates.clear();
 
 		String line = PROC_REQ_PROMPT;
 		System.out.print("\n" + line);
@@ -183,13 +189,16 @@ public class RequestEvaluator extends DeadlockPreventer {
 
 			boolean safeState = systemStateIsSafe();
 
+			if(recordBankersAlgoData) {
+				fileContent.addLine(null);
+			}
 			recordIntMatrix(ALLOCATION_TITLE, allocation);
 			fileContent.addLine(null);
 			recordIntMatrix(AVAILABLE_TITLE, available);
 			fileContent.addLine(null);
 			recordIntMatrix(NEED_TITLE, need);
 			fileContent.addLine(null);
-			recordWorkAndEndStates();
+			recordWorkAndFinishStates();
 			fileContent.addLine(null);
 
 			boolean execProc = false;
@@ -332,15 +341,17 @@ public class RequestEvaluator extends DeadlockPreventer {
 	 * DeadlockPreventer.bankersAlgorithmIter.
 	 */
 	private boolean systemStateIsSafe() throws IllegalArgumentException {
-		initEndArray();
-		int safeSeqLength = 0;
+		initArrayFinish();
 		work = new IntMatrix(available);
+		int safeSeqLength = 0;
+
 		if(recordBankersAlgoData) {
 			announceBankersAlgorithm();
 		}
+
 		while(true) {
 			int procNumber = bankersAlgorithmIter(recordBankersAlgoData);
-			saveWorkAndEndState();
+			saveWorkAndFinishState();
 
 			if(procNumber < 0) {
 				return false;
