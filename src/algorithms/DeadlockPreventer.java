@@ -115,7 +115,7 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 	/**
 	 * Sets all the values in Boolean array Finish to false.
 	 */
-	protected void initFinishArray() {
+	protected void initArrayFinish() {
 		for(int i=0; i<processCount; i++) {
 			finish[i] = false;
 		}

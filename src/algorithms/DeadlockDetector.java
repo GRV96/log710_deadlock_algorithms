@@ -33,12 +33,6 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 					InputFileReader.MATRIX_REQUEST_TITLE);
 			throw new InputFileException(message);
 		}
-
-		work = new IntMatrix(available);
-
-		for(int i=0; i<processCount; i++) {
-			finish[i] = allocation.rowSum(i) == 0;
-		}
 	}
 
 	@Override
@@ -49,6 +43,12 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 
 	@Override
 	protected boolean beforeLoop() {
+		work = new IntMatrix(available);
+		// Initialize array Finish
+		for(int i=0; i<processCount; i++) {
+			finish[i] = allocation.rowSum(i) == 0;
+		}
+
 		fileContent.addLine(null);
 		recordArray(FINISH_TITLE, booleanArrayToCharArray(finish));
 		return true;

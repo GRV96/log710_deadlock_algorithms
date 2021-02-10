@@ -38,7 +38,7 @@ public class SafeSequenceMaker extends DeadlockPreventer {
 	 */
 	private void addProcToSafeSeq(int procNumber) {
 		safeSeqLength++;
-		safeSeqLine += procNumber + " ";
+		safeSeqLine += " " + procNumber;
 	}
 
 	@Override
@@ -50,8 +50,8 @@ public class SafeSequenceMaker extends DeadlockPreventer {
 	@Override
 	protected boolean beforeLoop() {
 		safeSeqLength = 0;
-		safeSeqLine = "Safe sequence: ";
-		initFinishArray();
+		safeSeqLine = "Safe sequence:";
+		initArrayFinish();
 		work = new IntMatrix(available);
 		return true;
 	}
