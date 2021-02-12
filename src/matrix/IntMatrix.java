@@ -1,4 +1,4 @@
-package data;
+package matrix;
 
 /**
  * This class represents 2-dimensional matrices containing integral numbers.

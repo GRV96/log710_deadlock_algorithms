@@ -3,8 +3,8 @@ package algorithms;
 import java.io.IOException;
 import java.util.Scanner;
 
-import data.IntMatrix;
 import files.InputFileException;
+import matrix.IntMatrix;
 
 /**
  * This interactive class determines whether requests entered by the user in

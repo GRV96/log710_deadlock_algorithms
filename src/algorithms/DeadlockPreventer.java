@@ -2,9 +2,9 @@ package algorithms;
 
 import java.io.IOException;
 
-import data.IntMatrix;
 import files.InputFileException;
 import files.InputFileReader;
+import matrix.IntMatrix;
 
 /**
  * This abstract class contains the data and methods that all deadlock
