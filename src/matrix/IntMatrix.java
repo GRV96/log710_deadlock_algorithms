@@ -90,8 +90,8 @@ public class IntMatrix {
 	 * Adds the number in every cell of other to the number at the same
 	 * coordinates in this matrix. The sums are recorded in this matrix.
 	 * @param other - another instance of IntMatrix
-	 * @throws IllegalArgumentException if dimensionsAreEqual(other) returns
-	 * false
+	 * @throws IllegalArgumentException if this and other do not have the same
+	 * dimensions
 	 */
 	public void addition(IntMatrix other) throws IllegalArgumentException {
 		exceptionForDifferentDimensions(other);
@@ -111,7 +111,7 @@ public class IntMatrix {
 	 * @param row - the index of the row in which the addition is to be
 	 * performed
 	 * @throws IllegalArgumentException if row is out of bounds or
-	 * dimensionsAreEqual(other) returns false
+	 * this and other do not have the same dimensions
 	 */
 	public void additionOnRow(IntMatrix other, int row)
 			throws IllegalArgumentException {
@@ -154,10 +154,8 @@ public class IntMatrix {
 	 * of this matrix.
 	 * @return a new IntMatrix instance containing the column sums of this
 	 * matrix
-	 * @throws IllegalArgumentException if columnSum throws one
 	 */
-	public IntMatrix columnSumMatrix()
-			throws IllegalArgumentException {
+	public IntMatrix columnSumMatrix() {
 		int[] sumArray = new int[columns];
 
 		for(int j=0; j<columns; j++) {
@@ -196,7 +194,7 @@ public class IntMatrix {
 	 * @param destination - the matrix in which the copy is performed
 	 * @param source - the copied matrix
 	 * @throws IllegalArgumentException if destination and source do not have
-	 * the same dimensions as destination
+	 * the same dimensions
 	 */
 	private static void copyContent(IntMatrix destination, IntMatrix source)
 			throws IllegalArgumentException {
@@ -243,8 +241,8 @@ public class IntMatrix {
 	 * Throws an IllegalArgumentException if the other matrix does not have
 	 * the same dimensions as this one.
 	 * @param other - another instance of IntMatrix
-	 * @throws IllegalArgumentException if other does not have the same
-	 * dimensions as this
+	 * @throws IllegalArgumentException if this and other do not have the same
+	 * dimensions
 	 */
 	private void exceptionForDifferentDimensions(IntMatrix other)
 			throws IllegalArgumentException {
@@ -337,8 +335,8 @@ public class IntMatrix {
 	 * @param other - another instance of IntMatrix
 	 * @return true if every number in this matrix is less than or equal to the
 	 * corresponding number in other, false otherwise
-	 * @throws IllegalArgumentException if dimensionsAreEqual(other) returns
-	 * false
+	 * @throws IllegalArgumentException if this and other do not have the same
+	 * dimensions
 	 */
 	public boolean isLeqToMat(IntMatrix other)
 			throws IllegalArgumentException {
@@ -398,7 +396,7 @@ public class IntMatrix {
 	 * @return the content of the specified row in an array
 	 * @throws IllegalArgumentException if row is out of bounds
 	 */
-	public Integer[] rowToArray(int row) {
+	public Integer[] rowToArray(int row) throws IllegalArgumentException {
 		exceptionForIllegalRowIndex(row);
 
 		Integer[] rowArray = new Integer[columns];
@@ -416,7 +414,7 @@ public class IntMatrix {
 	 * @return a new matrix containing the specified row
 	 * @throws IllegalArgumentException if row is out of bounds
 	 */
-	public IntMatrix rowToIntMatrix(int row) {
+	public IntMatrix rowToIntMatrix(int row) throws IllegalArgumentException {
 		exceptionForIllegalRowIndex(row);
 		return new IntMatrix(matrix[row]);
 	}
@@ -478,8 +476,8 @@ public class IntMatrix {
 	 * same coordinates in this matrix. The differences are recorded in this
 	 * matrix.
 	 * @param other - another instance of IntMatrix
-	 * @throws IllegalArgumentException if dimensionsAreEqual(other) returns
-	 * false
+	 * @throws IllegalArgumentException if this and other do not have the same
+	 * dimensions
 	 */
 	public void substraction(IntMatrix other) throws IllegalArgumentException {
 		addition(other.getOpposite());
@@ -492,8 +490,8 @@ public class IntMatrix {
 	 * @param other - another instance of IntMatrix
 	 * @param row - the index of the row in which the substraction is to be
 	 * performed.
-	 * @throws IllegalArgumentException if dimensionsAreEqual(other) returns
-	 * false
+	 * @throws IllegalArgumentException if this and other do not have the same
+	 * dimensions
 	 */
 	public void substractionOnRow(IntMatrix other, int row)
 			throws IllegalArgumentException {
