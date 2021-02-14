@@ -344,7 +344,7 @@ public class IntMatrix {
 
 		for(int i=0; i<rows; i++) {
 			for(int j=0; j<columns; j++) {
-				if(get(i, j) > other.get(i, j)) {
+				if(matrix[i][j] > other.matrix[i][j]) {
 					return false;
 				}
 			}
