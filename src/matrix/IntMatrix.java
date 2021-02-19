@@ -71,7 +71,7 @@ public class IntMatrix {
 		rows = 1;
 		columns = content.length;
 		matrix = new int[rows][columns];
-		copyContent(matrix[0], content, false);
+		copyContent(matrix[0], content, 1);
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class IntMatrix {
 		rows = content.length;
 		columns = content[0].length;
 		matrix = new int[rows][columns];
-		copyContent(matrix, content, false);
+		copyContent(matrix, content, 1);
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class IntMatrix {
 		this.rows = other.rows;
 		this.columns = other.columns;
 		this.matrix = new int[rows][columns];
-		copyContent(this, other, false);
+		copyContent(this, other, 1);
 	}
 
 	/**
@@ -227,14 +227,14 @@ public class IntMatrix {
 
 	/**
 	 * Copies the content of a 1-dimensional int array into another
-	 * 1-dimensional int array.
+	 * 1-dimensional int array. Array source is not modified.
 	 * @param destination - the array in which the copy is performed
 	 * @param source - the copied array
-	 * @param opposites - If true, destination receives the opposite values.
+	 * @param factor - Multiplies the numbers from source before they are
+	 * saved in destination.
 	 */
 	private static void copyContent(int[] destination, int[] source,
-			boolean opposites) {
-		final int factor = opposites? -1: 1;
+			int factor) {
 		for(int i=0; i<source.length; i++) {
 			destination[i] = factor * source[i];
 		}
@@ -242,30 +242,33 @@ public class IntMatrix {
 
 	/**
 	 * Copies the content of a 2-dimensional int array into another
-	 * 2-dimensional int array.
+	 * 2-dimensional int array. Array source is not modified.
 	 * @param destination - the array in which the copy is performed
 	 * @param source - the copied array
-	 * @param opposites - If true, destination receives the opposite values.
+	 * @param factor - Multiplies the numbers from source before they are
+	 * saved in destination.
 	 */
 	private static void copyContent(int[][] destination, int[][] source,
-			boolean opposites) {
+			int factor) {
 		for(int i=0; i<source.length; i++) {
-			copyContent(destination[i], source[i], opposites);
+			copyContent(destination[i], source[i], factor);
 		}
 	}
 
 	/**
-	 * Copies the content of a matrix into another matrix.
+	 * Copies the content of a matrix into another matrix. Matrix source is
+	 * not modified.
 	 * @param destination - the matrix in which the copy is performed
 	 * @param source - the copied matrix
-	 * @param opposites - If true, destination receives the opposite values.
+	 * @param factor - Multiplies the numbers from source before they are
+	 * saved in destination.
 	 * @throws IllegalArgumentException if destination and source do not have
 	 * the same dimensions
 	 */
 	private static void copyContent(IntMatrix destination, IntMatrix source,
-			boolean opposites) throws IllegalArgumentException {
+			int factor) throws IllegalArgumentException {
 		destination.exceptionForDifferentDimensions(source);
-		copyContent(destination.matrix, source.matrix, opposites);
+		copyContent(destination.matrix, source.matrix, factor);
 	}
 
 	/**
@@ -408,7 +411,7 @@ public class IntMatrix {
 	 */
 	public IntMatrix getOpposite() {
 		IntMatrix opposite = new IntMatrix(rows, columns);
-		copyContent(opposite, this, true);
+		copyContent(opposite, this, -1);
 		return opposite;
 	}
 
