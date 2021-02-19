@@ -92,26 +92,43 @@ public class IntMatrix {
 	}
 
 	/**
-	 * Adds the number in every cell of other to the number at the same
-	 * coordinates in this matrix. The sums are recorded in this matrix.
+	 * Adds every number in other to the number at the same coordinates in
+	 * this matrix. The sums are saved in this matrix. Matrix other is not
+	 * modified. This method is equivalent to addition(other, 1).
 	 * @param other - another instance of IntMatrix
 	 * @throws IllegalArgumentException if this and other do not have the same
 	 * dimensions
 	 */
 	public void addition(IntMatrix other) throws IllegalArgumentException {
+		addition(other, 1);
+	}
+
+	/**
+	 * Multiplies every number in other by factor and adds the product to the
+	 * number at the same coordinates in this matrix. The sums are saved in
+	 * this matrix. Matrix other is not modified.
+	 * @param other - another instance of IntMatrix
+	 * @param factor - Multiplies the numbers from other before they are added
+	 * to those in this matrix.
+	 * @throws IllegalArgumentException if this and other do not have the same
+	 * dimensions
+	 */
+	public void addition(IntMatrix other, int factor)
+			throws IllegalArgumentException {
 		exceptionForDifferentDimensions(other);
 
 		for(int i=0; i<rows; i++) {
 			for(int j=0; j<columns; j++) {
-				matrix[i][j] += other.matrix[i][j];
+				matrix[i][j] += factor * other.matrix[i][j];
 			}
 		}
 	}
 
 	/**
-	 * Adds the number in every cell in the specified row of other to the
-	 * number at the same coordinates in this matrix. The sums are recorded in
-	 * this matrix.
+	 * Adds every number in the specified row of other to the number at the
+	 * same coordinates in this matrix. The sums are saved in this matrix.
+	 * Matrix other is not modified. This method is equivalent to
+	 * additionOnRow(other, row, 1).
 	 * @param other - another instance of IntMatrix
 	 * @param row - the index of the row in which the addition is to be
 	 * performed
@@ -120,11 +137,28 @@ public class IntMatrix {
 	 */
 	public void additionOnRow(IntMatrix other, int row)
 			throws IllegalArgumentException {
+		additionOnRow(other, row, 1);
+	}
+
+	/**
+	 * Multiplies every number in the specified row of other by factor and
+	 * adds it to the number at the same coordinates in this matrix. The sums
+	 * are saved in this matrix. Matrix other is not modified.
+	 * @param other - another instance of IntMatrix
+	 * @param row - the index of the row in which the addition is to be
+	 * performed
+	 * @param factor - Multiplies the numbers from other before they are added
+	 * to those in this matrix.
+	 * @throws IllegalArgumentException if row is out of bounds or
+	 * this and other do not have the same dimensions
+	 */
+	public void additionOnRow(IntMatrix other, int row, int factor)
+			throws IllegalArgumentException {
 		exceptionForIllegalRowIndex(row);
 		exceptionForDifferentDimensions(other);
 
 		for(int j=0; j<columns; j++) {
-			matrix[row][j] += other.matrix[row][j];
+			matrix[row][j] += factor * other.matrix[row][j];
 		}
 	}
 
@@ -496,21 +530,22 @@ public class IntMatrix {
 	}
 
 	/**
-	 * Subtracts the number in every cell of other from the number at the same
-	 * coordinates in this matrix. The differences are recorded in this
-	 * matrix.
+	 * Subtracts every number in other from the number at the same coordinates
+	 * in this matrix. The differences are saved in this matrix. Matrix other
+	 * is not modified. This method is equivalent to addition(other, -1).
 	 * @param other - another instance of IntMatrix
 	 * @throws IllegalArgumentException if this and other do not have the same
 	 * dimensions
 	 */
 	public void subtraction(IntMatrix other) throws IllegalArgumentException {
-		addition(other.getOpposite());
+		addition(other, -1);
 	}
 
 	/**
-	 * Subtracts the number in every cell in the specified row of other from
-	 * the number at the same coordinates in this matrix. The differences are
-	 * recorded in this matrix.
+	 * Subtracts every number in the specified row of other from the number at
+	 * the same coordinates in this matrix. The differences are saved in this
+	 * matrix. Matrix other is not modified. This method is equivalent to
+	 * additionOnRow(other, row, -1).
 	 * @param other - another instance of IntMatrix
 	 * @param row - the index of the row in which the subtraction is to be
 	 * performed.
@@ -519,6 +554,6 @@ public class IntMatrix {
 	 */
 	public void subtractionOnRow(IntMatrix other, int row)
 			throws IllegalArgumentException {
-		additionOnRow(other.getOpposite(), row);
+		additionOnRow(other, row, -1);
 	}
 }
