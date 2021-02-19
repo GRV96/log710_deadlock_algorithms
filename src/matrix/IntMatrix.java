@@ -549,8 +549,8 @@ public class IntMatrix {
 	 * @param other - another instance of IntMatrix
 	 * @param row - the index of the row in which the subtraction is to be
 	 * performed.
-	 * @throws IllegalArgumentException if this and other do not have the same
-	 * dimensions
+	 * @throws IllegalArgumentException if row is out of bounds or this and
+	 * other do not have the same dimensions
 	 */
 	public void subtractionOnRow(IntMatrix other, int row)
 			throws IllegalArgumentException {
