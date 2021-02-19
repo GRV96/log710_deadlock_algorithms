@@ -181,9 +181,9 @@ public class RequestEvaluator extends DeadlockPreventer {
 			IntMatrix needCopy = new IntMatrix(need);
 
 			// Simulate allocation
-			available.substraction(requestRow);
+			available.subtraction(requestRow);
 			allocation.additionOnRow(request, procNumber);
-			need.substractionOnRow(request, procNumber);
+			need.subtractionOnRow(request, procNumber);
 
 			boolean safeState = systemStateIsSafe();
 

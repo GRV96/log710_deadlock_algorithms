@@ -496,28 +496,28 @@ public class IntMatrix {
 	}
 
 	/**
-	 * Substracts the number in every cell of other from the number at the
-	 * same coordinates in this matrix. The differences are recorded in this
+	 * Subtracts the number in every cell of other from the number at the same
+	 * coordinates in this matrix. The differences are recorded in this
 	 * matrix.
 	 * @param other - another instance of IntMatrix
 	 * @throws IllegalArgumentException if this and other do not have the same
 	 * dimensions
 	 */
-	public void substraction(IntMatrix other) throws IllegalArgumentException {
+	public void subtraction(IntMatrix other) throws IllegalArgumentException {
 		addition(other.getOpposite());
 	}
 
 	/**
-	 * Substracts the number in every cell in the specified row of other from
+	 * Subtracts the number in every cell in the specified row of other from
 	 * the number at the same coordinates in this matrix. The differences are
 	 * recorded in this matrix.
 	 * @param other - another instance of IntMatrix
-	 * @param row - the index of the row in which the substraction is to be
+	 * @param row - the index of the row in which the subtraction is to be
 	 * performed.
 	 * @throws IllegalArgumentException if this and other do not have the same
 	 * dimensions
 	 */
-	public void substractionOnRow(IntMatrix other, int row)
+	public void subtractionOnRow(IntMatrix other, int row)
 			throws IllegalArgumentException {
 		additionOnRow(other.getOpposite(), row);
 	}

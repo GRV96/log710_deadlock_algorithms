@@ -58,7 +58,7 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 			throw new InputFileException(message);
 		}
 		need = new IntMatrix(maximum);
-		need.substraction(allocation);
+		need.subtraction(allocation);
 	}
 
 	/**

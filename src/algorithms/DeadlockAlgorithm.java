@@ -199,7 +199,7 @@ public abstract class DeadlockAlgorithm {
 
 		available = resources;
 		IntMatrix allocColumnSum = allocation.columnSumMatrix();
-		available.substraction(allocColumnSum);
+		available.subtraction(allocColumnSum);
 
 		finish = new Boolean[processCount];
 
