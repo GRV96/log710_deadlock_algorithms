@@ -8,7 +8,18 @@ public class IntMatrix {
 
 	public final int rows;
 	public final int columns;
-	private int[][] matrix;
+	private int[][] matrix = null;
+
+	/**
+	 * This constructor creates a matrix with uninitialized content.
+	 * @param rows - this matrix's number of rows
+	 * @param columns - this matrix's number of columns
+	 */
+	private IntMatrix(int rows, int columns) {
+		this.rows = rows;
+		this.columns = columns;
+		matrix = new int[rows][columns];
+	}
 
 	/**
 	 * This constructor creates a matrix with the specified number of rows and
@@ -21,14 +32,8 @@ public class IntMatrix {
 	 */
 	public IntMatrix(int rows, int columns, int content)
 			throws IllegalArgumentException {
-		if(rows <= 0) {
-			throw new IllegalArgumentException(
-					"The number of rows must be greater than 0.");
-		}
-		if(columns <= 0) {
-			throw new IllegalArgumentException(
-					"The number of columns must be greater than 0.");
-		}
+		exceptionForIllegalNumberOfRows(rows);
+		exceptionForIllegalNumberOfColumns(columns);
 
 		this.rows = rows;
 		this.columns = columns;
@@ -55,7 +60,7 @@ public class IntMatrix {
 		rows = 1;
 		columns = content.length;
 		matrix = new int[rows][columns];
-		copyContent(matrix[0], content);
+		copyContent(matrix[0], content, false);
 	}
 
 	/**
@@ -71,7 +76,7 @@ public class IntMatrix {
 		rows = content.length;
 		columns = content[0].length;
 		matrix = new int[rows][columns];
-		copyContent(matrix, content);
+		copyContent(matrix, content, false);
 	}
 
 	/**
@@ -83,7 +88,7 @@ public class IntMatrix {
 		this.rows = other.rows;
 		this.columns = other.columns;
 		this.matrix = new int[rows][columns];
-		copyContent(this, other);
+		copyContent(this, other, false);
 	}
 
 	/**
@@ -170,10 +175,13 @@ public class IntMatrix {
 	 * 1-dimensional int array.
 	 * @param destination - the array in which the copy is performed
 	 * @param source - the copied array
+	 * @param opposites - If true, destination receives the opposite values.
 	 */
-	private static void copyContent(int[] destination, int[] source) {
+	private static void copyContent(int[] destination, int[] source,
+			boolean opposites) {
+		final int factor = opposites? -1: 1;
 		for(int i=0; i<source.length; i++) {
-			destination[i] = source[i];
+			destination[i] = factor * source[i];
 		}
 	}
 
@@ -182,10 +190,12 @@ public class IntMatrix {
 	 * 2-dimensional int array.
 	 * @param destination - the array in which the copy is performed
 	 * @param source - the copied array
+	 * @param opposites - If true, destination receives the opposite values.
 	 */
-	private static void copyContent(int[][] destination, int[][] source) {
+	private static void copyContent(int[][] destination, int[][] source,
+			boolean opposites) {
 		for(int i=0; i<source.length; i++) {
-			copyContent(destination[i], source[i]);
+			copyContent(destination[i], source[i], opposites);
 		}
 	}
 
@@ -193,13 +203,14 @@ public class IntMatrix {
 	 * Copies the content of a matrix into another matrix.
 	 * @param destination - the matrix in which the copy is performed
 	 * @param source - the copied matrix
+	 * @param opposites - If true, destination receives the opposite values.
 	 * @throws IllegalArgumentException if destination and source do not have
 	 * the same dimensions
 	 */
-	private static void copyContent(IntMatrix destination, IntMatrix source)
-			throws IllegalArgumentException {
+	private static void copyContent(IntMatrix destination, IntMatrix source,
+			boolean opposites) throws IllegalArgumentException {
 		destination.exceptionForDifferentDimensions(source);
-		copyContent(destination.matrix, source.matrix);
+		copyContent(destination.matrix, source.matrix, opposites);
 	}
 
 	/**
@@ -267,6 +278,36 @@ public class IntMatrix {
 	}
 
 	/**
+	 * Throws an IllegalArgumentException if the given number of columns is
+	 * less than or equal to 0.
+	 * @param columns - a number of columns
+	 * @throws IllegalArgumentException if the given number of columns is less
+	 * than or equal to 0
+	 */
+	private void exceptionForIllegalNumberOfColumns(int columns)
+			throws IllegalArgumentException {
+		if(columns <= 0) {
+			throw new IllegalArgumentException(
+					"The number of columns must be greater than 0.");
+		}
+	}
+
+	/**
+	 * Throws an IllegalArgumentException if the given number of rows is less
+	 * than or equal to 0.
+	 * @param rows - a number of rows
+	 * @throws IllegalArgumentException if the given number of rows is less
+	 * than or equal to 0
+	 */
+	private void exceptionForIllegalNumberOfRows(int rows)
+			throws IllegalArgumentException {
+		if(rows <= 0) {
+			throw new IllegalArgumentException(
+					"The number of rows must be greater than 0.");
+		}
+	}
+
+	/**
 	 * Throws an IllegalArgumentException if the given row index is out of
 	 * bounds.
 	 * @param rowIndex - a row index
@@ -311,14 +352,8 @@ public class IntMatrix {
 	 * @return the IntMatrix containing the opposites
 	 */
 	public IntMatrix getOpposite() {
-		IntMatrix opposite = new IntMatrix(this);
-
-		for(int i=0; i<rows; i++) {
-			for(int j=0; j<columns; j++) {
-				opposite.matrix[i][j] *= -1;
-			}
-		}
-
+		IntMatrix opposite = new IntMatrix(rows, columns);
+		copyContent(opposite, this, true);
 		return opposite;
 	}
 
