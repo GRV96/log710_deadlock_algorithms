@@ -179,8 +179,18 @@ public class IntMatrix {
 	 */
 	public int columnSum(int column) throws IllegalArgumentException {
 		exceptionForIllegalColumnIndex(column);
+		return columnSumNoCheck(column);
+	}
 
+	/**
+	 * Calculates the sum of the numbers in the specified column without
+	 * making sure the column index is within bounds.
+	 * @param column - a column index
+	 * @return the sum of the numbers in the column
+	 */
+	private int columnSumNoCheck(int column) {
 		int sum = 0;
+
 		for(int i=0; i<rows; i++) {
 			sum += matrix[i][column];
 		}
@@ -198,7 +208,7 @@ public class IntMatrix {
 		int[] sumArray = new int[columns];
 
 		for(int j=0; j<columns; j++) {
-			sumArray[j] = columnSum(j);
+			sumArray[j] = columnSumNoCheck(j);
 		}
 
 		return new IntMatrix(sumArray);
