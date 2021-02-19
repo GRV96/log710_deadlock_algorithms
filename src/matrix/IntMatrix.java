@@ -454,7 +454,7 @@ public class IntMatrix {
 	}
 
 	/**
-	 * Sets the number a the given coordinates in this matrix.
+	 * Sets the number at the given coordinates in this matrix.
 	 * @param row - a row index
 	 * @param column - a column index
 	 * @param number - the number to put at the given coordinates.
