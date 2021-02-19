@@ -224,11 +224,8 @@ public class IntMatrix {
 		}
 
 		for(int i=0; i<rows; i++) {
-			int[] row = matrix[i];
-			int[] otherRow = other.matrix[i];
-
 			for(int j=0; j<columns; j++) {
-				if(row[j] != otherRow[j]) {
+				if(matrix[i][j] != other.matrix[i][j]) {
 					return false;
 				}
 			}
