@@ -6,8 +6,19 @@ package matrix;
  */
 public class IntMatrix {
 
+	/**
+	 * This matrix's number of rows
+	 */
 	public final int rows;
+
+	/**
+	 * This matrix's number of columns
+	 */
 	public final int columns;
+
+	/**
+	 * This matrix's content
+	 */
 	private int[][] matrix = null;
 
 	/**
