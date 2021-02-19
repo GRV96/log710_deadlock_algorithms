@@ -303,12 +303,8 @@ public class IntMatrix {
 	 * @param row - a row index
 	 * @param column - a column index
 	 * @return the number at the given coordinates
-	 * @throws IllegalArgumentException if row or column is out of bounds
 	 */
-	public int get(int row, int column)
-			throws IllegalArgumentException {
-		exceptionForIllegalRowIndex(row);
-		exceptionForIllegalColumnIndex(column);
+	public int get(int row, int column) {
 		return matrix[row][column];
 	}
 
@@ -462,12 +458,8 @@ public class IntMatrix {
 	 * @param row - a row index
 	 * @param column - a column index
 	 * @param number - the number to put at the given coordinates.
-	 * @throws IllegalArgumentException if row or column is out of bounds
 	 */
-	public void set(int row, int column, int number)
-			throws IllegalArgumentException {
-		exceptionForIllegalRowIndex(row);
-		exceptionForIllegalColumnIndex(column);
+	public void set(int row, int column, int number) {
 		matrix[row][column] = number;
 	}
 
