@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import data.IntMatrix;
 import files.FileContent;
 import files.FileUtil;
 import files.InputFileException;
 import files.InputFileReader;
 import files.OutputFileWriter;
+import matrix.IntMatrix;
 
 /**
  * This abstract class contains the data and methods that all deadlock
@@ -199,7 +199,7 @@ public abstract class DeadlockAlgorithm {
 
 		available = resources;
 		IntMatrix allocColumnSum = allocation.columnSumMatrix();
-		available.substraction(allocColumnSum);
+		available.subtraction(allocColumnSum);
 
 		finish = new Boolean[processCount];
 

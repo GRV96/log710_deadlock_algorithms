@@ -2,8 +2,8 @@ package algorithms;
 
 import java.io.IOException;
 
-import data.IntMatrix;
 import files.InputFileException;
+import matrix.IntMatrix;
 
 /**
  * This class attempts to make a sequence of processes that can be executed

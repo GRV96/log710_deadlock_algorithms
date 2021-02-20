@@ -3,8 +3,8 @@ package algorithms;
 import java.io.IOException;
 import java.util.Scanner;
 
-import data.IntMatrix;
 import files.InputFileException;
+import matrix.IntMatrix;
 
 /**
  * This interactive class determines whether requests entered by the user in
@@ -29,17 +29,17 @@ public class RequestEvaluator extends DeadlockPreventer {
 		{"1", "t", "true", "y", "yes"};
 
 	/**
-	 * Console prompt for the process and the requested resources
-	 */
-	private static final String PROC_REQ_PROMPT =
-			"Process and request (\"q\" to quit): ";
-
-	/**
 	 * All indications of incorrect console input should begin with this
 	 * string.
 	 */
 	private static final String INCORRECT_INPUT_WARNING =
 			"Incorrect input! ";
+
+	/**
+	 * Console prompt for the process and the requested resources
+	 */
+	private static final String PROC_REQ_PROMPT =
+			"Process and request (\"q\" to quit): ";
 
 	/**
 	 * A suffix appended to the input file's name to form the output file's
@@ -143,21 +143,19 @@ public class RequestEvaluator extends DeadlockPreventer {
 			fileContent.addLine(line);
 			return true;
 		}
-		int procNumber = procAndReq[0];
 
-		try {
-			for(int j=0; j<resourceTypeCount; j++) {
-				request.set(procNumber, j, procAndReq[j+1]);
-			}
-		}
-		catch(IllegalArgumentException iae) {
-			// Thrown by IntMatrix.set if procNumber >= processCount
+		int procNumber = procAndReq[0];
+		if(!request.rowIndexIsInBounds(procNumber)) {
 			line = INCORRECT_INPUT_WARNING
 					+ "Process numbers range from 0 to " + (processCount-1)
 					+ ". There is no process " + procNumber + ".";
 			System.err.println(line);
 			fileContent.addLine(line);
 			return true;
+		}
+
+		for(int j=0; j<resourceTypeCount; j++) {
+			request.set(procNumber, j, procAndReq[j+1]);
 		}
 
 		fileContent.addLine(null);
@@ -183,9 +181,9 @@ public class RequestEvaluator extends DeadlockPreventer {
 			IntMatrix needCopy = new IntMatrix(need);
 
 			// Simulate allocation
-			available.substraction(requestRow);
+			available.subtraction(requestRow);
 			allocation.additionOnRow(request, procNumber);
-			need.substractionOnRow(request, procNumber);
+			need.subtractionOnRow(request, procNumber);
 
 			boolean safeState = systemStateIsSafe();
 

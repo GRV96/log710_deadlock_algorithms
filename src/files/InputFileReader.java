@@ -2,7 +2,7 @@ package files;
 
 import java.util.regex.PatternSyntaxException;
 
-import data.IntMatrix;
+import matrix.IntMatrix;
 
 /**
  * Instances of this class extract data required by the deadlock algorithms

@@ -1,4 +1,4 @@
-package data;
+package matrix;
 
 /**
  * This class represents 2-dimensional matrices containing integral numbers.
@@ -6,9 +6,31 @@ package data;
  */
 public class IntMatrix {
 
+	/**
+	 * This matrix's number of rows
+	 */
 	public final int rows;
+
+	/**
+	 * This matrix's number of columns
+	 */
 	public final int columns;
-	private int[][] matrix;
+
+	/**
+	 * This matrix's content
+	 */
+	private int[][] matrix = null;
+
+	/**
+	 * This constructor creates a matrix with uninitialized content.
+	 * @param rows - this matrix's number of rows
+	 * @param columns - this matrix's number of columns
+	 */
+	private IntMatrix(int rows, int columns) {
+		this.rows = rows;
+		this.columns = columns;
+		matrix = new int[rows][columns];
+	}
 
 	/**
 	 * This constructor creates a matrix with the specified number of rows and
@@ -21,14 +43,8 @@ public class IntMatrix {
 	 */
 	public IntMatrix(int rows, int columns, int content)
 			throws IllegalArgumentException {
-		if(rows <= 0) {
-			throw new IllegalArgumentException(
-					"The number of rows must be greater than 0.");
-		}
-		if(columns <= 0) {
-			throw new IllegalArgumentException(
-					"The number of columns must be greater than 0.");
-		}
+		exceptionForIllegalNumberOfRows(rows);
+		exceptionForIllegalNumberOfColumns(columns);
 
 		this.rows = rows;
 		this.columns = columns;
@@ -55,7 +71,7 @@ public class IntMatrix {
 		rows = 1;
 		columns = content.length;
 		matrix = new int[rows][columns];
-		copyContent(matrix[0], content);
+		copyContent(matrix[0], content, 1);
 	}
 
 	/**
@@ -71,7 +87,7 @@ public class IntMatrix {
 		rows = content.length;
 		columns = content[0].length;
 		matrix = new int[rows][columns];
-		copyContent(matrix, content);
+		copyContent(matrix, content, 1);
 	}
 
 	/**
@@ -83,43 +99,77 @@ public class IntMatrix {
 		this.rows = other.rows;
 		this.columns = other.columns;
 		this.matrix = new int[rows][columns];
-		copyContent(this, other);
+		copyContent(this, other, 1);
 	}
 
 	/**
-	 * Adds the number in every cell of other to the number at the same
-	 * coordinates in this matrix. The sums are recorded in this matrix.
+	 * Adds every number in other to the number at the same coordinates in
+	 * this matrix. The sums are saved in this matrix. Matrix other is not
+	 * modified. This method is equivalent to addition(other, 1).
 	 * @param other - another instance of IntMatrix
-	 * @throws IllegalArgumentException if dimensionsAreEqual(other) returns
-	 * false
+	 * @throws IllegalArgumentException if this and other do not have the same
+	 * dimensions
 	 */
 	public void addition(IntMatrix other) throws IllegalArgumentException {
+		addition(other, 1);
+	}
+
+	/**
+	 * Multiplies every number in other by factor and adds the product to the
+	 * number at the same coordinates in this matrix. The sums are saved in
+	 * this matrix. Matrix other is not modified.
+	 * @param other - another instance of IntMatrix
+	 * @param factor - Multiplies the numbers from other before they are added
+	 * to those in this matrix.
+	 * @throws IllegalArgumentException if this and other do not have the same
+	 * dimensions
+	 */
+	public void addition(IntMatrix other, int factor)
+			throws IllegalArgumentException {
 		exceptionForDifferentDimensions(other);
 
 		for(int i=0; i<rows; i++) {
 			for(int j=0; j<columns; j++) {
-				matrix[i][j] += other.matrix[i][j];
+				matrix[i][j] += factor * other.matrix[i][j];
 			}
 		}
 	}
 
 	/**
-	 * Adds the number in every cell in the specified row of other to the
-	 * number at the same coordinates in this matrix. The sums are recorded in
-	 * this matrix.
+	 * Adds every number in the specified row of other to the number at the
+	 * same coordinates in this matrix. The sums are saved in this matrix.
+	 * Matrix other is not modified. This method is equivalent to
+	 * additionOnRow(other, row, 1).
 	 * @param other - another instance of IntMatrix
 	 * @param row - the index of the row in which the addition is to be
 	 * performed
 	 * @throws IllegalArgumentException if row is out of bounds or
-	 * dimensionsAreEqual(other) returns false
+	 * this and other do not have the same dimensions
 	 */
 	public void additionOnRow(IntMatrix other, int row)
+			throws IllegalArgumentException {
+		additionOnRow(other, row, 1);
+	}
+
+	/**
+	 * Multiplies every number in the specified row of other by factor and
+	 * adds it to the number at the same coordinates in this matrix. The sums
+	 * are saved in this matrix. Matrix other is not modified.
+	 * @param other - another instance of IntMatrix
+	 * @param row - the index of the row in which the addition is to be
+	 * performed
+	 * @param factor - Multiplies the numbers from other before they are added
+	 * to those in this matrix.
+	 * @throws IllegalArgumentException if row is out of bounds or
+	 * this and other do not have the same dimensions
+	 */
+	public void additionOnRow(IntMatrix other, int row, int factor)
 			throws IllegalArgumentException {
 		exceptionForIllegalRowIndex(row);
 		exceptionForDifferentDimensions(other);
 
 		for(int j=0; j<columns; j++) {
-			matrix[row][j] += other.matrix[row][j];
+			matrix[row][j] += factor * other.matrix[row][j];
 		}
 	}
 
@@ -140,8 +190,18 @@ public class IntMatrix {
 	 */
 	public int columnSum(int column) throws IllegalArgumentException {
 		exceptionForIllegalColumnIndex(column);
+		return columnSumNoCheck(column);
+	}
 
+	/**
+	 * Calculates the sum of the numbers in the specified column without
+	 * making sure the column index is within bounds.
+	 * @param column - a column index
+	 * @return the sum of the numbers in the column
+	 */
+	private int columnSumNoCheck(int column) {
 		int sum = 0;
+
 		for(int i=0; i<rows; i++) {
 			sum += matrix[i][column];
 		}
@@ -154,14 +214,12 @@ public class IntMatrix {
 	 * of this matrix.
 	 * @return a new IntMatrix instance containing the column sums of this
 	 * matrix
-	 * @throws IllegalArgumentException if columnSum throws one
 	 */
-	public IntMatrix columnSumMatrix()
-			throws IllegalArgumentException {
+	public IntMatrix columnSumMatrix() {
 		int[] sumArray = new int[columns];
 
 		for(int j=0; j<columns; j++) {
-			sumArray[j] = columnSum(j);
+			sumArray[j] = columnSumNoCheck(j);
 		}
 
 		return new IntMatrix(sumArray);
@@ -169,39 +227,48 @@ public class IntMatrix {
 
 	/**
 	 * Copies the content of a 1-dimensional int array into another
-	 * 1-dimensional int array.
+	 * 1-dimensional int array. Array source is not modified.
 	 * @param destination - the array in which the copy is performed
 	 * @param source - the copied array
+	 * @param factor - Multiplies the numbers from source before they are
+	 * saved in destination.
 	 */
-	private static void copyContent(int[] destination, int[] source) {
+	private static void copyContent(int[] destination, int[] source,
+			int factor) {
 		for(int i=0; i<source.length; i++) {
-			destination[i] = source[i];
+			destination[i] = factor * source[i];
 		}
 	}
 
 	/**
 	 * Copies the content of a 2-dimensional int array into another
-	 * 2-dimensional int array.
+	 * 2-dimensional int array. Array source is not modified.
 	 * @param destination - the array in which the copy is performed
 	 * @param source - the copied array
+	 * @param factor - Multiplies the numbers from source before they are
+	 * saved in destination.
 	 */
-	private static void copyContent(int[][] destination, int[][] source) {
+	private static void copyContent(int[][] destination, int[][] source,
+			int factor) {
 		for(int i=0; i<source.length; i++) {
-			copyContent(destination[i], source[i]);
+			copyContent(destination[i], source[i], factor);
 		}
 	}
 
 	/**
-	 * Copies the content of a matrix into another matrix.
+	 * Copies the content of a matrix into another matrix. Matrix source is
+	 * not modified.
 	 * @param destination - the matrix in which the copy is performed
 	 * @param source - the copied matrix
+	 * @param factor - Multiplies the numbers from source before they are
+	 * saved in destination.
 	 * @throws IllegalArgumentException if destination and source do not have
-	 * the same dimensions as destination
+	 * the same dimensions
 	 */
-	private static void copyContent(IntMatrix destination, IntMatrix source)
-			throws IllegalArgumentException {
+	private static void copyContent(IntMatrix destination, IntMatrix source,
+			int factor) throws IllegalArgumentException {
 		destination.exceptionForDifferentDimensions(source);
-		copyContent(destination.matrix, source.matrix);
+		copyContent(destination.matrix, source.matrix, factor);
 	}
 
 	/**
@@ -226,11 +293,8 @@ public class IntMatrix {
 		}
 
 		for(int i=0; i<rows; i++) {
-			int[] row = matrix[i];
-			int[] otherRow = other.matrix[i];
-
 			for(int j=0; j<columns; j++) {
-				if(row[j] != otherRow[j]) {
+				if(matrix[i][j] != other.matrix[i][j]) {
 					return false;
 				}
 			}
@@ -243,8 +307,8 @@ public class IntMatrix {
 	 * Throws an IllegalArgumentException if the other matrix does not have
 	 * the same dimensions as this one.
 	 * @param other - another instance of IntMatrix
-	 * @throws IllegalArgumentException if other does not have the same
-	 * dimensions as this
+	 * @throws IllegalArgumentException if this and other do not have the same
+	 * dimensions
 	 */
 	private void exceptionForDifferentDimensions(IntMatrix other)
 			throws IllegalArgumentException {
@@ -268,6 +332,36 @@ public class IntMatrix {
 			throw new IllegalArgumentException(
 					"Column indices range from 0 to " + (columns-1)
 					+ ". Index " + columnIndex + "is out of bounds.");
+		}
+	}
+
+	/**
+	 * Throws an IllegalArgumentException if the given number of columns is
+	 * less than or equal to 0.
+	 * @param columns - a number of columns
+	 * @throws IllegalArgumentException if the given number of columns is less
+	 * than or equal to 0
+	 */
+	private void exceptionForIllegalNumberOfColumns(int columns)
+			throws IllegalArgumentException {
+		if(columns <= 0) {
+			throw new IllegalArgumentException(
+					"The number of columns must be greater than 0.");
+		}
+	}
+
+	/**
+	 * Throws an IllegalArgumentException if the given number of rows is less
+	 * than or equal to 0.
+	 * @param rows - a number of rows
+	 * @throws IllegalArgumentException if the given number of rows is less
+	 * than or equal to 0
+	 */
+	private void exceptionForIllegalNumberOfRows(int rows)
+			throws IllegalArgumentException {
+		if(rows <= 0) {
+			throw new IllegalArgumentException(
+					"The number of rows must be greater than 0.");
 		}
 	}
 
@@ -305,12 +399,8 @@ public class IntMatrix {
 	 * @param row - a row index
 	 * @param column - a column index
 	 * @return the number at the given coordinates
-	 * @throws IllegalArgumentException if row or column is out of bounds
 	 */
-	public int get(int row, int column)
-			throws IllegalArgumentException {
-		exceptionForIllegalRowIndex(row);
-		exceptionForIllegalColumnIndex(column);
+	public int get(int row, int column) {
 		return matrix[row][column];
 	}
 
@@ -320,14 +410,8 @@ public class IntMatrix {
 	 * @return the IntMatrix containing the opposites
 	 */
 	public IntMatrix getOpposite() {
-		IntMatrix opposite = new IntMatrix(this);
-
-		for(int i=0; i<rows; i++) {
-			for(int j=0; j<columns; j++) {
-				opposite.matrix[i][j] *= -1;
-			}
-		}
-
+		IntMatrix opposite = new IntMatrix(rows, columns);
+		copyContent(opposite, this, -1);
 		return opposite;
 	}
 
@@ -337,8 +421,8 @@ public class IntMatrix {
 	 * @param other - another instance of IntMatrix
 	 * @return true if every number in this matrix is less than or equal to the
 	 * corresponding number in other, false otherwise
-	 * @throws IllegalArgumentException if dimensionsAreEqual(other) returns
-	 * false
+	 * @throws IllegalArgumentException if this and other do not have the same
+	 * dimensions
 	 */
 	public boolean isLeqToMat(IntMatrix other)
 			throws IllegalArgumentException {
@@ -346,7 +430,7 @@ public class IntMatrix {
 
 		for(int i=0; i<rows; i++) {
 			for(int j=0; j<columns; j++) {
-				if(get(i, j) > other.get(i, j)) {
+				if(matrix[i][j] > other.matrix[i][j]) {
 					return false;
 				}
 			}
@@ -398,7 +482,7 @@ public class IntMatrix {
 	 * @return the content of the specified row in an array
 	 * @throws IllegalArgumentException if row is out of bounds
 	 */
-	public Integer[] rowToArray(int row) {
+	public Integer[] rowToArray(int row) throws IllegalArgumentException {
 		exceptionForIllegalRowIndex(row);
 
 		Integer[] rowArray = new Integer[columns];
@@ -416,7 +500,7 @@ public class IntMatrix {
 	 * @return a new matrix containing the specified row
 	 * @throws IllegalArgumentException if row is out of bounds
 	 */
-	public IntMatrix rowToIntMatrix(int row) {
+	public IntMatrix rowToIntMatrix(int row) throws IllegalArgumentException {
 		exceptionForIllegalRowIndex(row);
 		return new IntMatrix(matrix[row]);
 	}
@@ -460,43 +544,40 @@ public class IntMatrix {
 	}
 
 	/**
-	 * Sets the number a the given coordinates in this matrix.
+	 * Sets the number at the given coordinates in this matrix.
 	 * @param row - a row index
 	 * @param column - a column index
 	 * @param number - the number to put at the given coordinates.
-	 * @throws IllegalArgumentException if row or column is out of bounds
 	 */
-	public void set(int row, int column, int number)
-			throws IllegalArgumentException {
-		exceptionForIllegalRowIndex(row);
-		exceptionForIllegalColumnIndex(column);
+	public void set(int row, int column, int number) {
 		matrix[row][column] = number;
 	}
 
 	/**
-	 * Substracts the number in every cell of other from the number at the
-	 * same coordinates in this matrix. The differences are recorded in this
-	 * matrix.
+	 * Subtracts every number in other from the number at the same coordinates
+	 * in this matrix. The differences are saved in this matrix. Matrix other
+	 * is not modified. This method is equivalent to addition(other, -1).
 	 * @param other - another instance of IntMatrix
-	 * @throws IllegalArgumentException if dimensionsAreEqual(other) returns
-	 * false
+	 * @throws IllegalArgumentException if this and other do not have the same
+	 * dimensions
 	 */
-	public void substraction(IntMatrix other) throws IllegalArgumentException {
-		addition(other.getOpposite());
+	public void subtraction(IntMatrix other) throws IllegalArgumentException {
+		addition(other, -1);
 	}
 
 	/**
-	 * Substracts the number in every cell in the specified row of other from
-	 * the number at the same coordinates in this matrix. The differences are
-	 * recorded in this matrix.
+	 * Subtracts every number in the specified row of other from the number at
+	 * the same coordinates in this matrix. The differences are saved in this
+	 * matrix. Matrix other is not modified. This method is equivalent to
+	 * additionOnRow(other, row, -1).
 	 * @param other - another instance of IntMatrix
-	 * @param row - the index of the row in which the substraction is to be
+	 * @param row - the index of the row in which the subtraction is to be
 	 * performed.
-	 * @throws IllegalArgumentException if dimensionsAreEqual(other) returns
-	 * false
+	 * @throws IllegalArgumentException if row is out of bounds or this and
+	 * other do not have the same dimensions
 	 */
-	public void substractionOnRow(IntMatrix other, int row)
+	public void subtractionOnRow(IntMatrix other, int row)
 			throws IllegalArgumentException {
-		additionOnRow(other.getOpposite(), row);
+		additionOnRow(other, row, -1);
 	}
 }
