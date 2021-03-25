@@ -25,15 +25,16 @@ line in a matrix are separated by spaces. It is paramount that n and m be
 consistent with the matrices’ dimensions. Their indices start at 0. All
 matrices, given and calculated, may only contain natural integers.
 
-File [06-deadlocks.pdf](/06-deadlocks.pdf) contains an explaination of deadlocks,
-a statement of the algorithms in this repository and examples of their
-application.
+File [06-deadlocks.pdf](/06-deadlocks.pdf) contains an explaination of
+deadlocks, a statement of the algorithms in this repository and examples of
+their application.
 
 ## Detecting Deadlocks
 Create a runnable .jar file from class *DeadlockDetector* and name it
 deadlock_detector.jar. Run it in command line and give it the path to a data
 file as a parameter. For example, on Windows, deadlock_detector.jar can be
-called with the data files provided in this repository in the following manner.
+called with the data files provided in this repository in the following
+manner.
 
 ```
 java -jar .\deadlock_detector.jar .\deadlock_detection1.txt
@@ -92,7 +93,7 @@ the system in an unsafe state. The system’s state is safe if and only if it
 can avoid deadlocks; if its state is unsafe, deadlocks are possible, but not
 certain. *RequestEvaluator* and *SafeSequenceMaker* need data files conform to
 the following format. Files deadlock_prevention1.txt to
-deadlock_prevention5.txt are valid input examples.
+deadlock_prevention3.txt are valid input examples.
 
 ```
 Processes: n
@@ -192,12 +193,13 @@ Process and request ("q" to quit): q
 
 The result file produced when the program ends contains the text from the
 console and data related to the system’s state and the banker’s algorithm.
-This data is more detailed if the second parameter in the command line is true.
+This data is more detailed if the second parameter in the command line is
+true.
 
 ### Making a Safe Sequence
 A safe sequence is a sequence of processes that can be executed in the order
-defined by the sequence with no deadlock occurring. An operating system is in
-a safe state if and only if at least one safe sequence exists.
+defined by the sequence without a deadlock occurring. An operating system is
+in a safe state if and only if at least one safe sequence exists.
 
 Create a runnable .jar file from class *SafeSequenceMaker* and name it
 safe_sequence_maker.jar. Run it in command line with the path to a data file

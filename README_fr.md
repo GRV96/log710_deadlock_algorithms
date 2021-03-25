@@ -12,10 +12,10 @@ algorithmes.
 
 Trois classes de ce dépôt, *DeadlockDetector*, *RequestEvaluator* et
 *SafeSequenceMaker*, contiennent une méthode *main*. Elles serviront à générer
-des exécutables .jar à appeler en ligne de commande avec le chemin d’un fichier
-de données comme paramètre. L’extension de ce fichier doit être «.txt». Ces
-exécutables créent dans leur dossier un fichier de résultats dont l’extension
-est aussi «.txt».
+des exécutables .jar à appeler en ligne de commande avec le chemin d’un
+fichier de données comme paramètre. L’extension de ce fichier doit être
+«.txt». Ces exécutables créent dans leur dossier un fichier de résultats dont
+l’extension est aussi «.txt».
 
 La première ligne du fichier de données indique le nombre de processus
 considérés (n); la deuxième indique le nombre de types de ressource (m)
@@ -97,7 +97,7 @@ système est sûr si et seulement s’il est capable d’éviter les interblocag
 si son état est non sûr, les interblocages sont possibles, mais pas certains.
 *RequestEvaluator* et *SafeSequenceMaker* ont besoin de fichiers de données
 conformes au format suivant. Les fichiers deadlock_prevention1.txt à
-deadlock_prevention5.txt sont des exemples d’entrée valide.
+deadlock_prevention3.txt sont des exemples d’entrée valide.
 
 ```
 Processes: n
@@ -143,11 +143,11 @@ Créez un exécutable .jar à partir de la classe *RequestEvaluator* et nommez-l
 request_evaluator.jar. Appelez-le en ligne de commande avec comme premier
 paramètre le chemin d’un fichier de données et comme deuxième paramètre une
 chaîne de caractères, dont la casse n’importera pas, exprimant une valeur
-booléenne. Ce dernier paramètre détermine si le fichier de résultats contiendra
-des données détaillées de l’algorithme du banquier. Pour la valeur *faux*, les
-chaînes suivantes sont acceptées: «0», «f», «false», «n», «no»; pour la valeur
-*vrai*, entrez une de ces chaînes: «1», «t», «true», «y», «yes». Sur Windows,
-on peut exécuter request_evaluator.jar comme suit.
+booléenne. Ce dernier paramètre détermine si le fichier de résultats
+contiendra des données détaillées de l’algorithme du banquier. Pour la valeur
+*faux*, les chaînes suivantes sont acceptées: «0», «f», «false», «n», «no»;
+pour la valeur *vrai*, entrez une de ces chaînes: «1», «t», «true», «y»,
+«yes». Sur Windows, on peut exécuter request_evaluator.jar comme suit.
 
 ```
 java -jar .\request_evaluator.jar .\deadlock_prevention1.txt 0
@@ -208,9 +208,10 @@ Une séquence sûre est une séquence de processus qui peuvent être exécutés 
 l’ordre défini par la séquence sans interblocage. Un système d’exploitation
 est dans un état sûr si et seulement si au moins une séquence sûre existe.
 
-Créez un exécutable .jar à partir de la classe *SafeSequenceMaker* et nommez-le
-safe_sequence_maker.jar. Appelez-le en ligne de commande avec comme seul
-paramètre le chemin d’un fichier de données comme dans l’exemple ci-dessous.
+Créez un exécutable .jar à partir de la classe *SafeSequenceMaker* et
+nommez-le safe_sequence_maker.jar. Appelez-le en ligne de commande avec comme
+seul paramètre le chemin d’un fichier de données comme dans l’exemple
+ci-dessous.
 
 ```
 java -jar .\safe_sequence_maker.jar .\deadlock_prevention1.txt
