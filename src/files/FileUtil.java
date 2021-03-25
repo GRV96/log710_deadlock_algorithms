@@ -1,5 +1,9 @@
 package files;
 
+/**
+ * This class contains static methods that aid in using files.
+ * @author Guyllaume Rousseau
+ */
 public final class FileUtil {
 
 	/**
