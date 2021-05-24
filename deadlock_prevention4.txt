@@ -2,12 +2,12 @@ Processes: 2
 Resource types: 1
 
 Resources
-4
+5
 
 Allocation
 1
 0
 
 Maximum
-6
+5
 1
