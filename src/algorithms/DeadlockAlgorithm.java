@@ -155,7 +155,7 @@ public abstract class DeadlockAlgorithm {
 	 * This constructor parses the text file designated by inputPath in order
 	 * to obtain the data that all deadlock algorithms require. It initializes
 	 * the number of processes and matrices Resources, Allocation and Available.
-	 * @param inputPath - path of the input file
+	 * @param inputPath - the path to the input file
 	 * @param outputPathSuffix - a suffix to append to the input file's name
 	 * to form that of the output file
 	 * @throws InputFileException if the input file contains a fault
@@ -169,12 +169,14 @@ public abstract class DeadlockAlgorithm {
 			throw new IOException("The input file must have the extension \""
 					+ FileUtil.TXT_EXTENSION + "\".");
 		}
+
 		File inputFile = new File(inputPath);
 		if(!inputFile.exists()) {
 			throw new IOException("File " + inputPath + " does not exist.");
 		}
 		fileContent = new FileContent(inputFile);
 		inputReader = new InputFileReader(fileContent);
+
 		String outputPath =
 				FileUtil.addSuffixToPath(inputPath, outputPathSuffix);
 		outputWriter = new OutputFileWriter(outputPath);
@@ -309,7 +311,7 @@ public abstract class DeadlockAlgorithm {
 
 	/**
 	 * Creates a message signaling that the specified matrix is undefined.
-	 * @param matrixTitle - title of an undefined matrix
+	 * @param matrixTitle - the title of an undefined matrix
 	 * @return the created message
 	 */
 	protected static String makeUndefinedMatrixMsg(String matrixTitle) {
@@ -416,7 +418,7 @@ public abstract class DeadlockAlgorithm {
 	 * Records the number of the current iteration in fileContent so it will
 	 * be written in the output file. This method produces the line
 	 * "ITERATION n".
-	 * @param iteration - number of the current iteration
+	 * @param iteration - the number of the current iteration
 	 */
 	protected void recordIterationNumber(int iteration) {
 		fileContent.addLine("ITERATION " + iteration);
@@ -425,7 +427,7 @@ public abstract class DeadlockAlgorithm {
 	/**
 	 * Records in fileContent the index of a process selected for execution.
 	 * This method produces the line "Process n executed".
-	 * @param procIndex - index of the executed process
+	 * @param procIndex - the index of the executed process
 	 */
 	protected void recordProcessToExecute(int procIndex) {
 		fileContent.addLine("Process " + procIndex + " executed");
