@@ -349,6 +349,7 @@ public class RequestEvaluator extends DeadlockPreventer {
 
 		while(true) {
 			int procNumber = bankersAlgorithmIter(recordBankersAlgoData);
+
 			saveWorkAndFinishState();
 
 			if(procNumber < 0) {
@@ -357,8 +358,13 @@ public class RequestEvaluator extends DeadlockPreventer {
 			else {
 				safeSeqLength++;
 			}
+
 			if(safeSeqLength >= processCount) {
 				return true;
+			}
+
+			if(recordBankersAlgoData) {
+				fileContent.addLine(null);
 			}
 		}
 	}

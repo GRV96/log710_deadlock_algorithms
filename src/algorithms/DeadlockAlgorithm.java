@@ -28,38 +28,38 @@ public abstract class DeadlockAlgorithm {
 			"ERROR! The allocation exceeds the existent resources.";
 
 	/**
-	 * Title of matrix Allocation
+	 * The title of matrix Allocation
 	 */
 	protected static final String ALLOCATION_TITLE = "Allocation";
 
 	/**
-	 * Title of matrix Available
+	 * The title of matrix Available
 	 */
 	protected static final String AVAILABLE_TITLE = "Available";
 
 	/**
-	 * Title of boolean array Finish
+	 * The title of boolean array Finish
 	 */
 	protected static final String FINISH_TITLE = "Finish";
 
 	/**
-	 * Title of boolean array Finish's state list
+	 * The title of boolean array Finish's state list
 	 */
 	protected static final String FINISH_THROUGH_ITERS_TITLE =
 			"Finish through the iterations";
 
 	/**
-	 * Title of matrix Request
+	 * The title of matrix Request
 	 */
 	protected static final String REQUEST_TITLE = "Request";
 
 	/**
-	 * Title of matrix Work
+	 * The title of matrix Work
 	 */
 	protected static final String WORK_TITLE = "Work";
 
 	/**
-	 * Title of matrix Work's state list
+	 * The title of matrix Work's state list
 	 */
 	protected static final String WORK_THROUGH_ITERS_TITLE =
 			"Work through the iterations";

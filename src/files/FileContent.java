@@ -56,7 +56,7 @@ public class FileContent implements Iterable<String> {
 			lineList.add(EMPTY_STRING);
 		}
 		else {
-			lineList.add(line.trim());
+			lineList.add(line);
 		}
 	}
 
