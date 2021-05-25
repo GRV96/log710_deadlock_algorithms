@@ -45,6 +45,7 @@ java -jar .\deadlock_detector.jar .\deadlock_detection2.txt
 java -jar .\deadlock_detector.jar .\deadlock_detection3.txt
 java -jar .\deadlock_detector.jar .\deadlock_detection4.txt
 java -jar .\deadlock_detector.jar .\deadlock_detection5.txt
+java -jar .\deadlock_detector.jar .\deadlock_detection6.txt
 ```
 
 Le fichier de données définit les matrices *Resources*, *Allocation* et
@@ -153,6 +154,7 @@ pour la valeur *vrai*, entrez une de ces chaînes: «1», «t», «true», «y»
 java -jar .\request_evaluator.jar .\deadlock_prevention1.txt 0
 java -jar .\request_evaluator.jar .\deadlock_prevention2.txt y
 java -jar .\request_evaluator.jar .\deadlock_prevention3.txt f
+java -jar .\request_evaluator.jar .\deadlock_prevention4.txt 1
 ```
 
 En premier lieu, le programme indique dans la console si l’état initial du

@@ -518,9 +518,9 @@ public class IntMatrix {
 			throws IllegalArgumentException {
 		exceptionForIllegalRowIndex(row);
 
-		String rowStr = "";
-		for(int j=0; j<columns; j++) {
-			rowStr += matrix[row][j] + separator;
+		String rowStr = "" + matrix[row][0];
+		for(int j=1; j<columns; j++) {
+			rowStr += separator + matrix[row][j];
 		}
 
 		return rowStr;

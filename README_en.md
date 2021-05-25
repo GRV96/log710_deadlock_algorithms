@@ -42,6 +42,7 @@ java -jar .\deadlock_detector.jar .\deadlock_detection2.txt
 java -jar .\deadlock_detector.jar .\deadlock_detection3.txt
 java -jar .\deadlock_detector.jar .\deadlock_detection4.txt
 java -jar .\deadlock_detector.jar .\deadlock_detection5.txt
+java -jar .\deadlock_detector.jar .\deadlock_detection6.txt
 ```
 
 The data file defines matrices *Resources*, *Allocation* and *Request*. Row
@@ -148,6 +149,7 @@ be run the following way.
 java -jar .\request_evaluator.jar .\deadlock_prevention1.txt 0
 java -jar .\request_evaluator.jar .\deadlock_prevention2.txt y
 java -jar .\request_evaluator.jar .\deadlock_prevention3.txt f
+java -jar .\request_evaluator.jar .\deadlock_prevention4.txt 1
 ```
 
 First, the program indicates in the console whether the system’s initial state

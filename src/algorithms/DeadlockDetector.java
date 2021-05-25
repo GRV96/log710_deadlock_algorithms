@@ -12,6 +12,8 @@ import matrix.IntMatrix;
  */
 public class DeadlockDetector extends DeadlockAlgorithm {
 
+	private static final String DEADLOCK_DETECT = "_deadlock_detect";
+
 	/**
 	 * This constructor parses the text file designated by inputPath in order
 	 * to obtain the data that the deadlock detection algorithms require. In
@@ -25,7 +27,7 @@ public class DeadlockDetector extends DeadlockAlgorithm {
 	public DeadlockDetector(String inputPath)
 			throws InputFileException, IOException {
 		// Can throw InputFileException or IOException.
-		super(inputPath, RESULT_SUFFIX);
+		super(inputPath, DEADLOCK_DETECT);
 
 		request = inputReader.getMatrixRequest();
 		if(request == null) {

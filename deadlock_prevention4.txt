@@ -6,8 +6,8 @@ Resources
 
 Allocation
 1
-2
+0
 
-Request
+Maximum
 5
-2
+1

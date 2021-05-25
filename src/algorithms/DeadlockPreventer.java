@@ -19,9 +19,14 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 	private static final String BANKERS_ALGO_LINE = "Banker's algorithm";
 
 	/**
-	 * Title of the need matrix
+	 * The title of the matrix Need
 	 */
 	protected static final String NEED_TITLE = "Need";
+
+	/**
+	 * The String "\t"
+	 */
+	private static final String TABULATION = "\t";
 
 	/**
 	 * The maximum matrix matches processes (rows) with the maximum number of
@@ -47,7 +52,7 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 	 * @throws IOException if the file designated by inputPath is non-existent
 	 * or does not have the extension .txt
 	 */
-	public DeadlockPreventer(String inputPath, String outputPathSuffix)
+	protected DeadlockPreventer(String inputPath, String outputPathSuffix)
 			throws InputFileException, IOException {
 		// Can throw InputFileException or IOException.
 		super(inputPath, outputPathSuffix);
@@ -80,7 +85,13 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 			throws IllegalArgumentException {
 		int procIndex = -1;
 		for(int i=0; i<processCount; i++) {
-			if(procExecIsSafe(i, recordData)) {
+			boolean safe = procExecIsSafe(i, recordData);
+
+			if(recordData) {
+				fileContent.addLine(null);
+			}
+
+			if(safe) {
 				procIndex = i;
 				break;
 			}
@@ -133,11 +144,11 @@ public abstract class DeadlockPreventer extends DeadlockAlgorithm {
 	protected boolean procExecIsSafe(int procIndex, boolean recordData) {
 		IntMatrix needRow = need.rowToIntMatrix(procIndex);
 		if(recordData) {
-			fileContent.addLine("Process " + procIndex);
-			fileContent.addLine("Finish[" + procIndex + "]: "
+			fileContent.addLine("\tProcess " + procIndex);
+			fileContent.addLine("\tFinish[" + procIndex + "]: "
 					+ booleanToChar(finish[procIndex], true));
-			recordIntMatrixRow(NEED_TITLE, need, procIndex);
-			recordIntMatrixRow(WORK_TITLE, work, 0);
+			recordIntMatrixRow(TABULATION + NEED_TITLE, need, procIndex);
+			recordIntMatrixRow(TABULATION + WORK_TITLE, work, 0);
 		}
 		return !finish[procIndex] && needRow.isLeqToMat(work);
 	}
