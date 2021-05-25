@@ -223,10 +223,17 @@ public abstract class DeadlockAlgorithm {
 	 * @return a line of text containing the array's elements
 	 */
 	private static <T> String arrayToTextLine(T[] array) {
+		int length = array.length;
 		String line = "";
-		for(int i=0; i<array.length; i++) {
-			line += array[i] + " ";
+
+		if(length > 0) {
+			line += array[0];
+
+			for(int i=1; i<length; i++) {
+				line += " " + array[i];
+			}
 		}
+
 		return line;
 	}
 
