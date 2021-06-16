@@ -9,7 +9,7 @@ public final class FileUtil {
 	/**
 	 * The "txt" file extension
 	 */
-	public static final String TXT_EXTENSION = "txt";
+	public static final String TXT_EXTENSION = ".txt";
 
 	/**
 	 * The '.' character
@@ -42,7 +42,7 @@ public final class FileUtil {
 
 	/**
 	 * Returns the extension of the given filepath. The extension is defined
-	 * as the substring ranging from the last occurrence of '.' (exclusive) to
+	 * as the substring ranging from the last occurrence of '.' (inclusive) to
 	 * the end of the filepath.
 	 * @param filepath - a filepath
 	 * @return the extension of filepath or null if it does not have one
@@ -51,7 +51,7 @@ public final class FileUtil {
 		String extension = null;
 		int dotIndex = filepath.lastIndexOf(PERIOD);
 		if(dotIndex >= 0) {
-			extension = filepath.substring(dotIndex+1);
+			extension = filepath.substring(dotIndex);
 		}
 		return extension;
 	}

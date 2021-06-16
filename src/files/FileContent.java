@@ -28,23 +28,13 @@ public class FileContent implements Iterable<String> {
 
 	/**
 	 * This constructor stores the given file's lines in the same order as in
-	 * their file. Every line is trimmed with method String.trim before it is
-	 * stored.
+	 * the file.
 	 * @param file - a file containing text
 	 * @throws IOException if an I/O error occurs reading from the file or a
 	 * malformed or unmappable byte sequence is read
 	 */
 	public FileContent(File file) throws IOException {
 		lineList = Files.readAllLines(file.toPath());
-
-		int lineCount = getLineCount();
-		for(int i=0; i<lineCount; i++) {
-			String line = lineList.get(i);
-			String trimmedLine = line.trim();
-			if(!line.equals(trimmedLine)) {
-				lineList.set(i, trimmedLine);
-			}
-		}
 	}
 
 	/**
@@ -61,7 +51,7 @@ public class FileContent implements Iterable<String> {
 	}
 
 	/**
-	 * Adds a line of text n times after all the currently contained lines.
+	 * Adds a line of text n times after the currently contained lines.
 	 * @param line - a line of text. If it is null, empty lines are added.
 	 * @param n - the number of times line must be added
 	 */
@@ -76,7 +66,7 @@ public class FileContent implements Iterable<String> {
 	 * @param lineIndex - the index of the wanted line
 	 * @return the text line at lineIndex
 	 * @throws IndexOutOfBoundsException
-	 * if 0 < lineIndex || this.getLineCount() <= lineIndex
+	 * if lineIndex < 0 || this.getLineCount() <= lineIndex
 	 */
 	public String getLine(int lineIndex) throws IndexOutOfBoundsException {
 		return lineList.get(lineIndex);
@@ -88,6 +78,10 @@ public class FileContent implements Iterable<String> {
 	 */
 	public int getLineCount() {return lineList.size();}
 
+	/**
+	 * Provides an iterator over the text lines stored in this instance.
+	 * @return an iterator over text lines
+	 */
 	@Override
 	public Iterator<String> iterator() {return lineList.iterator();}
 }
