@@ -78,6 +78,10 @@ public class FileContent implements Iterable<String> {
 	 */
 	public int getLineCount() {return lineList.size();}
 
+	/**
+	 * Provides an iterator over the text lines stored in this instance.
+	 * @return an iterator over text lines
+	 */
 	@Override
 	public Iterator<String> iterator() {return lineList.iterator();}
 }
